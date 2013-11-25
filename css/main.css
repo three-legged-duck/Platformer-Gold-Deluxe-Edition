@@ -73,15 +73,6 @@ body {
     ALL: Orange Theme
    =================== */
 
-.header-container {
-    border-bottom: 20px solid #e44d26;
-}
-
-.footer-container,
-.main aside {
-    border-top: 20px solid #e44d26;
-}
-
 .header-container,
 .footer-container,
 .main aside {
@@ -104,7 +95,8 @@ nav ul {
 nav a {
     display: block;
     margin-bottom: 10px;
-    padding: 15px 0;
+    padding: 5px 0;
+    height: 5px;
 
     text-align: center;
     text-decoration: none;
@@ -233,7 +225,7 @@ nav a:hover {
 
     nav {
         float: right;
-        width: 38%;
+        width: 30%;
     }
 
 /* ============

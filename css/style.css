@@ -917,7 +917,7 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: 375px;
+		width: 250px;
 		height: 100%;
 		color: #fff;
 		background: #222729 url('images/overlay.png');
@@ -1063,7 +1063,7 @@
 	
 	#footer
 	{
-		margin-left: 375px;
+		margin-left: 250px;
 		text-align: center;
 		background-color: #dce3e2;
 		padding: 3em 0 4em 0;
@@ -1092,7 +1092,7 @@
 
 	#main
 	{
-		margin-left: 375px;
+		margin-left: 250px;
 	}
 	
 		#main > section

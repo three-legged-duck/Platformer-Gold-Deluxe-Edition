@@ -9,7 +9,7 @@ namespace Platformer_The_Game
 {
     class Game
     {
-        RenderWindow w;
+        public RenderWindow w;
         IState state;
 
         public Game()

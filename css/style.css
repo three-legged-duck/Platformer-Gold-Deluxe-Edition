@@ -489,6 +489,7 @@
 	.fa
 	{
 		text-decoration: none;
+		border-bottom: none;
 	}
 
 		.fa.solo

@@ -3,7 +3,7 @@
 @font-face{font-family:'FontAwesome';src:url('font/fontawesome-webfont.eot?v=4.0.1');src:url('font/fontawesome-webfont.eot?#iefix&v=4.0.1') format('embedded-opentype'),url('font/fontawesome-webfont.woff?v=4.0.1') format('woff'),url('font/fontawesome-webfont.ttf?v=4.0.1') format('truetype'),url('font/fontawesome-webfont.svg?v=4.0.1#fontawesomeregular') format('svg');font-weight:normal;font-style:normal}
 
 /*
-	Prologue 1.1 by HTML5 UP
+	Prologue 1.2 by HTML5 UP
 	html5up.net | @n33co
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
@@ -917,7 +917,7 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: 250px;
+		width: 375px;
 		height: 100%;
 		color: #fff;
 		background: #222729 url('images/overlay.png');
@@ -936,9 +936,8 @@
 		#header .bottom
 		{
 			position: absolute;
-			left: 0;
 			bottom: 0;
-			width: 100%;
+			font-size: 0.8em;
 		}
 
 		#header .icons
@@ -1063,7 +1062,7 @@
 	
 	#footer
 	{
-		margin-left: 250px;
+		margin-left: 375px;
 		text-align: center;
 		background-color: #dce3e2;
 		padding: 3em 0 4em 0;
@@ -1092,7 +1091,7 @@
 
 	#main
 	{
-		margin-left: 250px;
+		margin-left: 375px;
 	}
 	
 		#main > section

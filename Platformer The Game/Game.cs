@@ -11,6 +11,7 @@ namespace Platformer_The_Game
     {
         public RenderWindow w;
         IState state;
+        Font font = new Font("sansation.ttf");
 
         public Game()
         {

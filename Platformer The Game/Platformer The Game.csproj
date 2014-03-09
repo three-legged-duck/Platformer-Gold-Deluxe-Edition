@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E3E6EC67-8263-4065-A9CD-483228DA227F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Platformer_The_Game</RootNamespace>
     <AssemblyName>Platformer The Game</AssemblyName>
@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="sfmlnet-audio-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -78,6 +81,7 @@
     <Compile Include="MenuState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -102,9 +106,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ressources\sansation.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="res\fonts\arial.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="res\backgrounds\suchbg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets" Condition="Exists('..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets')" />
@@ -113,7 +118,11 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <ResourcesFiles Include="res\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ResourcesFiles)" DestinationFolder="$(OutputPath)" />
+  </Target>
 </Project>

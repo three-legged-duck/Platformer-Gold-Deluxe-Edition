@@ -13,6 +13,7 @@ namespace Platformer_The_Game
         /// </summary>
         static void Main()
         {
+            
             new Game().RunMainLoop();
         }
     }

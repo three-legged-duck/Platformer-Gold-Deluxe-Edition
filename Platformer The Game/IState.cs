@@ -10,6 +10,6 @@ namespace Platformer_The_Game
         void Initialize(Game game);
         void Update();
         void Draw();
-        void Unintialize();
+        void Uninitialize();
     }
 }

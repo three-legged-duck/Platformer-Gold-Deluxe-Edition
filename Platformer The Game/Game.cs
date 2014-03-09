@@ -10,7 +10,7 @@ namespace Platformer_The_Game
     class Game
     {
         public RenderWindow w;
-        IState state;
+        public IState state;
         Font font = new Font("arial.ttf");
         public Settings settings  = Settings.Load();
 
@@ -27,6 +27,7 @@ namespace Platformer_The_Game
 
         public void RunMainLoop()
         {
+            
             MenuState menu = new MenuState(font, "menuBg.bmp", "Jouer", "Options", "Quitter");
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
@@ -37,7 +38,10 @@ namespace Platformer_The_Game
                         break;
                 }
             };
-            state = menu;
+            
+
+            state =  new SplashState("splash.bmp", true, menu);
+            
             Initialize();
             while (w.IsOpen())
             {

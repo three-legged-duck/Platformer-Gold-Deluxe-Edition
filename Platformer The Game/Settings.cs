@@ -24,10 +24,13 @@ namespace Platformer_The_Game
 
         private Settings()
         {
+            // Keyboard
             SetButton(typeof(Game /* TODO : State */), Keyboard.Key.E, Action.Use);
-
-
+            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.Space, Action.Jump);
+            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.LShift, Action.Run);
+            
             SetButton(typeof(MenuState), Keyboard.Key.Return, Action.Use);
+            
             SetButton(typeof(Default), Keyboard.Key.W, Action.Up);
             SetButton(typeof(Default), Keyboard.Key.S, Action.Down);
             SetButton(typeof(Default), Keyboard.Key.A, Action.Left);
@@ -36,8 +39,8 @@ namespace Platformer_The_Game
             SetButton(typeof(Default), Keyboard.Key.Down, Action.Down);
             SetButton(typeof(Default), Keyboard.Key.Left, Action.Left);
             SetButton(typeof(Default), Keyboard.Key.Right, Action.Right);
-            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.Space, Action.Jump);
-            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.LShift, Action.Run);
+            
+            // Joystick
             SetButton(typeof(Default), 1, Action.Use);
             SetButton(typeof(Default), 2, Action.Up);
             SetButton(typeof(Default), 3, Action.Down);

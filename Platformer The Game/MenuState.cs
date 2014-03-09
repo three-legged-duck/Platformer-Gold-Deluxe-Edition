@@ -19,8 +19,6 @@ namespace Platformer_The_Game
         const int carretRightPos = 25;
 
         int selectedPos;
-        EventHandler<KeyEventArgs> KeyPressHandler;
-        EventHandler<JoystickButtonEventArgs> JoyPressHandler;
         EventHandler<MouseButtonEventArgs> MouseClickHandler;
         EventHandler<MouseMoveEventArgs> MouseMoveHandler;
 
@@ -28,14 +26,8 @@ namespace Platformer_The_Game
         Sprite backgroundSprite;
         Texture backgroundTexture;
 
-        public void OnEvent(Settings.Action a)
-        {
-        }
-
         public MenuState (Font font,string img, params string[] menuItems)
         {
-            KeyPressHandler = new EventHandler<KeyEventArgs>(onKeyPressed);
-            JoyPressHandler = new EventHandler<JoystickButtonEventArgs>(onKeyPressed);
             MouseClickHandler = new EventHandler<MouseButtonEventArgs>(onMousePressed);
             MouseMoveHandler = new EventHandler<MouseMoveEventArgs>(onMouseMoved);
             menuList = new List<string>(menuItems);
@@ -49,8 +41,6 @@ namespace Platformer_The_Game
         {
             this.game = game;
             backgroundSprite.Scale = new Vector2f(game.w.Size.X / backgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / backgroundSprite.GetGlobalBounds().Height);
-            game.w.KeyPressed += KeyPressHandler;
-            game.w.JoystickButtonPressed += JoyPressHandler;
             game.w.MouseButtonPressed += MouseClickHandler;
             game.w.MouseMoved += MouseMoveHandler;
             carretLeft = new Text("- ", menuFont);
@@ -94,17 +84,8 @@ namespace Platformer_The_Game
 
         public void Uninitialize()
         {
-            game.w.KeyPressed -= KeyPressHandler;
-        }
-
-        public void onKeyPressed(object sender, KeyEventArgs args)
-        {
-            onAction(game.settings.GetAction(typeof(MenuState), args.Code));
-        }
-
-        public void onKeyPressed(object sender, JoystickButtonEventArgs args)
-        {
-            onAction(game.settings.GetAction(typeof(MenuState), args.Button));
+            game.w.MouseButtonPressed -= MouseClickHandler;
+            game.w.MouseMoved -= MouseMoveHandler;
         }
 
         public void onMousePressed(object sender, MouseButtonEventArgs args)
@@ -118,7 +99,7 @@ namespace Platformer_The_Game
                 FloatRect realRect = getRealRect(menuBtns[i].GetGlobalBounds());
                 if (realRect.Contains(args.X, args.Y))
                 {
-                    onAction(Settings.Action.Use);
+                    OnEvent(Settings.Action.Use);
                 }
             }
         }
@@ -140,9 +121,13 @@ namespace Platformer_The_Game
             return new FloatRect(fr.Left - carretLeftPos, fr.Top,
                 fr.Width + carretLeftPos + carretRightPos, fr.Height);
         }
-
-        public void onAction(Settings.Action action)
+        int nextmillis = 0;
+        public void OnEvent(Settings.Action action)
         {
+            if (nextmillis > Environment.TickCount)
+            {
+                return;
+            }
             switch (action)
             {
                 case Settings.Action.Up:
@@ -168,7 +153,7 @@ namespace Platformer_The_Game
                 selectedPos = 0;
             }
 
-            Console.WriteLine(selectedPos);
+            nextmillis = Environment.TickCount + 150;
         }
 
         public class ItemSelectedEventArgs : EventArgs

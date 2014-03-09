@@ -11,5 +11,6 @@ namespace Platformer_The_Game
         void Update();
         void Draw();
         void Uninitialize();
+        void OnEvent(Settings.Action a);
     }
 }

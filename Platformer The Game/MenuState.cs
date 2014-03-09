@@ -20,6 +20,10 @@ namespace Platformer_The_Game
         Sprite background_sprite;
         Texture background_texture;
 
+        public void OnEvent(Settings.Action a)
+        {
+        }
+
         public MenuState (Font font,string img, params string[] menuItems)
         {
             KeyPressHandler = new EventHandler<KeyEventArgs>(onKeyPressed);

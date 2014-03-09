@@ -20,6 +20,7 @@ namespace Platformer_The_Game
 
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
+            w.JoystickButtonPressed += new EventHandler<JoystickButtonEventArgs>(OnJoyPressed);
             w.Closed += new EventHandler(OnClosed);
         }
 
@@ -69,10 +70,12 @@ namespace Platformer_The_Game
 
         private void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            if (e.Code == Keyboard.Key.Escape)
-            {
-                Close();
-            }
+            state.OnEvent(settings.GetAction(e.Code));
+        }
+
+        private void OnJoyPressed(object sender, JoystickButtonEventArgs btn)
+        {
+            state.OnEvent(settings.GetAction(btn.Button));
         }
 
         private void OnClosed(object sender, EventArgs e)

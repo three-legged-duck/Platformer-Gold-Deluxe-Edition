@@ -16,20 +16,21 @@ namespace Platformer_The_Game
 
         public Game()
         {
-            w = new RenderWindow(new VideoMode(1280, 1024), "Platformer");
-
+            //Setup the wimdow and disable resizing
+            w = new RenderWindow(new VideoMode(800, 600), "Platformer", SFML.Window.Styles.Close);
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
             w.JoystickButtonPressed += new EventHandler<JoystickButtonEventArgs>(OnJoyPressed);
+            w.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(OnMousePressed);
             w.Closed += new EventHandler(OnClosed);
         }
 
         public void RunMainLoop()
         {
-            MenuState menu = new MenuState(font, "suchbg.png", "Jouer", "Options", "Quitter");
+            MenuState menu = new MenuState(font, "menuBg.bmp", "Jouer", "Options", "Quitter");
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
-                switch (args.selected_pos)
+                switch (args.selectedPos)
                 {
                     case 2:
                         Close();
@@ -70,12 +71,20 @@ namespace Platformer_The_Game
 
         private void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            state.OnEvent(settings.GetAction(e.Code));
+            state.OnEvent(settings.GetAction(this.GetType(), e.Code));
         }
 
         private void OnJoyPressed(object sender, JoystickButtonEventArgs btn)
         {
-            state.OnEvent(settings.GetAction(btn.Button));
+            state.OnEvent(settings.GetAction(this.GetType(), btn.Button));
+        }
+
+        private void OnMousePressed(object sender, MouseButtonEventArgs btn)
+        {
+            if (btn.Button == Mouse.Button.Left)
+            {
+                state.OnEvent(Settings.Action.Use);
+            }
         }
 
         private void OnClosed(object sender, EventArgs e)

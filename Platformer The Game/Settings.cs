@@ -13,78 +13,104 @@ namespace Platformer_The_Game
     [Serializable]
     class Settings
     {
+        public class Default { }
         public enum Action { Use, Up, Down, Left, Right, Jump, Run, None };
-        Dictionary<Keyboard.Key, Action> keyboard_keys = new Dictionary<Keyboard.Key,Action>();
-        Dictionary<uint, Action> joystick_keys = new Dictionary<uint, Action>();
-        [NonSerialized] const string file_name = "game.settings";
+        
+        Dictionary<Type,Dictionary<Keyboard.Key,Action>> keyboardKeys =
+            new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
+        Dictionary<Type, Dictionary<uint, Action>> joystickKeys =
+            new Dictionary<Type, Dictionary<uint, Action>>();
+        [NonSerialized] const string fileName = "game.settings";
 
         private Settings()
         {
-            SetButton(Keyboard.Key.E, Action.Use);
-            SetButton(Keyboard.Key.Return, Action.Use);
-            SetButton(Keyboard.Key.W, Action.Up);
-            SetButton(Keyboard.Key.S, Action.Down);
-            SetButton(Keyboard.Key.A, Action.Left);
-            SetButton(Keyboard.Key.D, Action.Right);
-            SetButton(Keyboard.Key.Up, Action.Up);
-            SetButton(Keyboard.Key.Down, Action.Down);
-            SetButton(Keyboard.Key.Left, Action.Left);
-            SetButton(Keyboard.Key.Right, Action.Right);
-            SetButton(Keyboard.Key.Space, Action.Jump);
-            SetButton(Keyboard.Key.LShift, Action.Run);
-            SetButton(1, Action.Use);
-            SetButton(2, Action.Up);
-            SetButton(3, Action.Down);
-            SetButton(4, Action.Left);
-            SetButton(5, Action.Right);
-            SetButton(6, Action.Jump);
-            SetButton(7, Action.Run);
+            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.E, Action.Use);
+
+
+            SetButton(typeof(MenuState), Keyboard.Key.Return, Action.Use);
+            SetButton(typeof(Default), Keyboard.Key.W, Action.Up);
+            SetButton(typeof(Default), Keyboard.Key.S, Action.Down);
+            SetButton(typeof(Default), Keyboard.Key.A, Action.Left);
+            SetButton(typeof(Default), Keyboard.Key.D, Action.Right);
+            SetButton(typeof(Default), Keyboard.Key.Up, Action.Up);
+            SetButton(typeof(Default), Keyboard.Key.Down, Action.Down);
+            SetButton(typeof(Default), Keyboard.Key.Left, Action.Left);
+            SetButton(typeof(Default), Keyboard.Key.Right, Action.Right);
+            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.Space, Action.Jump);
+            SetButton(typeof(Game /* TODO : State */), Keyboard.Key.LShift, Action.Run);
+            SetButton(typeof(Default), 1, Action.Use);
+            SetButton(typeof(Default), 2, Action.Up);
+            SetButton(typeof(Default), 3, Action.Down);
+            SetButton(typeof(Default), 4, Action.Left);
+            SetButton(typeof(Default), 5, Action.Right);
+            SetButton(typeof(Game /* TODO : State */), 6, Action.Jump);
+            SetButton(typeof(Game /* TODO : State */), 7, Action.Run);
         }
 
-        public Action GetAction(Keyboard.Key k)
+        public Action GetAction(Type state, Keyboard.Key k)
         {
+            Dictionary<Keyboard.Key, Action> tmp;
             Action a;
-            if (keyboard_keys.TryGetValue(k, out a))
+            if (keyboardKeys.TryGetValue(state, out tmp)
+                && tmp.TryGetValue(k, out a))
             {
                 return a;
             }
-            else
-            {
-                return Action.None;
-            }
-        }
-
-        public Action GetAction(uint j_k)
-        {
-            Action a;
-            if (joystick_keys.TryGetValue(j_k, out a))
+            if (keyboardKeys.TryGetValue(typeof(Default), out tmp)
+                && tmp.TryGetValue(k, out a))
             {
                 return a;
             }
-            else
+            return Action.None;
+        }
+
+        public Action GetAction(Type state, uint jK)
+        {
+            Dictionary<uint, Action> tmp;
+            Action a;
+            if (joystickKeys.TryGetValue(state, out tmp)
+                && tmp.TryGetValue(jK, out a))
             {
-                return Action.None;
+                return a;
             }
+            if (joystickKeys.TryGetValue(typeof(Default), out tmp)
+                && tmp.TryGetValue(jK, out a))
+            {
+                return a;
+            }
+            return Action.None;
         }
 
-        public void SetButton(uint k, Action a)
+        public void SetButton(Type state, uint k, Action a)
         {
-            joystick_keys.Add(k, a);
+            Dictionary<uint, Action> tmp;
+            if (!joystickKeys.TryGetValue(state, out tmp))
+            {
+                tmp = new Dictionary<uint, Action>();
+                joystickKeys.Add(state, tmp);
+            }
+            tmp.Add(k, a);
         }
 
-        public void SetButton(Keyboard.Key k, Action a)
+        public void SetButton(Type state, Keyboard.Key k, Action a)
         {
-            keyboard_keys.Add(k, a);
+            Dictionary<Keyboard.Key, Action> tmp;
+            if (!keyboardKeys.TryGetValue(state, out tmp))
+            {
+                tmp = new Dictionary<Keyboard.Key, Action>();
+                keyboardKeys.Add(state, tmp);
+            }
+            tmp.Add(k, a);
         }
 
         public void Save()
         {
 
-            BinaryFormatter Formatter = new BinaryFormatter();
+            BinaryFormatter formatter = new BinaryFormatter();
             try
             {
-                FileStream writeFileStream = new FileStream(file_name, FileMode.Create, FileAccess.Write);
-                Formatter.Serialize(writeFileStream, this);
+                FileStream writeFileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                formatter.Serialize(writeFileStream, this);
                 writeFileStream.Close();
             }
             catch
@@ -95,12 +121,12 @@ namespace Platformer_The_Game
 
         public static Settings Load()
         {
-            BinaryFormatter Formatter = new BinaryFormatter();
+            BinaryFormatter formatter = new BinaryFormatter();
 
             try
             {
-                FileStream readerFileStream = new FileStream(file_name, FileMode.Open, FileAccess.Read);
-                return Formatter.Deserialize(readerFileStream) as Settings;
+                FileStream readerFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                return formatter.Deserialize(readerFileStream) as Settings;
             }
             catch
             {

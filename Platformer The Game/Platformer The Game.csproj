@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SplashState.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="IState.cs" />
     <Compile Include="LevelEditor.cs" />
@@ -111,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\backgrounds\menuBg.bmp" />
+    <Content Include="res\backgrounds\splash.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets" Condition="Exists('..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets')" />

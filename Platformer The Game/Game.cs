@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,10 @@ namespace Platformer_The_Game
         {
             //Setup the wimdow and disable resizing
             w = new RenderWindow(new VideoMode(800, 600), "Platformer", SFML.Window.Styles.Close);
+            w.SetKeyRepeatEnabled(false);
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
+            w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 
             w.JoystickButtonPressed += new EventHandler<JoystickButtonEventArgs>(OnJoyPressed);
             w.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(OnMousePressed);
             w.Closed += new EventHandler(OnClosed);
@@ -45,7 +48,6 @@ namespace Platformer_The_Game
             Initialize();
             while (w.IsOpen())
             {
-                // Trigger the Event Handling
                 w.DispatchEvents();
 
                 // Tick update
@@ -65,6 +67,10 @@ namespace Platformer_The_Game
 
         private void Update()
         {
+            foreach (Keyboard.Key key in keyPressed)
+            {
+                state.OnEvent(settings.GetAction(state.GetType(), key));
+            }
             state.Update();
         }
 
@@ -73,9 +79,15 @@ namespace Platformer_The_Game
             state.Draw();
         }
 
+        HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
         private void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            state.OnEvent(settings.GetAction(this.GetType(), e.Code));
+            keyPressed.Add(e.Code);
+        }
+
+        private void OnKeyReleased(object sender, KeyEventArgs e)
+        {
+            keyPressed.Remove(e.Code);
         }
 
         private void OnJoyPressed(object sender, JoystickButtonEventArgs btn)

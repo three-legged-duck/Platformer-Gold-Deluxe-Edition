@@ -11,10 +11,12 @@ namespace Platformer_The_Game
     {
         public RenderWindow w;
         IState state;
+        Font font = new Font("arial.ttf");
+        public Settings settings  = Settings.Load();
 
         public Game()
         {
-            w = new RenderWindow(new VideoMode(800, 600), "Platformer");
+            w = new RenderWindow(new VideoMode(1280, 1024), "Platformer");
 
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
@@ -23,7 +25,17 @@ namespace Platformer_The_Game
 
         public void RunMainLoop()
         {
-            state = new MenuState();
+            MenuState menu = new MenuState(font, "suchbg.png", "Jouer", "Options", "Quitter");
+            menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+            {
+                switch (args.selected_pos)
+                {
+                    case 2:
+                        Close();
+                        break;
+                }
+            };
+            state = menu;
             Initialize();
             while (w.IsOpen())
             {
@@ -59,14 +71,19 @@ namespace Platformer_The_Game
         {
             if (e.Code == Keyboard.Key.Escape)
             {
-                ((Window)sender).Close();
+                Close();
             }
         }
 
         private void OnClosed(object sender, EventArgs e)
         {
-            Window w = (Window)sender;
+            Close();
+        }
+
+        private void Close()
+        {
             w.Close();
+            System.Environment.Exit(0);
         }
     }
 }

@@ -7,9 +7,9 @@ namespace Platformer_The_Game
 {
     interface IState
     {
-        public void Initialize(Game game);
-        public void Update();
-        public void Draw();
-        public void Unintialize();
+        void Initialize(Game game);
+        void Update();
+        void Draw();
+        void Uninitialize();
     }
 }

@@ -70,12 +70,12 @@ namespace Platformer_The_Game
 
         private void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            state.OnEvent(settings.GetAction(e.Code));
+            state.OnEvent(settings.GetAction(this.GetType(), e.Code));
         }
 
         private void OnJoyPressed(object sender, JoystickButtonEventArgs btn)
         {
-            state.OnEvent(settings.GetAction(btn.Button));
+            state.OnEvent(settings.GetAction(this.GetType(), btn.Button));
         }
 
         private void OnClosed(object sender, EventArgs e)

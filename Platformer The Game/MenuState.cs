@@ -86,12 +86,12 @@ namespace Platformer_The_Game
 
         public void onKeyPressed(object sender, KeyEventArgs args)
         {
-            onAction(game.settings.GetAction(args.Code));
+            onAction(game.settings.GetAction(typeof(MenuState), args.Code));
         }
 
         public void onKeyPressed(object sender, JoystickButtonEventArgs args)
         {
-            onAction(game.settings.GetAction(args.Button));
+            onAction(game.settings.GetAction(typeof(MenuState), args.Button));
         }
 
         public void onAction(Settings.Action action)

@@ -36,6 +36,10 @@ namespace Platformer_The_Game
             {
                 switch (args.selectedPos)
                 {
+                    case 0:
+                        state = new GameState();
+                        state.Initialize(this);
+                        break;
                     case 2:
                         Close();
                         break;

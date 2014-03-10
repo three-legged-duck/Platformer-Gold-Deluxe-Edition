@@ -34,6 +34,7 @@ namespace Platformer_The_Game
             w = new RenderWindow(new VideoMode(800, 600), "Platformer", SFML.Window.Styles.Close);
             w.SetFramerateLimit(60);
             w.SetKeyRepeatEnabled(false);
+            w.SetIcon(128, 128, (new Image("icon.png")).Pixels);
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
             w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 

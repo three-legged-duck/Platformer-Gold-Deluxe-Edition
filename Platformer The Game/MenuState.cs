@@ -74,8 +74,17 @@ namespace Platformer_The_Game
         public void Draw()
         {
             game.w.Draw(backgroundSprite);
-            foreach (Text t in menuBtns)
+            for (int i = 0;i < menuBtns.Count;i++)
             {
+                Text t = menuBtns[i];
+                if (i == selectedPos)
+                {
+                    t.Color = new Color(t.Color.R, t.Color.G, t.Color.B, 255);
+                }
+                else
+                {
+                    t.Color = new Color(t.Color.R, t.Color.G, t.Color.B, 150);
+                }
                 game.w.Draw(t);
             }
             game.w.Draw(carretLeft);
@@ -121,6 +130,7 @@ namespace Platformer_The_Game
             return new FloatRect(fr.Left - carretLeftPos, fr.Top,
                 fr.Width + carretLeftPos + carretRightPos, fr.Height);
         }
+
         int nextmillis = 0;
         public void OnEvent(Settings.Action action)
         {

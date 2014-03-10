@@ -19,12 +19,12 @@ namespace Platformer_The_Game
         {
             //Setup the wimdow and disable resizing
             w = new RenderWindow(new VideoMode(800, 600), "Platformer", SFML.Window.Styles.Close);
+            w.SetFramerateLimit(60);
             w.SetKeyRepeatEnabled(false);
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
             w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 
             w.JoystickButtonPressed += new EventHandler<JoystickButtonEventArgs>(OnJoyPressed);
-            w.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(OnMousePressed);
             w.Closed += new EventHandler(OnClosed);
         }
 
@@ -97,14 +97,6 @@ namespace Platformer_The_Game
         private void OnJoyPressed(object sender, JoystickButtonEventArgs btn)
         {
             state.OnEvent(settings.GetAction(this.GetType(), btn.Button));
-        }
-
-        private void OnMousePressed(object sender, MouseButtonEventArgs btn)
-        {
-            if (btn.Button == Mouse.Button.Left)
-            {
-                state.OnEvent(Settings.Action.Use);
-            }
         }
 
         private void OnClosed(object sender, EventArgs e)

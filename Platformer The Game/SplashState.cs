@@ -18,9 +18,28 @@ namespace Platformer_The_Game
         bool scale;
         IState nextState;
 
+        EventHandler<KeyEventArgs> KeyReleasedHandler;
+        EventHandler<MouseButtonEventArgs> MouseBtnHandler;
         public void Initialize(Game g)
         {
             this.game = g;
+            KeyReleasedHandler = delegate(object sender, KeyEventArgs args)
+            {
+                Uninitialize();
+            };
+
+            MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
+            {
+                if (btn.Button == Mouse.Button.Left)
+                {
+                    Uninitialize();
+                }
+            };
+
+            g.w.KeyReleased += KeyReleasedHandler;
+            g.w.MouseButtonPressed += MouseBtnHandler;
+
+
             if (scale)
             {
                 SplashSprite.Scale = new Vector2f(game.w.Size.X / SplashSprite.GetGlobalBounds().Width, game.w.Size.Y / SplashSprite.GetGlobalBounds().Height);
@@ -57,12 +76,16 @@ namespace Platformer_The_Game
 
         public void Uninitialize()
         {
+            game.w.KeyReleased -= KeyReleasedHandler;
+            game.w.MouseButtonPressed -= MouseBtnHandler;
+
             game.state = nextState;
             nextState.Initialize(game);
         }
 
         public void OnEvent(Settings.Action a)
-        {  
+        {
+            //Uninitialize();
         }
     }
 }

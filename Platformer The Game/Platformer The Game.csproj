@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts\arial.ttf" />
+    <None Include="res\music\eddsworldCreditsTheme.ogg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\images\character1.bmp" />

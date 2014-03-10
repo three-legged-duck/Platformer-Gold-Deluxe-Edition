@@ -48,9 +48,7 @@ namespace Platformer_The_Game
             this.sprite = new Sprite(new Texture(image));
 
             // Hitbox
-            this.Hitbox = new Hitbox(new List<RectangleShape> {
-                Utils.NewRectangle(pos.X, pos.Y, sprite.GetGlobalBounds().Width, sprite.GetGlobalBounds().Height)
-            });
+            this.Hitbox = new Hitbox(new List<FloatRect> { sprite.GetLocalBounds() });
             direction = Facing.Right;
             //state = State.Stopped;
             this.Pos = pos;
@@ -98,28 +96,28 @@ namespace Platformer_The_Game
             else if (speed.X < -1 || speed.X > 1) speed.X += direction == Facing.Left ? 1 : -1;
             else speed.X = 0;
             if (!OnGround && speed.Y < 100) speed.Y++;
+            else if (OnGround && speed.Y != 0) speed.Y = 0;
             _pos.X += speed.X;
             _pos.Y += speed.Y;
+            Hitbox.MoveTo(_pos);
             moving = false;
+            sprite.Position = _pos;
         }
 
         public void Draw()
         {
-            sprite.Position = _pos;
             game.w.Draw(sprite);
-            Vector2f size = new Vector2f(sprite.GetGlobalBounds().Width, sprite.GetGlobalBounds().Height);
-            RectangleShape boundingBox = new RectangleShape(size);
-            boundingBox.Position = _pos;
-            boundingBox.OutlineColor = Color.Red;
-            boundingBox.FillColor = Color.Transparent;
-            boundingBox.OutlineThickness = 3;
-            game.w.Draw(boundingBox);
         }
 
         public void Uninitialize()
         {
 
         }
-        
+
+
+        public void Collided(Platform platform)
+        {
+            OnGround = true;
+        }
     }
 }

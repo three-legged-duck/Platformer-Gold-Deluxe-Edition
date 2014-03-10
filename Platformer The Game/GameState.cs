@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SFML.Window;
 using SFML.Graphics;
+using SFML.Audio;
 
 namespace Platformer_The_Game
 {
@@ -11,7 +12,9 @@ namespace Platformer_The_Game
     {
         Game game;
         Player player;
-         public List<Plateform> plateforms;
+
+        Music backgroundMusic; 
+        public List<Plateform> plateforms;
         
 
         public GameState()
@@ -22,10 +25,13 @@ namespace Platformer_The_Game
         public void Initialize(Game game)
         {
             this.game = game;
+            backgroundMusic = new Music("gameLoop.ogg");
+            backgroundMusic.Play();
+            backgroundMusic.Loop = true;
             plateforms = new List<Plateform>();
 
-            player = new Player(game, this, new Vector2f(50, 200)); // exemple value
-            plateforms.Add(new Plateform(new Vector2f(50, 240), "BlocksMisc.png", game)); // example value
+            player = new Player(game, this, new Vector2f(50, 200));
+            plateforms.Add(new Plateform(new Vector2f(50, 240), "BlocksMisc.png", game));
         }
         
         public void Draw()
@@ -46,6 +52,7 @@ namespace Platformer_The_Game
         
         public void Uninitialize()
         {
+            backgroundMusic.Stop();
         }
 
         public void OnEvent(Settings.Action action)

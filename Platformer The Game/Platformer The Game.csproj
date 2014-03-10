@@ -115,10 +115,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts\arial.ttf" />
+    <None Include="res\shaders\flipTexture.frag" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\dlls\csfml-audio-2.dll" />
+    <Content Include="res\dlls\csfml-graphics-2.dll" />
+    <Content Include="res\dlls\csfml-window-2.dll" />
+    <Content Include="res\dlls\libsndfile-1.dll" />
+    <Content Include="res\dlls\openal32.dll" />
+    <Content Include="res\images\BlocksMisc.png" />
     <Content Include="res\images\character1.bmp" />
     <Content Include="res\images\floor.bmp" />
+    <Content Include="res\images\lvl1bg.png" />
     <Content Include="res\images\menuBg.png" />
     <Content Include="res\images\splash.bmp" />
   </ItemGroup>

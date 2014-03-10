@@ -4,62 +4,111 @@ using System.Linq;
 using System.Text;
 using SFML.Graphics;
 using SFML.Window;
+using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
-    class Player : Unit
-    {
-        Vector2f acceleration = new Vector2f();
 
-        public Player(Vector2f spawnPos, int weight, Game game, GameState state)
-            : base(game, "character1.bmp", state)
+
+    class Player
+    {
+        enum Facing { Left, Right };
+        Facing direction;
+        bool moving;
+
+        protected Vector2f speed; // TODO : Why no int ?
+        Vector2f _pos;
+        public Vector2f Pos
         {
-            this.Weight = weight;
-            Pos = spawnPos;
+            get { return _pos; }
+            set { _pos = value; }
+        }
+
+        public Hitbox Hitbox;
+
+
+        Image image;
+        protected Sprite sprite;
+        
+        GameState gameState;
+        protected readonly Game game;
+
+        public Player(Game game, GameState state, Vector2f pos)
+        {
+            this.game = game;
+            this.gameState = state;
+
+            direction = Facing.Right;
+            
+            // Visual Appearance
+            image = new Image("character1.bmp");
+            image.CreateMaskFromColor(new Color(0, 255, 0));
+            this.sprite = new Sprite(new Texture(image));
+
+            // Hitbox
+            this.Hitbox = new Hitbox(new List<RectangleShape> {
+                Utils.NewRectangle(pos.X, pos.Y, sprite.GetGlobalBounds().Width, sprite.GetGlobalBounds().Height)
+            });
+            direction = Facing.Right;
             //state = State.Stopped;
-            acceleration.X = 0;
-            celerity.X = 0f;
+            this.Pos = pos;
         }
 
         public void Initialize()
         { }
-        public void SetState(State state)
-        {
-            this.state = state;
-        }
 
         public void Event(Settings.Action action)
         {
             switch (action)
             {
-                case Settings.Action.Right:
-                    if (celerity.X == 0)
-                        celerity.X = 4;
-                    acceleration.X = .2f;
-                    break;
                 case Settings.Action.Left:
-                    if (celerity.X == 0)
-                        celerity.X = -4;
-                    acceleration.X = -.2f;
+                    moving = true;
+                    if (direction == Facing.Right)
+                    {
+                        Debug.WriteLine("Changed : Left");
+                        sprite.TextureRect = new IntRect((int)image.Size.X, 0, (int)-image.Size.X, (int)image.Size.Y);
+                    }
+                    direction = Facing.Left;
+                    break;
+                case Settings.Action.Right:
+                    moving = true;
+                    if (direction == Facing.Left)
+                    {
+                        Debug.WriteLine("Changed : Right");
+                        sprite.TextureRect = new IntRect(0, 0, (int)image.Size.X, (int)image.Size.Y);
+                    }
+                    direction = Facing.Right;
                     break;
                 case Settings.Action.Jump:
-                    if (celerity.Y == 0f)
-                        celerity.Y = 3;
+
                     break;
 
             }
         }
-        public override void Update()
-        {
-            celerity.X += acceleration.X;
-            acceleration.X *= -.4f;
-            if (Math.Abs(acceleration.X) < .00002f)
-                celerity.X = 0;
 
-            base.Update();
+        public void Update()
+        {
+            if (moving) speed.X += (direction == Facing.Left ? -1 : 1);
+            else if (speed.X < -1 || speed.X > 1) speed.X += direction == Facing.Left ? 1 : -1;
+            else speed.X = 0;
+            _pos.X += speed.X;
+            moving = false;
         }
 
-        public override void Uninitialize()
+        public void Draw()
+        {
+            sprite.Position = _pos;
+            game.w.Draw(sprite);
+            Vector2f size = new Vector2f(sprite.GetGlobalBounds().Width, sprite.GetGlobalBounds().Height);
+            RectangleShape boundingBox = new RectangleShape(size);
+            boundingBox.Position = _pos;
+            boundingBox.OutlineColor = Color.Red;
+            boundingBox.FillColor = Color.Transparent;
+            boundingBox.OutlineThickness = 3;
+            game.w.Draw(boundingBox);
+        }
+
+        public void Uninitialize()
         {
 
         }

@@ -24,8 +24,8 @@ namespace Platformer_The_Game
             this.game = game;
             plateforms = new List<Plateform>();
 
-            player = new Player(new Vector2f(50, 200), 100, game, this); // exemple value
-            plateforms.Add(new Plateform(new Vector2f(50, 240), "floor.bmp", game)); // example value
+            player = new Player(game, this, new Vector2f(50, 200)); // exemple value
+            plateforms.Add(new Plateform(new Vector2f(50, 240), "BlocksMisc.png", game)); // example value
         }
         
         public void Draw()

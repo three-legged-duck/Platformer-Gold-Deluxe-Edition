@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SFML.Graphics;
 using SFML.Window;
+using SFML.Audio;
 
 namespace Platformer_The_Game
 {
@@ -14,6 +15,7 @@ namespace Platformer_The_Game
         List<string> menuList;
         List<Text> menuBtns = new List<Text>();
         Text carretLeft, carretRight;
+        Music backgroundMusic;
 
         const int carretLeftPos = 50;
         const int carretRightPos = 25;
@@ -26,7 +28,7 @@ namespace Platformer_The_Game
         Sprite backgroundSprite;
         Texture backgroundTexture;
 
-        public MenuState (Font font,string img, params string[] menuItems)
+        public MenuState (Font font,string img, string music, params string[] menuItems)
         {
             MouseClickHandler = new EventHandler<MouseButtonEventArgs>(onMousePressed);
             MouseMoveHandler = new EventHandler<MouseMoveEventArgs>(onMouseMoved);
@@ -35,10 +37,13 @@ namespace Platformer_The_Game
             backgroundImage = new Image(img);
             backgroundTexture = new Texture(backgroundImage);
             backgroundSprite = new Sprite(backgroundTexture);
+            backgroundMusic = new Music(music);
+            backgroundMusic.Loop = true;
         }
 
         public void Initialize(Game game)
         {
+            backgroundMusic.Play();
             this.game = game;
             backgroundSprite.Scale = new Vector2f(game.w.Size.X / backgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / backgroundSprite.GetGlobalBounds().Height);
             game.w.MouseButtonPressed += MouseClickHandler;
@@ -95,6 +100,7 @@ namespace Platformer_The_Game
         {
             game.w.MouseButtonPressed -= MouseClickHandler;
             game.w.MouseMoved -= MouseMoveHandler;
+            backgroundMusic.Stop();
         }
 
         public void onMousePressed(object sender, MouseButtonEventArgs args)

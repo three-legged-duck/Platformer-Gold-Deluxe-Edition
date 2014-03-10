@@ -25,14 +25,14 @@ namespace Platformer_The_Game
             this.game = g;
             KeyReleasedHandler = delegate(object sender, KeyEventArgs args)
             {
-                Uninitialize();
+                EndSplash();
             };
 
             MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
             {
                 if (btn.Button == Mouse.Button.Left)
                 {
-                    Uninitialize();
+                    EndSplash();
                 }
             };
 
@@ -65,7 +65,7 @@ namespace Platformer_The_Game
             }
             else
             {
-                Uninitialize();
+                EndSplash();
             }
         }
 
@@ -74,18 +74,20 @@ namespace Platformer_The_Game
             game.w.Draw(SplashSprite);
         }
 
+        public void EndSplash()
+        {
+            game.State = nextState;
+        }
+
         public void Uninitialize()
         {
             game.w.KeyReleased -= KeyReleasedHandler;
             game.w.MouseButtonPressed -= MouseBtnHandler;
-
-            game.state = nextState;
-            nextState.Initialize(game);
         }
 
         public void OnEvent(Settings.Action a)
         {
-            //Uninitialize();
+            //EndSplash();
         }
     }
 }

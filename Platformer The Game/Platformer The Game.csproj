@@ -53,6 +53,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="sfmlnet-audio-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -115,7 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts\arial.ttf" />
-    <None Include="res\shaders\flipTexture.frag" />
+    <None Include="res\music\eddsworldCreditsTheme.ogg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\dlls\csfml-audio-2.dll" />
@@ -127,6 +130,8 @@
     <Content Include="res\images\character1.bmp" />
     <Content Include="res\images\floor.bmp" />
     <Content Include="res\images\lvl1bg.png" />
+    <Content Include="icon.ico" />
+    <Content Include="res\images\icon.png" />
     <Content Include="res\images\menuBg.png" />
     <Content Include="res\images\splash.bmp" />
   </ItemGroup>

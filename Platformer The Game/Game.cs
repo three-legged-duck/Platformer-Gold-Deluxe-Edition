@@ -11,7 +11,20 @@ namespace Platformer_The_Game
     class Game
     {
         public RenderWindow w;
-        public IState state;
+        IState state;
+        public IState State
+        {
+            get { return state; }
+            set
+            {
+                if (state != null)
+                {
+                    state.Uninitialize();
+                }
+                state = value;
+                state.Initialize(this);
+            }
+        }
         Font font = new Font("arial.ttf");
         public Settings settings  = Settings.Load();
 
@@ -21,6 +34,7 @@ namespace Platformer_The_Game
             w = new RenderWindow(new VideoMode(800, 600), "Platformer", SFML.Window.Styles.Close);
             w.SetFramerateLimit(60);
             w.SetKeyRepeatEnabled(false);
+            w.SetIcon(128, 128, (new Image("icon.png")).Pixels);
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
             w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 
@@ -30,15 +44,16 @@ namespace Platformer_The_Game
 
         public void RunMainLoop()
         {
-            
-            MenuState menu = new MenuState(font, "menuBg.bmp", "Jouer", "Options", "Quitter");
+
+            Initialize();
+
+            MenuState menu = new MenuState(font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Jouer", "Options", "Quitter");
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.selectedPos)
                 {
                     case 0:
-                        state = new GameState();
-                        state.Initialize(this);
+                        State = new GameState();
                         break;
                     case 2:
                         Close();
@@ -47,9 +62,8 @@ namespace Platformer_The_Game
             };
             
 
-            state =  new SplashState("splash.bmp", true, menu);
+            State = new SplashState("splash.bmp", true, menu);
             
-            Initialize();
             while (w.IsOpen())
             {
                 w.DispatchEvents();
@@ -66,7 +80,6 @@ namespace Platformer_The_Game
 
         private void Initialize()
         {
-            state.Initialize(this);
         }
 
         private void Update()

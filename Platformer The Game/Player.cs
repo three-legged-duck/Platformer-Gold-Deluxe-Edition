@@ -9,24 +9,23 @@ namespace Platformer_The_Game
 {
     class Player : Unit
     {
-        int weight;
         Vector2f acceleration = new Vector2f();
 
-        public Player(Vector2f spawnPos, int weight, Game game)
-            : base(game, "character1.bmp")
+        public Player(Vector2f spawnPos, int weight, Game game, GameState state)
+            : base(game, "character1.bmp", state)
         {
-            this.weight = weight;
+            this.Weight = weight;
             Pos = spawnPos;
-            unitState = UnitState.Stopped;
+            //state = State.Stopped;
             acceleration.X = 0;
-            celerity.X = .0001f;
+            celerity.X = 0f;
         }
 
         public void Initialize()
         { }
-        public void SetState(UnitState state)
+        public void SetState(State state)
         {
-            this.unitState = state;
+            this.state = state;
         }
 
         public void Event(Settings.Action action)
@@ -34,12 +33,18 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Right:
-                    acceleration.X = .1f;
+                    if (celerity.X == 0)
+                        celerity.X = 4;
+                    acceleration.X = .2f;
                     break;
                 case Settings.Action.Left:
-                    acceleration.X = -.1f;
+                    if (celerity.X == 0)
+                        celerity.X = -4;
+                    acceleration.X = -.2f;
                     break;
                 case Settings.Action.Jump:
+                    if (celerity.Y == 0f)
+                        celerity.Y = 3;
                     break;
 
             }
@@ -47,7 +52,10 @@ namespace Platformer_The_Game
         public override void Update()
         {
             celerity.X += acceleration.X;
-            acceleration.X = 0;
+            acceleration.X *= -.4f;
+            if (Math.Abs(acceleration.X) < .00002f)
+                celerity.X = 0;
+
             base.Update();
         }
 

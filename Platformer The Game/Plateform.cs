@@ -14,7 +14,8 @@ namespace Platformer_The_Game
         Image image;
         Texture texture;
         Sprite sprite;
-        public readonly RectangleShape Hitbox;
+        public readonly Hitbox hitbox;
+        RectangleShape box; // FIXME
 
         public Plateform(Vector2f pos, string imgPath, Game game)
         {
@@ -23,9 +24,10 @@ namespace Platformer_The_Game
             image = new Image(imgPath);
             texture = new Texture(image);
             sprite = new Sprite(texture);
-            Hitbox = new RectangleShape();
-            Hitbox.Position = new Vector2f();
-            sprite.Scale = new Vector2f(game.w.Size.X / sprite.GetGlobalBounds().Width, 1);
+            box = new RectangleShape(new Vector2f(sprite.GetLocalBounds().Width, sprite.GetLocalBounds().Height)); // FIXME
+            box.Position = this.Pos;
+            hitbox = new Hitbox(new List<RectangleShape> { box }); // FIXME use the real RectShape list
+            sprite.Scale = new Vector2f(game.w.Size.X / sprite.GetLocalBounds().Width, 1);
             sprite.Position = Pos;
 
         } 

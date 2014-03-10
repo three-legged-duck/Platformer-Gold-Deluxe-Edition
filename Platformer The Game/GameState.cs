@@ -11,8 +11,8 @@ namespace Platformer_The_Game
     {
         Game game;
         Player player;
-        List<Plateform> plateforms;
-
+         public List<Plateform> plateforms;
+        
 
         public GameState()
         {
@@ -24,7 +24,7 @@ namespace Platformer_The_Game
             this.game = game;
             plateforms = new List<Plateform>();
 
-            player = new Player(new Vector2f(50, 200), 100, game); // exemple value
+            player = new Player(new Vector2f(50, 200), 100, game, this); // exemple value
             plateforms.Add(new Plateform(new Vector2f(50, 240), "floor.bmp", game)); // example value
         }
         
@@ -37,9 +37,10 @@ namespace Platformer_The_Game
         
         public void Update()
         {
-            player.Update();
             foreach (Plateform plateform in plateforms)
                 plateform.Update();
+            player.Update();
+            
 
         }
         

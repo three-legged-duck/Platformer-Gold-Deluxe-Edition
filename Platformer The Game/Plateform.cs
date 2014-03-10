@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SFML.Graphics;
 using SFML.Window;
+using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
@@ -11,7 +12,6 @@ namespace Platformer_The_Game
     {
         Game game;
         public Vector2f Pos { get; set; }
-        Image image;
         Texture texture;
         Sprite sprite;
         public readonly Hitbox hitbox;
@@ -21,13 +21,13 @@ namespace Platformer_The_Game
         {
             this.Pos = pos;
             this.game = game;
-            image = new Image(imgPath);
-            texture = new Texture(image);
+            texture = new Texture(imgPath);
+            texture.Repeated = true;
             sprite = new Sprite(texture);
             box = new RectangleShape(new Vector2f(sprite.GetLocalBounds().Width, sprite.GetLocalBounds().Height)); // FIXME
             box.Position = this.Pos;
             hitbox = new Hitbox(new List<RectangleShape> { box }); // FIXME use the real RectShape list
-            sprite.Scale = new Vector2f(game.w.Size.X / sprite.GetLocalBounds().Width, 1);
+            sprite.TextureRect = new IntRect(0, 0, (int)(game.w.Size.X), sprite.TextureRect.Height);
             sprite.Position = Pos;
 
         } 

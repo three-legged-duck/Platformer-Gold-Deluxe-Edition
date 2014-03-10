@@ -15,6 +15,7 @@ namespace Platformer_The_Game
         enum Facing { Left, Right };
         Facing direction;
         bool moving;
+        public bool OnGround;
 
         protected Vector2f speed; // TODO : Why no int ?
         Vector2f _pos;
@@ -39,6 +40,7 @@ namespace Platformer_The_Game
             this.gameState = state;
 
             direction = Facing.Right;
+            OnGround = true;
             
             // Visual Appearance
             image = new Image("character1.bmp");
@@ -80,7 +82,11 @@ namespace Platformer_The_Game
                     direction = Facing.Right;
                     break;
                 case Settings.Action.Jump:
-
+                    if (OnGround)
+                    {
+                        OnGround = false;
+                        speed.Y = -15;
+                    }
                     break;
 
             }
@@ -91,7 +97,9 @@ namespace Platformer_The_Game
             if (moving) speed.X += (direction == Facing.Left ? -1 : 1);
             else if (speed.X < -1 || speed.X > 1) speed.X += direction == Facing.Left ? 1 : -1;
             else speed.X = 0;
+            if (!OnGround && speed.Y < 100) speed.Y++;
             _pos.X += speed.X;
+            _pos.Y += speed.Y;
             moving = false;
         }
 

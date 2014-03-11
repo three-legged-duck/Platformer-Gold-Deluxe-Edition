@@ -5,6 +5,7 @@ using System.Text;
 using SFML.Graphics;
 using SFML.Window;
 using System.Diagnostics;
+using SFML.Audio;
 
 namespace Platformer_The_Game
 {
@@ -34,6 +35,9 @@ namespace Platformer_The_Game
         GameState gameState;
         protected readonly Game game;
 
+        SoundBuffer SoundBuffer;
+        Sound sound;
+
         public Player(Game game, GameState state, Vector2f pos)
         {
             this.game = game;
@@ -53,6 +57,9 @@ namespace Platformer_The_Game
             direction = Facing.Right;
             //state = State.Stopped;
             this.Pos = pos;
+
+            SoundBuffer = new SoundBuffer("bump.aiff");
+            sound = new Sound();
         }
 
         public void Initialize()
@@ -148,6 +155,8 @@ namespace Platformer_The_Game
             }
             else
             {
+                sound.SoundBuffer = SoundBuffer;
+                sound.Play();
                 _pos.Y = collision.Top + collision.Height;
                 Hitbox.MoveTo(_pos);
                 sprite.Position = _pos;

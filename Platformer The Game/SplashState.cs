@@ -10,8 +10,6 @@ namespace Platformer_The_Game
     class SplashState : IState
     {
         Game game;
-        Image SplashImg;
-        Texture SplashTexture;
         Sprite SplashSprite;
         byte alpha = 0;
         const byte max = 255; //max for rgb drawing
@@ -48,9 +46,7 @@ namespace Platformer_The_Game
 
         public SplashState(string img, bool doScale, IState nextState)
         {
-            SplashImg = new Image(img);
-            SplashTexture = new Texture(SplashImg);
-            SplashSprite = new Sprite(SplashTexture);
+            SplashSprite = new Sprite(new Texture(img));
             this.scale = doScale;
             this.nextState = nextState;
         }

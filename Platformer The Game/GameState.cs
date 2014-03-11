@@ -16,13 +16,15 @@ namespace Platformer_The_Game
 
         Music backgroundMusic; 
         public List<Platform> platforms;
-        
+
+        Sprite BackgroundSprite;
 
         public GameState()
         {
             
         }
         bool Initialized = false;
+
         public void Initialize(Game game)
         {
             if (Initialized)
@@ -32,21 +34,29 @@ namespace Platformer_The_Game
                 return;
             }
             this.game = game;
+
+            BackgroundSprite = new Sprite(new Texture("lvl1bg.png"));
+            BackgroundSprite.Scale = new Vector2f(game.w.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
+
             backgroundMusic = new Music("gameLoop.ogg");
             backgroundMusic.Play();
             backgroundMusic.Loop = true;
             platforms = new List<Platform>();
 
             player = new Player(game, this, new Vector2f(50, 180));
-            platforms.Add(new Platform(new Vector2f(50, 240), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
+            platforms.Add(new Platform(new Vector2f(180, 280), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
+            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int)game.w.Size.X / 2, 40), "BlocksMisc.png", game));
             Initialized = true;
         }
         
         public void Draw()
         {
+            game.w.Draw(BackgroundSprite);
             foreach (Platform plateform in platforms)
+            {
                 plateform.Draw();
+            }
             player.Draw();
         }
         
@@ -62,7 +72,6 @@ namespace Platformer_The_Game
                 FloatRect rect;
                 if (player.Hitbox.Collides(platform.hitbox, out rect))
                 {
-                    Debug.WriteLine("Collided");
                     player.Collided(platform, rect);
                 }
             }
@@ -78,7 +87,7 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Pause:
-                    MenuState pause = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Reprendre", "Retour au Menu Principal");
+                    MenuState pause = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Reprendre", "Retour au menu principal");
                     pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
                     {
                         switch (args.selectedPos)

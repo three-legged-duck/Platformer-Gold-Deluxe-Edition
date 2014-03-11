@@ -35,7 +35,7 @@ namespace Platformer_The_Game
         public void Draw()
         {
             game.w.Draw(sprite);
-            // game.w.Draw(hitbox);
+            //game.w.Draw(hitbox);
         }
     }
 }

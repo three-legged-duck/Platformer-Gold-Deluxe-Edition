@@ -41,9 +41,12 @@ namespace Platformer_The_Game
             backgroundMusic.Loop = true;
         }
 
+
+
         bool Initialized = false;
         public void Initialize(Game game)
         {
+            nextmillis = System.Environment.TickCount + 150;
             backgroundMusic.Play();
             game.w.MouseButtonPressed += MouseClickHandler;
             game.w.MouseMoved += MouseMoveHandler; if (Initialized) return;
@@ -139,7 +142,7 @@ namespace Platformer_The_Game
                 fr.Width + carretLeftPos + carretRightPos, fr.Height);
         }
 
-        int nextmillis = 0;
+        int nextmillis;
         public void OnEvent(Settings.Action action)
         {
             if (nextmillis > Environment.TickCount)

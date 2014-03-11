@@ -48,7 +48,7 @@ namespace Platformer_The_Game
             
             spriteSheet = new Image("plateformes.png");
             spriteSheet.CreateMaskFromColor(new Color(0,255,0));
-            Texture blockTexture = new Texture(spriteSheet, new IntRect(0, 32, 32, 32));
+            Texture blockTexture = new Texture(spriteSheet, new IntRect(12 * 32, 0, 32, 32));
             
             platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int)game.w.Size.X - 48, 32), blockTexture, game));
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X , 32), blockTexture, game));

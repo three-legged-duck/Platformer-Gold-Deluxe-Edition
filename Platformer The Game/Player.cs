@@ -64,6 +64,8 @@ namespace Platformer_The_Game
 
         public void Initialize()
         { }
+        
+        int updateSprite = 0;
         int currFrame = 0;
         public void Event(Settings.Action action)
         {
@@ -71,12 +73,20 @@ namespace Platformer_The_Game
             {
                 case Settings.Action.Left:
                     moving = true;
-                    sprite.TextureRect = new IntRect(90 * ((currFrame++ % 6) + 1), 0, -90, 94); 
+                    if (direction == Facing.Right || updateSprite-- == 0)
+                    {
+                        sprite.TextureRect = new IntRect(90 * ((currFrame++ % 6) + 1), 0, -90, 94); 
+                        updateSprite = 5;
+                    }
                     direction = Facing.Left;
                     break;
                 case Settings.Action.Right:
                     moving = true;
-                    sprite.TextureRect = new IntRect(90 * (currFrame++ % 6), 0, 90, 94); 
+                    if (direction == Facing.Left || updateSprite-- == 0)
+                    {
+                        sprite.TextureRect = new IntRect(90 * (currFrame++ % 6), 0, 90, 94);
+                        updateSprite = 5;
+                    }
                     direction = Facing.Right;
                     break;
                 case Settings.Action.Jump:
@@ -92,7 +102,7 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            if (moving && Math.Abs(speed.X) < 100) speed.X += (direction == Facing.Left ? -1 : 1);
+            if (moving && Math.Abs(speed.X) < 75) speed.X += (direction == Facing.Left ? -1 : 1);
             else if (!moving && (speed.X < -1 || speed.X > 1)) speed.X += direction == Facing.Left ? 1 : -1;
             else if (!moving) speed.X = 0;
             if (!OnGround && speed.Y < 100) speed.Y++;

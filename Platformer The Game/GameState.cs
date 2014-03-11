@@ -14,7 +14,7 @@ namespace Platformer_The_Game
         Game game;
         Player player;
 
-        Music backgroundMusic; 
+        Music backgroundMusic;
         public List<Platform> platforms;
 
         Sprite BackgroundSprite;
@@ -37,9 +37,9 @@ namespace Platformer_The_Game
 
             BackgroundSprite = new Sprite(new Texture("lvl1bg.png"));
             BackgroundSprite.Scale = new Vector2f(game.w.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
-
             backgroundMusic = new Music("gameLoop.ogg");
             backgroundMusic.Play();
+            backgroundMusic.Volume = 50f;
             backgroundMusic.Loop = true;
             platforms = new List<Platform>();
 

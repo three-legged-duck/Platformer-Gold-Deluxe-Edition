@@ -34,8 +34,10 @@ namespace Platformer_The_Game
         }
         public void Draw()
         {
-            game.w.Draw(sprite);
-            //game.w.Draw(hitbox);
+            if (game.settings.DrawTextures)
+                game.w.Draw(sprite);
+            if (game.settings.DrawHitbox)
+                game.w.Draw(hitbox);
         }
     }
 }

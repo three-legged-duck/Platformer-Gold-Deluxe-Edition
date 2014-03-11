@@ -21,6 +21,10 @@ namespace Platformer_The_Game
         Dictionary<Type, Dictionary<uint, Action>> joystickKeys =
             new Dictionary<Type, Dictionary<uint, Action>>();
         [NonSerialized] const string fileName = "game.settings";
+        [NonSerialized]
+        public bool DrawTextures = true;
+        [NonSerialized]
+        public bool DrawHitbox = false;
 
         private Settings()
         {

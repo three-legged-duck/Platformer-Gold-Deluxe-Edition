@@ -13,7 +13,7 @@ namespace Platformer_The_Game
         Game game;
         private static Font menuFont;
         List<string> menuList;
-        List<Text> menuBtns = new List<Text>();
+        public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
         Text carretLeft, carretRight;
         Music backgroundMusic;
 
@@ -41,13 +41,14 @@ namespace Platformer_The_Game
             backgroundMusic.Loop = true;
         }
 
+        bool Initialized = false;
         public void Initialize(Game game)
         {
             backgroundMusic.Play();
+            game.w.MouseButtonPressed += MouseClickHandler;
+            game.w.MouseMoved += MouseMoveHandler; if (Initialized) return;
             this.game = game;
             backgroundSprite.Scale = new Vector2f(game.w.Size.X / backgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / backgroundSprite.GetGlobalBounds().Height);
-            game.w.MouseButtonPressed += MouseClickHandler;
-            game.w.MouseMoved += MouseMoveHandler;
             carretLeft = new Text("- ", menuFont);
             carretRight = new Text(" -", menuFont);
             for (int i = 0; i < menuList.Count; i++)
@@ -61,6 +62,7 @@ namespace Platformer_The_Game
 
                 menuBtns.Add(menuItem);
             }
+            Initialized = true;
         }
 
         public void Update()

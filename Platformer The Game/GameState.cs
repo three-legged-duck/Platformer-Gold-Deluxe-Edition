@@ -35,8 +35,8 @@ namespace Platformer_The_Game
                 return;
             }
             this.game = game;
-            
-            BackgroundSprite = new Sprite(new Texture("lvl1bg.png"));
+
+            BackgroundSprite = new Sprite(new Texture("backgroundStars.bmp"));
             BackgroundSprite.Scale = new Vector2f(game.w.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
             backgroundMusic = new Music("gameLoop.ogg");
             backgroundMusic.Play();

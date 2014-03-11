@@ -48,7 +48,6 @@ namespace Platformer_The_Game
             Initialize();
 
             MenuState menu = Utils.CreateMainMenu(this);
-            
 
             State = new SplashState("splash.bmp", true, menu);
             

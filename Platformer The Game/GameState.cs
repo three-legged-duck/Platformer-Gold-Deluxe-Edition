@@ -15,6 +15,7 @@ namespace Platformer_The_Game
         Player player;
 
         Music backgroundMusic;
+        Image spriteSheet;
         public List<Platform> platforms;
 
         Sprite BackgroundSprite;
@@ -34,7 +35,7 @@ namespace Platformer_The_Game
                 return;
             }
             this.game = game;
-
+            
             BackgroundSprite = new Sprite(new Texture("lvl1bg.png"));
             BackgroundSprite.Scale = new Vector2f(game.w.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
             backgroundMusic = new Music("gameLoop.ogg");
@@ -44,9 +45,14 @@ namespace Platformer_The_Game
             platforms = new List<Platform>();
 
             player = new Player(game, this, new Vector2f(50, 180));
-            platforms.Add(new Platform(new Vector2f(180, 280), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
-            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
-            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int)game.w.Size.X / 2, 40), "BlocksMisc.png", game));
+            
+            spriteSheet = new Image("plateformes.png");
+            spriteSheet.CreateMaskFromColor(new Color(0,255,0));
+            Texture blockTexture = new Texture(spriteSheet, new IntRect(0, 32, 32, 32));
+            
+            platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int)game.w.Size.X - 48, 32), blockTexture, game));
+            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X , 32), blockTexture, game));
+            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int)game.w.Size.X - 192, 32), blockTexture, game));
             Initialized = true;
         }
         

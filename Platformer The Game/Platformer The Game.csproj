@@ -134,6 +134,7 @@
     <Content Include="icon.ico" />
     <Content Include="res\images\icon.png" />
     <Content Include="res\images\menuBg.png" />
+    <Content Include="res\images\plateformes.png" />
     <Content Include="res\images\splash.bmp" />
     <Content Include="res\music\bump.aiff" />
   </ItemGroup>

@@ -39,6 +39,8 @@ namespace Platformer_The_Game
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
             w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 
             w.JoystickButtonPressed += new EventHandler<JoystickButtonEventArgs>(OnJoyPressed);
+            w.JoystickButtonReleased += new EventHandler<JoystickButtonEventArgs>(OnJoyReleased);
+            w.JoystickMoved += new EventHandler<JoystickMoveEventArgs>(OnJoyAxisMoved);
             w.Closed += new EventHandler(OnClosed);
         }
 
@@ -75,6 +77,14 @@ namespace Platformer_The_Game
             {
                 state.OnEvent(settings.GetAction(state.GetType(), key));
             }
+            foreach (KeyValuePair<Joystick.Axis, float> axis in axisPressed)
+            {
+                state.OnEvent(settings.GetAction(state.GetType(), axis.Key, axis.Value));
+            }
+            foreach (uint key in joyPressed)
+            {
+                state.OnEvent(settings.GetAction(state.GetType(), key));
+            }
             state.Update();
         }
 
@@ -94,9 +104,24 @@ namespace Platformer_The_Game
             keyPressed.Remove(e.Code);
         }
 
-        private void OnJoyPressed(object sender, JoystickButtonEventArgs btn)
+        HashSet<uint> joyPressed = new HashSet<uint>();
+        private void OnJoyPressed(object sender, JoystickButtonEventArgs e)
         {
-            state.OnEvent(settings.GetAction(this.GetType(), btn.Button));
+            joyPressed.Add(e.Button);
+        }
+
+        private void OnJoyReleased(object sender, JoystickButtonEventArgs e)
+        {
+            joyPressed.Remove(e.Button);
+        }
+
+        Dictionary<Joystick.Axis, float> axisPressed = new Dictionary<Joystick.Axis, float>();
+        private void OnJoyAxisMoved(object sender, JoystickMoveEventArgs args)
+        {
+            if (args.Position < -50 || args.Position > 50)
+                axisPressed[args.Axis] = args.Position;
+            else
+                axisPressed.Remove(args.Axis);
         }
 
         private void OnClosed(object sender, EventArgs e)

@@ -48,9 +48,9 @@ namespace Platformer_The_Game
         {
             string[] menuItems = new string[] 
             {
-                "Draw Textures : " + (game.settings.DrawTextures ? "On" : "Off"),
-                "Draw Hitbox : " + (game.settings.DrawHitbox ? "On" : "Off"),
-                "Return"
+                "Afficher textures : " + (game.settings.DrawTextures ? "oui" : "non"),
+                "Afficher masques de collision : " + (game.settings.DrawHitbox ? "oui" : "non"),
+                "Retour"
             };
             MenuState options = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
             
@@ -60,11 +60,11 @@ namespace Platformer_The_Game
                 {
                     case 0:
                         game.settings.DrawTextures = !game.settings.DrawTextures;
-                        options.menuBtns[0].DisplayedString = "Draw Textures : " + (game.settings.DrawTextures ? "On" : "Off");
+                        options.menuBtns[0].DisplayedString = "Afficher textures : " + (game.settings.DrawTextures ? "oui" : "non");
                         break;
                     case 1:
                         game.settings.DrawHitbox = !game.settings.DrawHitbox;
-                        options.menuBtns[1].DisplayedString = "Draw Hitbox : " + (game.settings.DrawHitbox ? "On" : "Off");
+                        options.menuBtns[1].DisplayedString = "Afficher masques de collision : " + (game.settings.DrawHitbox ? "oui" : "non");
                         break;
                     case 2:
                         game.State = returnState;

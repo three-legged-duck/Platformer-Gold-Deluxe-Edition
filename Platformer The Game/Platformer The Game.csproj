@@ -127,13 +127,12 @@
     <Content Include="res\dlls\csfml-window-2.dll" />
     <Content Include="res\dlls\libsndfile-1.dll" />
     <Content Include="res\dlls\openal32.dll" />
-    <Content Include="res\images\BlocksMisc.png" />
+    <Content Include="res\images\backgroundStars.bmp" />
     <Content Include="res\images\character.png" />
     <Content Include="res\images\floor.bmp" />
-    <Content Include="res\images\lvl1bg.png" />
     <Content Include="icon.ico" />
     <Content Include="res\images\icon.png" />
-    <Content Include="res\images\menuBg.png" />
+    <Content Include="res\images\menuBg.bmp" />
     <Content Include="res\images\plateformes.png" />
     <Content Include="res\images\splash.bmp" />
     <Content Include="res\music\bump.aiff" />

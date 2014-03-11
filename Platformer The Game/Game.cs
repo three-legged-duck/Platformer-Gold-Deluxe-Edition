@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
@@ -96,11 +97,13 @@ namespace Platformer_The_Game
         HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
         private void OnKeyPressed(object sender, KeyEventArgs e)
         {
+            Debug.WriteLine("Pressed : " + e.Code.ToString());
             keyPressed.Add(e.Code);
         }
 
         private void OnKeyReleased(object sender, KeyEventArgs e)
         {
+            Debug.WriteLine("Released : " + e.Code);
             keyPressed.Remove(e.Code);
         }
 

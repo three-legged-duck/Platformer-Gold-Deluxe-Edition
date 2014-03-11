@@ -102,9 +102,16 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            if (moving && Math.Abs(speed.X) < 75) speed.X += (direction == Facing.Left ? -1 : 1);
-            else if (!moving && (speed.X < -1 || speed.X > 1)) speed.X += direction == Facing.Left ? 1 : -1;
-            else if (!moving) speed.X = 0;
+            if (moving)
+            {
+                if (Math.Abs(speed.X) < 75) speed.X += (direction == Facing.Left ? -1 : 1);
+            } // below : not moving
+            else if (-1 < speed.X && speed.X < 1) speed.X = 0;
+            else
+            {
+                if (speed.X > 0) speed.X--;
+                else speed.X++;
+            }
             if (!OnGround && speed.Y < 100) speed.Y++;
             else if (OnGround && speed.Y != 0) speed.Y = 0;
             _pos.X = Math.Min(Math.Max(_pos.X + speed.X, 0), 800 - sprite.GetLocalBounds().Width);

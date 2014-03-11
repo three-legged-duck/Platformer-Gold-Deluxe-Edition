@@ -7,22 +7,61 @@ using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    class Hitbox
+    class Hitbox : Drawable
     {
-        List<RectangleShape> shape;
-
-        public Hitbox(List<RectangleShape> shape)
+        public List<FloatRect> shapes;
+        public List<FloatRect> effectiveShapes;
+        public Hitbox(List<FloatRect> shape)
         {
-            this.shape = shape;
+            this.shapes = shape;
+            this.effectiveShapes = new List<FloatRect>(shapes.Count);
         }
-        public void Update(Vector2f newPos) // Called in Unit.Update()
+        public void MoveTo(Vector2f newPos) // Called in Unit.Update()
         {
-            foreach (RectangleShape rect in shape)
+            effectiveShapes.Clear();
+            foreach(FloatRect currShape in shapes)
             {
-                rect.Position = new Vector2f(newPos.X, newPos.Y);
+                FloatRect copy = currShape;
+                copy.Left += newPos.X;
+                copy.Top += newPos.Y;
+                effectiveShapes.Add(copy);
             }
         }
-        
 
+        public bool Collides(Hitbox other)
+        {
+            FloatRect overlap;
+            return Collides(other, out overlap); 
+        }
+
+        public bool Collides(Hitbox other, out FloatRect overlap)
+        {
+            overlap = new FloatRect();
+            foreach (FloatRect shapeOther in other.effectiveShapes)
+            {
+                foreach (FloatRect shapeHere in effectiveShapes)
+                {
+                    if (shapeOther.Intersects(shapeHere, out overlap))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Utility method
+        public void Draw(RenderTarget target, RenderStates states)
+        {
+            foreach (FloatRect rect in this.effectiveShapes)
+            {
+                RectangleShape boundingBox = new RectangleShape(new Vector2f(rect.Width, rect.Height));
+                boundingBox.Position = new Vector2f(rect.Left, rect.Top);
+                boundingBox.OutlineColor = Color.Red;
+                boundingBox.FillColor = Color.Transparent;
+                boundingBox.OutlineThickness = 3;
+                target.Draw(boundingBox);
+            }
+        }
     }
 }

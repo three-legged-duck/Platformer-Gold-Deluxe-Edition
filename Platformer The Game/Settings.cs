@@ -14,7 +14,7 @@ namespace Platformer_The_Game
     class Settings
     {
         public class Default { }
-        public enum Action { Use, Up, Down, Left, Right, Jump, Run, None };
+        public enum Action { Use, Up, Down, Left, Right, Jump, Run, Pause, None };
         
         Dictionary<Type,Dictionary<Keyboard.Key,Action>> keyboardKeys =
             new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
@@ -38,6 +38,7 @@ namespace Platformer_The_Game
             SetButton(typeof(Default), Keyboard.Key.Right, Action.Right);
             SetButton(typeof(GameState), Keyboard.Key.Space, Action.Jump);
             SetButton(typeof(GameState), Keyboard.Key.LShift, Action.Run);
+            SetButton(typeof(GameState), Keyboard.Key.Escape, Action.Pause);
             SetButton(typeof(Default), 1, Action.Use);
             SetButton(typeof(Default), 2, Action.Up);
             SetButton(typeof(Default), 3, Action.Down);

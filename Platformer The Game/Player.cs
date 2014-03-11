@@ -48,9 +48,7 @@ namespace Platformer_The_Game
             this.sprite = new Sprite(new Texture(image));
 
             // Hitbox
-            this.Hitbox = new Hitbox(new List<RectangleShape> {
-                Utils.NewRectangle(pos.X, pos.Y, sprite.GetGlobalBounds().Width, sprite.GetGlobalBounds().Height)
-            });
+            this.Hitbox = new Hitbox(new List<FloatRect> { sprite.GetLocalBounds() });
             direction = Facing.Right;
             //state = State.Stopped;
             this.Pos = pos;
@@ -94,32 +92,37 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            if (moving) speed.X += (direction == Facing.Left ? -1 : 1);
-            else if (speed.X < -1 || speed.X > 1) speed.X += direction == Facing.Left ? 1 : -1;
-            else speed.X = 0;
+            if (moving && Math.Abs(speed.X) < 100) speed.X += (direction == Facing.Left ? -1 : 1);
+            else if (!moving && (speed.X < -1 || speed.X > 1)) speed.X += direction == Facing.Left ? 1 : -1;
+            else if (!moving) speed.X = 0;
             if (!OnGround && speed.Y < 100) speed.Y++;
-            _pos.X += speed.X;
-            _pos.Y += speed.Y;
+            else if (OnGround && speed.Y != 0) speed.Y = 0;
+            _pos.X = Math.Min(Math.Max(_pos.X + speed.X, 0), 800 - sprite.GetLocalBounds().Width);
+            _pos.Y = Math.Min(Math.Max(_pos.Y + speed.Y, 0), 600 - sprite.GetLocalBounds().Height);
+            Hitbox.MoveTo(_pos);
             moving = false;
+            OnGround = false;
+            sprite.Position = _pos;
         }
 
         public void Draw()
         {
-            sprite.Position = _pos;
             game.w.Draw(sprite);
-            Vector2f size = new Vector2f(sprite.GetGlobalBounds().Width, sprite.GetGlobalBounds().Height);
-            RectangleShape boundingBox = new RectangleShape(size);
-            boundingBox.Position = _pos;
-            boundingBox.OutlineColor = Color.Red;
-            boundingBox.FillColor = Color.Transparent;
-            boundingBox.OutlineThickness = 3;
-            game.w.Draw(boundingBox);
         }
 
         public void Uninitialize()
         {
 
         }
-        
+
+
+        public void Collided(Platform platform, FloatRect collision)
+        {
+            _pos.Y = collision.Top - sprite.TextureRect.Height;
+            Hitbox.MoveTo(_pos);
+            sprite.Position = _pos;
+            OnGround = true;
+
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace Platformer_The_Game
                 state.Initialize(this);
             }
         }
-        Font font = new Font("arial.ttf");
+        public Font font = new Font("arial.ttf");
         public Settings settings  = Settings.Load();
 
         public Game()
@@ -47,19 +47,7 @@ namespace Platformer_The_Game
 
             Initialize();
 
-            MenuState menu = new MenuState(font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Jouer", "Options", "Quitter");
-            menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
-            {
-                switch (args.selectedPos)
-                {
-                    case 0:
-                        State = new GameState();
-                        break;
-                    case 2:
-                        Close();
-                        break;
-                }
-            };
+            MenuState menu = Utils.CreateMainMenu(this);
             
 
             State = new SplashState("splash.bmp", true, menu);
@@ -117,7 +105,7 @@ namespace Platformer_The_Game
             Close();
         }
 
-        private void Close()
+        public void Close()
         {
             w.Close();
             System.Environment.Exit(0);

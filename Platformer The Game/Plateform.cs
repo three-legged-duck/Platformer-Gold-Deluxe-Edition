@@ -16,11 +16,10 @@ namespace Platformer_The_Game
         Sprite sprite;
         public readonly Hitbox hitbox;
         
-        public Platform(Vector2f pos, Vector2i size, string imgPath, Game game)
+        public Platform(Vector2f pos, Vector2i size, Texture texture, Game game)
         {
             this.Pos = pos;
             this.game = game;
-            texture = new Texture(imgPath);
             texture.Repeated = true;
             sprite = new Sprite(texture);
             sprite.TextureRect = new IntRect(0, 0, size.X, size.Y);

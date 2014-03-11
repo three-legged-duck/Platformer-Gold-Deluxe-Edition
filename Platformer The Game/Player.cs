@@ -72,21 +72,11 @@ namespace Platformer_The_Game
                 case Settings.Action.Left:
                     moving = true;
                     sprite.TextureRect = new IntRect(90 * ((currFrame++ % 6) + 1), 0, -90, 94); 
-/*                    if (direction == Facing.Right)
-                    {
-                        Debug.WriteLine("Changed : Left");
-                        sprite.TextureRect = new IntRect((int)sprite.GetLocalBounds().Width, 0, (int)-sprite.GetLocalBounds().Width, (int)sprite.GetLocalBounds().Height);
-                    }*/
                     direction = Facing.Left;
                     break;
                 case Settings.Action.Right:
                     moving = true;
                     sprite.TextureRect = new IntRect(90 * (currFrame++ % 6), 0, 90, 94); 
-                    /*if (direction == Facing.Left)
-                    {
-                        Debug.WriteLine("Changed : Right");
-                        sprite.TextureRect = new IntRect(0, 0, (int)sprite.GetLocalBounds().Width, (int)sprite.GetLocalBounds().Height);
-                    } */ 
                     direction = Facing.Right;
                     break;
                 case Settings.Action.Jump:
@@ -146,7 +136,6 @@ namespace Platformer_The_Game
         {
             if (platform.Pos.Y + platform.hitbox.effectiveShapes[0].Height > Pos.Y + sprite.GetLocalBounds().Height)
             {
-                //if (collision.Top - Pos.Y
                 _pos.Y = collision.Top - sprite.TextureRect.Height;
                 Hitbox.MoveTo(_pos);
                 sprite.Position = _pos;

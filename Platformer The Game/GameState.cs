@@ -93,7 +93,7 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Pause:
-                    MenuState pause = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Reprendre", "Options", "Retour au Menu Principal");
+                    MenuState pause = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Reprendre", "Options", "Retour au menu principal");
                     pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
                     {
                         switch (args.selectedPos)
@@ -103,6 +103,9 @@ namespace Platformer_The_Game
                                 break;
                             case 1:
                                 game.State = Utils.CreateOptionsMenu(this.game, pause);
+                                break;
+                            case 2:
+                                game.State = Utils.CreateMainMenu(this.game);
                                 break;
                         }
                     };

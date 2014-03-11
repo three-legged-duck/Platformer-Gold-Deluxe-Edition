@@ -20,6 +20,9 @@ namespace Platformer_The_Game
             new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
         Dictionary<Type, Dictionary<uint, Action>> joystickKeys =
             new Dictionary<Type, Dictionary<uint, Action>>();
+        Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>> joystickAxis =
+            new Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>>();
+
         [NonSerialized] const string fileName = "game.settings";
         [NonSerialized]
         public bool DrawTextures = true;
@@ -28,10 +31,7 @@ namespace Platformer_The_Game
 
         private Settings()
         {
-            SetButton(typeof(GameState), Keyboard.Key.E, Action.Use);
-
-
-            SetButton(typeof(MenuState), Keyboard.Key.Return, Action.Use);
+            // Keyboard
             SetButton(typeof(Default), Keyboard.Key.W, Action.Up);
             SetButton(typeof(Default), Keyboard.Key.S, Action.Down);
             SetButton(typeof(Default), Keyboard.Key.A, Action.Left);
@@ -40,16 +40,21 @@ namespace Platformer_The_Game
             SetButton(typeof(Default), Keyboard.Key.Down, Action.Down);
             SetButton(typeof(Default), Keyboard.Key.Left, Action.Left);
             SetButton(typeof(Default), Keyboard.Key.Right, Action.Right);
+
+            SetButton(typeof(GameState), Keyboard.Key.E, Action.Use);
             SetButton(typeof(GameState), Keyboard.Key.Space, Action.Jump);
             SetButton(typeof(GameState), Keyboard.Key.LShift, Action.Run);
             SetButton(typeof(GameState), Keyboard.Key.Escape, Action.Pause);
-            SetButton(typeof(Default), 1, Action.Use);
-            SetButton(typeof(Default), 2, Action.Up);
-            SetButton(typeof(Default), 3, Action.Down);
-            SetButton(typeof(Default), 4, Action.Left);
-            SetButton(typeof(Default), 5, Action.Right);
-            SetButton(typeof(GameState), 6, Action.Jump);
-            SetButton(typeof(GameState), 7, Action.Run);
+            
+            SetButton(typeof(MenuState), Keyboard.Key.Return, Action.Use);
+            
+            // Axis
+            SetButton(typeof(Default), Joystick.Axis.X, Action.Left, Action.Right);
+            SetButton(typeof(Default), Joystick.Axis.Y, Action.Up, Action.Down);
+            SetButton(typeof(GameState), (uint)0, Action.Jump);
+            SetButton(typeof(GameState), 2, Action.Use);
+            SetButton(typeof(GameState), 7, Action.Pause);
+            SetButton(typeof(MenuState), (uint)0, Action.Use);
         }
 
         public Action GetAction(Type state, Keyboard.Key k)
@@ -86,6 +91,29 @@ namespace Platformer_The_Game
             return Action.None;
         }
 
+        public Action GetAction(Type state, Joystick.Axis axis, float position)
+        {
+            Dictionary<Joystick.Axis, Tuple<Action, Action>> tmp;
+            Tuple<Action, Action> a;
+            if (joystickAxis.TryGetValue(state, out tmp)
+                && tmp.TryGetValue(axis, out a))
+            {
+                if (position < -50)
+                    return a.Item1;
+                else
+                    return a.Item2;
+            }
+            if (joystickAxis.TryGetValue(typeof(Default), out tmp)
+                && tmp.TryGetValue(axis, out a))
+            {
+                if (position < -50)
+                    return a.Item1;
+                else
+                    return a.Item2;
+            }
+            return Action.None;
+        }
+
         public void SetButton(Type state, uint k, Action a)
         {
             Dictionary<uint, Action> tmp;
@@ -106,6 +134,17 @@ namespace Platformer_The_Game
                 keyboardKeys.Add(state, tmp);
             }
             tmp.Add(k, a);
+        }
+
+        public void SetButton(Type state, Joystick.Axis axis, Action low, Action high)
+        {
+            Dictionary<Joystick.Axis, Tuple<Action,Action>> tmp;
+            if (!joystickAxis.TryGetValue(state, out tmp))
+            {
+                tmp = new Dictionary<Joystick.Axis, Tuple<Action,Action>>();
+                joystickAxis.Add(state, tmp);
+            }
+            tmp.Add(axis, new Tuple<Action, Action>(low, high));
         }
 
         public void Save()

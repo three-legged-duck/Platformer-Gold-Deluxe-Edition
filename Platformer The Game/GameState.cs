@@ -22,8 +22,15 @@ namespace Platformer_The_Game
         {
             
         }
+        bool Initialized = false;
         public void Initialize(Game game)
         {
+            if (Initialized)
+            {
+                // after main menu
+                backgroundMusic.Play();
+                return;
+            }
             this.game = game;
             backgroundMusic = new Music("gameLoop.ogg");
             backgroundMusic.Play();
@@ -33,6 +40,7 @@ namespace Platformer_The_Game
             player = new Player(game, this, new Vector2f(50, 180));
             platforms.Add(new Platform(new Vector2f(50, 240), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
+            Initialized = true;
         }
         
         public void Draw()
@@ -67,7 +75,28 @@ namespace Platformer_The_Game
 
         public void OnEvent(Settings.Action action)
         {
-            player.Event(action);
+            switch (action)
+            {
+                case Settings.Action.Pause:
+                    MenuState pause = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Reprendre", "Retour au Menu Principal");
+                    pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+                    {
+                        switch (args.selectedPos)
+                        {
+                            case 0:
+                                game.State = this;
+                                break;
+                            case 1:
+                                game.State = Utils.CreateMainMenu(this.game);
+                                break;
+                        }
+                    };
+                    game.State = pause;
+                    break;
+                default:
+                    player.Event(action);
+                    break;
+            }
         }
     }
 }

@@ -22,5 +22,23 @@ namespace Platformer_The_Game
             shape.Position = new Vector2f(sizeX, sizeY);
             return shape;
         }
+
+        public static MenuState CreateMainMenu(Game game)
+        {
+            MenuState menu = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", "Jouer", "Options", "Quitter");
+            menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+            {
+                switch (args.selectedPos)
+                {
+                    case 0:
+                        game.State = new GameState();
+                        break;
+                    case 2:
+                        game.Close();
+                        break;
+                }
+            };
+            return menu;
+        }
     }
 }

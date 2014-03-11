@@ -30,17 +30,23 @@ namespace Platformer_The_Game
 
         public bool Collides(Hitbox other)
         {
+            FloatRect overlap;
+            return Collides(other, out overlap); 
+        }
+
+        public bool Collides(Hitbox other, out FloatRect overlap)
+        {
+            overlap = new FloatRect();
             foreach (FloatRect shapeOther in other.effectiveShapes)
             {
                 foreach (FloatRect shapeHere in effectiveShapes)
                 {
-                    if (shapeOther.Intersects(shapeHere))
+                    if (shapeOther.Intersects(shapeHere, out overlap))
                     {
                         return true;
                     }
                 }
             }
-
             return false;
         }
 

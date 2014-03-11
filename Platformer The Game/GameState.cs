@@ -22,7 +22,6 @@ namespace Platformer_The_Game
         {
             
         }
-
         public void Initialize(Game game)
         {
             this.game = game;
@@ -31,8 +30,9 @@ namespace Platformer_The_Game
             backgroundMusic.Loop = true;
             platforms = new List<Platform>();
 
-            player = new Player(game, this, new Vector2f(50, 200));
-            platforms.Add(new Platform(new Vector2f(50, 240), "BlocksMisc.png", game));
+            player = new Player(game, this, new Vector2f(50, 180));
+            platforms.Add(new Platform(new Vector2f(50, 240), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
+            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X, 40), "BlocksMisc.png", game));
         }
         
         public void Draw()
@@ -51,10 +51,11 @@ namespace Platformer_The_Game
             
             foreach (Platform platform in platforms)
             {
-                if (player.Hitbox.Collides(platform.hitbox))
+                FloatRect rect;
+                if (player.Hitbox.Collides(platform.hitbox, out rect))
                 {
                     Debug.WriteLine("Collided");
-                    player.Collided(platform);
+                    player.Collided(platform, rect);
                 }
             }
         }

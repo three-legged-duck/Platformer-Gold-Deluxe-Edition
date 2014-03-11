@@ -92,15 +92,16 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            if (moving) speed.X += (direction == Facing.Left ? -1 : 1);
-            else if (speed.X < -1 || speed.X > 1) speed.X += direction == Facing.Left ? 1 : -1;
-            else speed.X = 0;
+            if (moving && Math.Abs(speed.X) < 100) speed.X += (direction == Facing.Left ? -1 : 1);
+            else if (!moving && (speed.X < -1 || speed.X > 1)) speed.X += direction == Facing.Left ? 1 : -1;
+            else if (!moving) speed.X = 0;
             if (!OnGround && speed.Y < 100) speed.Y++;
             else if (OnGround && speed.Y != 0) speed.Y = 0;
-            _pos.X += speed.X;
-            _pos.Y += speed.Y;
+            _pos.X = Math.Min(Math.Max(_pos.X + speed.X, 0), 800 - sprite.GetLocalBounds().Width);
+            _pos.Y = Math.Min(Math.Max(_pos.Y + speed.Y, 0), 600 - sprite.GetLocalBounds().Height);
             Hitbox.MoveTo(_pos);
             moving = false;
+            OnGround = false;
             sprite.Position = _pos;
         }
 
@@ -115,9 +116,13 @@ namespace Platformer_The_Game
         }
 
 
-        public void Collided(Platform platform)
+        public void Collided(Platform platform, FloatRect collision)
         {
+            _pos.Y = collision.Top - sprite.TextureRect.Height;
+            Hitbox.MoveTo(_pos);
+            sprite.Position = _pos;
             OnGround = true;
+
         }
     }
 }

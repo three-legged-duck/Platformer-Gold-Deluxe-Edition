@@ -21,7 +21,6 @@ namespace Platformer_The_Game
         public void Initialize(Game g)
         {
             this.game = g;
-            game.w.SetFramerateLimit(240);
             KeyReleasedHandler = delegate(object sender, KeyEventArgs args)
             {
                 EndSplash();
@@ -58,8 +57,8 @@ namespace Platformer_The_Game
             if (!IsFadeOut)
             {
                 SplashSprite.Color = new Color(max, max, max, alpha);
-                alpha++;
-                if (alpha == 255)
+                alpha = (byte)Math.Min(alpha + 4 , 255);
+                if (alpha >= 255)
                 {
                     IsFadeOut = true;
                 }
@@ -67,8 +66,8 @@ namespace Platformer_The_Game
             else
             {
                 SplashSprite.Color = new Color(max, max, max, alpha);
-                alpha--;
-                if (alpha == 0)
+                alpha = (byte)Math.Max(alpha - 4, 0);
+                if (alpha <= 0)
                 {
                     EndSplash();
                 }
@@ -83,7 +82,6 @@ namespace Platformer_The_Game
         public void EndSplash()
         {
             game.State = nextState;
-            game.w.SetFramerateLimit(60);
         }
 
         public void Uninitialize()

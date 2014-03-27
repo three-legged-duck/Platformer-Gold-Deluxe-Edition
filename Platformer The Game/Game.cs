@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.IO;
 
 namespace Platformer_The_Game
 {
@@ -103,6 +104,15 @@ namespace Platformer_The_Game
 
         private void OnKeyReleased(object sender, KeyEventArgs e)
         {
+            if (e.Code == Keyboard.Key.F1)
+            {
+                DirectoryInfo info = new DirectoryInfo("capture");
+                if (!info.Exists) info.Create();
+                long uniqueKey = info.LastWriteTime.Ticks + 1L;
+                string filename = String.Format("capture\\file{0}.png", uniqueKey);
+                w.Capture().SaveToFile(filename);
+            }
+
             Debug.WriteLine("Released : " + e.Code);
             keyPressed.Remove(e.Code);
         }

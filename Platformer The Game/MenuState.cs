@@ -11,6 +11,8 @@ namespace Platformer_The_Game
     class MenuState : IState
     {
         Game game;
+        View view;
+
         private static Font menuFont;
         List<string> menuList;
         public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
@@ -46,22 +48,23 @@ namespace Platformer_The_Game
         bool Initialized = false;
         public void Initialize(Game game)
         {
+            view = game.w.DefaultView;
             nextmillis = System.Environment.TickCount + 150;
             backgroundMusic.Play();
             game.w.MouseButtonPressed += MouseClickHandler;
             game.w.MouseMoved += MouseMoveHandler; if (Initialized) return;
             this.game = game;
-            backgroundSprite.Scale = new Vector2f(game.w.Size.X / backgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / backgroundSprite.GetGlobalBounds().Height);
+            backgroundSprite.Scale = new Vector2f(view.Size.X / backgroundSprite.GetLocalBounds().Width, view.Size.Y / backgroundSprite.GetLocalBounds().Height);
             carretLeft = new Text("- ", menuFont);
             carretRight = new Text(" -", menuFont);
             for (int i = 0; i < menuList.Count; i++)
             {
                 Text menuItem = new Text(menuList[i], menuFont);
-                uint itemWidth = (uint)menuItem.GetGlobalBounds().Width;
+                uint itemWidth = (uint)menuItem.GetLocalBounds().Width;
                 uint itemHeight = menuItem.CharacterSize;
 
-                menuItem.Position = new Vector2f(game.w.Size.X / 2 - itemWidth / 2,
-                    game.w.Size.Y / 2 - menuList.Count * itemHeight / 2 + i * itemHeight);
+                menuItem.Position = new Vector2f(view.Size.X / 2 - itemWidth / 2,
+                    view.Size.Y / 2 - menuList.Count * itemHeight / 2 + i * itemHeight);
 
                 menuBtns.Add(menuItem);
             }
@@ -71,18 +74,19 @@ namespace Platformer_The_Game
         public void Update()
         {
             Text item = menuBtns[selectedPos];
-            uint itemWidth = (uint)item.GetGlobalBounds().Width;
+            uint itemWidth = (uint)item.GetLocalBounds().Width;
             uint itemHeight = item.CharacterSize;
 
-            carretLeft.Position = new Vector2f(game.w.Size.X / 2 - itemWidth / 2 - carretLeftPos,
-                game.w.Size.Y / 2 - menuList.Count * itemHeight / 2 + selectedPos * itemHeight);
+            carretLeft.Position = new Vector2f(view.Size.X / 2 - itemWidth / 2 - carretLeftPos,
+                view.Size.Y / 2 - menuList.Count * itemHeight / 2 + selectedPos * itemHeight);
 
-            carretRight.Position = new Vector2f(game.w.Size.X / 2 + itemWidth / 2 + carretRightPos,
-                game.w.Size.Y / 2 - menuList.Count * itemHeight / 2 + selectedPos * itemHeight);
+            carretRight.Position = new Vector2f(view.Size.X / 2 + itemWidth / 2 + carretRightPos,
+                view.Size.Y / 2 - menuList.Count * itemHeight / 2 + selectedPos * itemHeight);
         }
 
         public void Draw()
         {
+            game.w.SetView(view);
             game.w.Draw(backgroundSprite);
             for (int i = 0;i < menuBtns.Count;i++)
             {
@@ -116,8 +120,9 @@ namespace Platformer_The_Game
             }
             for (int i = 0; i < menuBtns.Count; i++)
             {
+                Vector2f mousePos = game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
                 FloatRect realRect = getRealRect(menuBtns[i].GetGlobalBounds());
-                if (realRect.Contains(args.X, args.Y))
+                if (realRect.Contains(mousePos.X, mousePos.Y))
                 {
                     OnEvent(Settings.Action.Use);
                 }
@@ -128,8 +133,9 @@ namespace Platformer_The_Game
         {
             for (int i = 0; i < menuBtns.Count; i++)
             {
+                Vector2f mousePos = game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
                 FloatRect realRect = getRealRect(menuBtns[i].GetGlobalBounds());
-                if (realRect.Contains(args.X, args.Y))
+                if (realRect.Contains(mousePos.X, mousePos.Y))
                 {
                     selectedPos = i;
                 }

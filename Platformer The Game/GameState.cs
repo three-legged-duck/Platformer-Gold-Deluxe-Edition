@@ -14,6 +14,8 @@ namespace Platformer_The_Game
         Game game;
         Player player;
 
+        View view;
+
         Music backgroundMusic;
         Image spriteSheet;
         public List<Platform> platforms;
@@ -35,9 +37,9 @@ namespace Platformer_The_Game
                 return;
             }
             this.game = game;
-
+            view = new View();
             BackgroundSprite = new Sprite(new Texture("backgroundStars.bmp"));
-            BackgroundSprite.Scale = new Vector2f(game.w.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
+            BackgroundSprite.Scale = new Vector2f(game.w.DefaultView.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.DefaultView.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
             backgroundMusic = new Music("gameLoop.ogg");
             backgroundMusic.Play();
             backgroundMusic.Volume = 50f;
@@ -54,11 +56,14 @@ namespace Platformer_The_Game
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X , 32), blockTexture, game));
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int)game.w.Size.X - 192, 32), blockTexture, game));
             Initialized = true;
+            view.Center = player.Pos;
         }
         
         public void Draw()
         {
+            game.w.SetView(game.w.DefaultView);
             game.w.Draw(BackgroundSprite);
+            game.w.SetView(view);
             foreach (Platform plateform in platforms)
             {
                 plateform.Draw();
@@ -81,6 +86,7 @@ namespace Platformer_The_Game
                     player.Collided(platform, rect);
                 }
             }
+            view.Center = player.Pos;
         }
         
         public void Uninitialize()

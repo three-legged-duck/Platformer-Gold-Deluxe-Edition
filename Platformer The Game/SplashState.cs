@@ -10,6 +10,8 @@ namespace Platformer_The_Game
     class SplashState : IState
     {
         Game game;
+
+        View view;
         Sprite SplashSprite;
         byte alpha = 0;
         const byte max = 255; //max for rgb drawing
@@ -21,6 +23,7 @@ namespace Platformer_The_Game
         public void Initialize(Game g)
         {
             this.game = g;
+            view = new View();
             KeyReleasedHandler = delegate(object sender, KeyEventArgs args)
             {
                 EndSplash();
@@ -40,7 +43,7 @@ namespace Platformer_The_Game
 
             if (scale)
             {
-                SplashSprite.Scale = new Vector2f(game.w.Size.X / SplashSprite.GetGlobalBounds().Width, game.w.Size.Y / SplashSprite.GetGlobalBounds().Height);
+                SplashSprite.Scale = new Vector2f(view.Size.X / SplashSprite.GetGlobalBounds().Width, view.Size.Y / SplashSprite.GetGlobalBounds().Height);
             }
         }
 
@@ -76,6 +79,7 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
+            game.w.SetView(view);
             game.w.Draw(SplashSprite);
         }
 

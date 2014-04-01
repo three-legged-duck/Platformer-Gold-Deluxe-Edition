@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  
+  <!-- Main menu -->
+  <string name="play">Jouer</string>
+  <string name="settings">Options</string>
+  <string name="quit">Quitter</string>
+
+  <!-- Settings menu -->
+  <string name="drawTextures">Afficher textures</string>
+  <string name="drawHitboxes">Afficher masques de collision</string>
+  <string name="language">Langue</string>
+  <string name="back">Retour</string>
+  <string name="yes">oui</string>
+  <string name="no">non</string>
+
+  <!-- Pause menu -->
+  <string name="resume">Reprendre</string>
+  <string name="backMain">Retour au menu principal</string>
+
+</resources>
+
+

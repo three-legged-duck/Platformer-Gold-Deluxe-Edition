@@ -136,6 +136,8 @@
     <Content Include="res\images\plateformes.png" />
     <Content Include="res\images\splash.bmp" />
     <Content Include="res\music\bump.aiff" />
+    <Content Include="res\strings\English.xml" />
+    <Content Include="res\strings\French.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets" Condition="Exists('..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets')" />

@@ -28,6 +28,8 @@ namespace Platformer_The_Game
         public bool DrawTextures = true;
         [NonSerialized]
         public bool DrawHitbox = false;
+        [NonSerialized]
+        public Utils.Language language = Utils.Language.English;
 
         private Settings()
         {

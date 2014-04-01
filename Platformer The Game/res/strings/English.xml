@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  
+  <!-- Main menu -->
+  <string name="play">Play</string>
+  <string name="settings">Settings</string>
+  <string name="quit">Quit</string>
+
+  <!-- Settings menu -->
+  <string name="drawTextures">Draw textures</string>
+  <string name="drawHitboxes">Draw hitboxes</string>
+  <string name="language">Language</string>
+  <string name="back">Back</string>
+  <string name="yes">yes</string>
+  <string name="no">no</string>
+
+  <!-- Pause menu -->
+  <string name="resume">Resume</string>
+  <string name="backMain">Main menu</string>
+
+</resources>
+
+

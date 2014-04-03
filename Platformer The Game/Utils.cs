@@ -6,29 +6,43 @@ using SFML.Window;
 using SFML.Graphics;
 using System.Xml;
 using System.IO;
-using System.Text;
 
 namespace Platformer_The_Game
 {
     class Utils
     {
-        /*
-        public static Dictionary<K,V> CreateDict<K,V>()
-        {
-            return new Dictionary<K, V>();
-        }
-        */
-
         public enum Language { French, English };
+
+
+        //Translation files
+        public static XmlDocument frenchStrings = new XmlDocument();
+        public static XmlDocument englishStrings = new XmlDocument();
+
+        public static void LoadTranslations()
+        {
+            frenchStrings.Load("French.xml");
+            englishStrings.Load("English.xml");
+        }
 
         public static string GetString(string key, Game game)
         {
-            
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load(game.settings.language.ToString() + ".xml"); // load the file according to the current language
-
-            XmlNodeList nodes = xDoc.SelectNodes("//string[@name='" + key + "']");
-            return nodes.Item(0).InnerText;
+            string nodeSearch = "//string[@name='" + key + "']";
+            XmlNodeList translatedString;
+            switch (game.settings.language)
+            {
+                case Language.French:
+                    translatedString = frenchStrings.SelectNodes(nodeSearch);
+                    break;
+                default:
+                    translatedString = englishStrings.SelectNodes(nodeSearch);
+                    break;
+            }
+            try { return translatedString.Item(0).InnerText; }
+            catch
+            {
+                try { return (englishStrings.SelectNodes(nodeSearch)).Item(0).InnerText; }
+                catch { return key; }
+            }
         }
 
         public static RectangleShape NewRectangle(float coordX, float coordY, float sizeX, float sizeY)

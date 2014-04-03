@@ -37,6 +37,8 @@ namespace Platformer_The_Game
             w.SetFramerateLimit(60);
             w.SetKeyRepeatEnabled(false);
             w.SetIcon(128, 128, (new Image("icon.png")).Pixels);
+            //Load ressources
+            Utils.LoadTranslations();
             // Setup the events
             w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
             w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 

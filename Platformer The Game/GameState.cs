@@ -99,7 +99,7 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Pause:
-                    MenuState pause = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", Utils.GetString("resume", game), Utils.GetString("settings", game), Utils.GetString("backMain", game));
+                    MenuState pause = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", Utils.GetString("resume", game), Utils.GetString("settings", game), Utils.GetString("backMain", game));
                     pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
                     {
                         switch (args.selectedPos)

@@ -27,7 +27,7 @@ namespace Platformer_The_Game
                 state.Initialize(this);
             }
         }
-        public Font font = new Font("arial.ttf");
+        public Font menuFont = new Font("Square.ttf");
         public Settings settings  = Settings.Load();
 
         public Game()
@@ -108,10 +108,11 @@ namespace Platformer_The_Game
         {
             if (e.Code == Keyboard.Key.F1)
             {
-                DirectoryInfo info = new DirectoryInfo("capture");
-                if (!info.Exists) info.Create();
-                long uniqueKey = info.LastWriteTime.Ticks + 1L;
-                string filename = String.Format("capture\\file{0}.png", uniqueKey);
+                if (!Directory.Exists("screenshots"))
+                {
+                    Directory.CreateDirectory("screenshots");
+                }
+                string filename = String.Format("screenshots\\screen_{0}.png", DateTime.Now.ToFileTimeUtc());
                 w.Capture().SaveToFile(filename);
             }
 

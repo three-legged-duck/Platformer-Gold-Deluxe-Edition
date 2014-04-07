@@ -54,7 +54,7 @@ namespace Platformer_The_Game
 
         public static MenuState CreateMainMenu(Game game)
         {
-            MenuState menu = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", GetString("play", game), GetString("settings", game), GetString("quit", game));
+            MenuState menu = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", GetString("play", game), GetString("settings", game), GetString("quit", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.selectedPos)
@@ -82,7 +82,7 @@ namespace Platformer_The_Game
                 GetString("language", game) + " : "+ (game.settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
                 "Retour"
             };
-            MenuState options = new MenuState(game.font, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
+            MenuState options = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
             
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {

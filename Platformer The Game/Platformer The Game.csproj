@@ -58,16 +58,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="sfmlnet-audio-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SFML.Net.2.1.0\lib\net\sfmlnet-audio-2.dll</HintPath>
+      <HintPath>..\packages\SFML.Net.2.1.5\lib\sfmlnet-audio-2.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-graphics-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SFML.Net.2.1.0\lib\net\sfmlnet-graphics-2.dll</HintPath>
+      <HintPath>..\packages\SFML.Net.2.1.5\lib\sfmlnet-graphics-2.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-window-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SFML.Net.2.1.0\lib\net\sfmlnet-window-2.dll</HintPath>
+      <HintPath>..\packages\SFML.Net.2.1.5\lib\sfmlnet-window-2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -117,16 +114,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="res\fonts\arial.ttf" />
     <None Include="res\music\gameLoop.ogg" />
     <None Include="res\music\eddsworldCreditsTheme.ogg" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="res\dlls\csfml-audio-2.dll" />
-    <Content Include="res\dlls\csfml-graphics-2.dll" />
-    <Content Include="res\dlls\csfml-window-2.dll" />
-    <Content Include="res\dlls\libsndfile-1.dll" />
-    <Content Include="res\dlls\openal32.dll" />
+    <Content Include="dlls\csfml-audio-2.dll" />
+    <Content Include="dlls\csfml-graphics-2.dll" />
+    <Content Include="dlls\csfml-window-2.dll" />
+    <Content Include="dlls\libsndfile-1.dll" />
+    <Content Include="dlls\openal32.dll" />
     <Content Include="res\images\backgroundStars.bmp" />
     <Content Include="res\images\character.png" />
     <Content Include="res\images\floor.bmp" />
@@ -156,5 +154,12 @@
       <ResourcesFiles Include="res\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(ResourcesFiles)" DestinationFolder="$(OutputPath)" />
+  </Target>
+  <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets'))" />
   </Target>
 </Project>

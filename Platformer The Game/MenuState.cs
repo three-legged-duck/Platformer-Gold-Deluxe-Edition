@@ -32,8 +32,8 @@ namespace Platformer_The_Game
 
         public MenuState (Font font,string img, string music, params string[] menuItems)
         {
-            MouseClickHandler = new EventHandler<MouseButtonEventArgs>(onMousePressed);
-            MouseMoveHandler = new EventHandler<MouseMoveEventArgs>(onMouseMoved);
+            MouseClickHandler = onMousePressed;
+            MouseMoveHandler = onMouseMoved;
             menuList = new List<string>(menuItems);
             menuFont = font;
             backgroundImage = new Image(img);

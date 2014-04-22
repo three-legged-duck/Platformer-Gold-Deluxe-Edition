@@ -32,20 +32,40 @@ namespace Platformer_The_Game
 
         public Game()
         {
-            //Setup the wimdow and disable resizing
-            w = new RenderWindow(new VideoMode(800, 600), "Platformer", SFML.Window.Styles.Close);
+            //Load ressources
+            Utils.LoadTranslations();
+
+            //Load main window
+            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer", (settings.fullscreen) ? SFML.Window.Styles.Fullscreen : SFML.Window.Styles.Close);
+            WindowInit();
+        }
+
+        public void RecreateWindow()
+        {
+            w.KeyPressed -= OnKeyPressed;
+            w.KeyReleased -= OnKeyReleased;
+            w.JoystickButtonPressed -= OnJoyPressed;
+            w.JoystickButtonReleased -= OnJoyReleased;
+            w.JoystickMoved -= OnJoyAxisMoved;
+            w.Closed -= OnClosed;
+            w.Close();
+            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer", (settings.fullscreen) ? SFML.Window.Styles.Fullscreen : SFML.Window.Styles.Close);
+            WindowInit();
+
+        }
+
+        private void WindowInit()
+        {
             w.SetFramerateLimit(60);
             w.SetKeyRepeatEnabled(false);
             w.SetIcon(128, 128, (new Image("icon.png")).Pixels);
-            //Load ressources
-            Utils.LoadTranslations();
             // Setup the events
-            w.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
-            w.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased); 
-            w.JoystickButtonPressed += new EventHandler<JoystickButtonEventArgs>(OnJoyPressed);
-            w.JoystickButtonReleased += new EventHandler<JoystickButtonEventArgs>(OnJoyReleased);
-            w.JoystickMoved += new EventHandler<JoystickMoveEventArgs>(OnJoyAxisMoved);
-            w.Closed += new EventHandler(OnClosed);
+            w.KeyPressed += OnKeyPressed;
+            w.KeyReleased += OnKeyReleased;
+            w.JoystickButtonPressed += OnJoyPressed;
+            w.JoystickButtonReleased += OnJoyReleased;
+            w.JoystickMoved += OnJoyAxisMoved;
+            w.Closed += OnClosed;
         }
 
         public void RunMainLoop()

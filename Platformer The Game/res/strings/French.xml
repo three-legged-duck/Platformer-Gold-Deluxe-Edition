@@ -10,6 +10,8 @@
   <string name="drawTextures">Afficher textures</string>
   <string name="drawHitboxes">Afficher masques de collision</string>
   <string name="language">Langue</string>
+  <string name="fullscreen">Plein écran</string>
+  <string name="resolution">Résolution</string>  
   <string name="back">Retour</string>
   <string name="yes">oui</string>
   <string name="no">non</string>

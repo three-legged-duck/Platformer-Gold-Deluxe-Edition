@@ -23,13 +23,13 @@ namespace Platformer_The_Game
         Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>> joystickAxis =
             new Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>>();
 
-        [NonSerialized] const string fileName = "game.settings";
-        [NonSerialized]
-        public bool DrawTextures = true;
-        [NonSerialized]
-        public bool DrawHitbox = false;
-        [NonSerialized]
+        public bool drawTextures = true;
+        public bool drawHitbox = false;
         public Utils.Language language = Utils.Language.English;
+        public bool fullscreen = false;
+        public uint windowWidth = 800;
+        public uint windowHeight = 600;
+        [NonSerialized] const string fileName = "game.settings";
 
         private Settings()
         {

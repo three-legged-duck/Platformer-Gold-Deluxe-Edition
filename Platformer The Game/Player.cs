@@ -137,9 +137,9 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
-            if (game.settings.DrawTextures)
+            if (game.settings.drawTextures)
                 game.w.Draw(sprite);
-            if (game.settings.DrawHitbox)
+            if (game.settings.drawHitbox)
                 game.w.Draw(Hitbox);
         }
 

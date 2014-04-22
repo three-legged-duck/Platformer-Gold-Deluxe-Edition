@@ -80,7 +80,7 @@ namespace Platformer_The_Game
                 GetOptionText("drawHitboxes", game.settings.drawHitbox, game),
                 GetString("language", game) + " : "+ (game.settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
                 GetOptionText("fullscreen", game.settings.fullscreen, game),
-                "Retour"
+                GetString("back",game)
             };
             MenuState options = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
             

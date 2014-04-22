@@ -1,6 +1,6 @@
 # Credits
 
-  This game is created by the Three Legged Duck team, but we use many ressource available on Internet.
+  This game is created by the Three Legged Duck team, but we use many ressources available on Internet.
 So here is the list of the different ressources used along with their authors (and thanks to them :) ).
 
 Ce jeu est créé par la team Three Legged Duck, mais nous utilisons beaucoup de ressources disponibles sur Internet.

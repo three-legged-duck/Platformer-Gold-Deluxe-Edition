@@ -12,4 +12,4 @@ Voici donc la liste des différentes ressources utilisées ainsi que leurs auteu
 
  
   [1]: https://www.freesound.org/people/timgormly/sounds/170141/
-  [2]: Eddsworld%20Credits%20Theme
+  [2]: http://www.newgrounds.com/audio/listen/435009

@@ -31,7 +31,7 @@ namespace Platformer_The_Game
 
             MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
             {
-                if (btn.Button == Mouse.Button.Left)
+                if (btn.Button == Mouse.Button.Left || btn.Button == Mouse.Button.Right)
                 {
                     EndSplash();
                 }

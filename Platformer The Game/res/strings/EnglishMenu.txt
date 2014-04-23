@@ -1,0 +1,2 @@
+﻿It's an awesome game !
+Awesome SFML platformer

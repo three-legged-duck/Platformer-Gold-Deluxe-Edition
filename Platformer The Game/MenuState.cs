@@ -5,30 +5,37 @@ using System.Text;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.Audio;
+using System.IO;
 
 namespace Platformer_The_Game
 {
     class MenuState : IState
     {
-        Game game;
-        View view;
-
-        private static Font menuFont;
-        List<string> menuList;
-        public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
-        Text carretLeft, carretRight;
-        Music backgroundMusic;
-
         const int carretLeftPos = 50;
         const int carretRightPos = 25;
 
+        Game game;
+        View view;
+
+        List<string> menuList;
+        public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
+        Text carretLeft, carretRight;
         int selectedPos;
+
         EventHandler<MouseButtonEventArgs> MouseClickHandler;
         EventHandler<MouseMoveEventArgs> MouseMoveHandler;
 
+        //Media ressources
+        private static Font menuFont;
+        Music backgroundMusic;
         Image backgroundImage;
         Sprite backgroundSprite;
         Texture backgroundTexture;
+
+        //Scrolling text
+        Text scrollingText;
+        string[] textLines;
+        Random rng = new Random();
 
         public MenuState (Font font,string img, string music, params string[] menuItems)
         {
@@ -42,8 +49,6 @@ namespace Platformer_The_Game
             backgroundMusic = new Music(music);
             backgroundMusic.Loop = true;
         }
-
-
 
         bool Initialized = false;
         public void Initialize(Game game)
@@ -68,6 +73,9 @@ namespace Platformer_The_Game
 
                 menuBtns.Add(menuItem);
             }
+            textLines = File.ReadAllLines(game.settings.language.ToString() + "Menu.txt");
+            scrollingText = new Text(RandomTextLine(),menuFont);
+            scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
             Initialized = true;
         }
 
@@ -103,6 +111,17 @@ namespace Platformer_The_Game
             }
             game.w.Draw(carretLeft);
             game.w.Draw(carretRight);
+
+            if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
+            {
+                scrollingText = new Text(RandomTextLine(), menuFont);
+                scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
+            }
+            else
+            {
+                scrollingText.Position = new Vector2f(scrollingText.Position.X - 5, scrollingText.Position.Y);
+            }
+                game.w.Draw(scrollingText);
         }
 
         public void Uninitialize()
@@ -110,6 +129,11 @@ namespace Platformer_The_Game
             game.w.MouseButtonPressed -= MouseClickHandler;
             game.w.MouseMoved -= MouseMoveHandler;
             backgroundMusic.Stop();
+        }
+
+        private string RandomTextLine()
+        {
+            return textLines[rng.Next(0, textLines.Length)];
         }
 
         public void onMousePressed(object sender, MouseButtonEventArgs args)

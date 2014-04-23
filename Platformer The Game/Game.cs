@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using SFML.Audio;
 
 namespace Platformer_The_Game
 {
@@ -29,6 +30,8 @@ namespace Platformer_The_Game
         }
         public Font menuFont = new Font("Square.ttf");
         public Settings settings  = Settings.Load();
+        Music bgMusic;
+        string bgMusicName;
 
         public Game()
         {
@@ -110,6 +113,22 @@ namespace Platformer_The_Game
                 state.OnEvent(settings.GetAction(state.GetType(), key));
             }
             state.Update();
+            if (state.BgMusicName != null && bgMusic == null)
+            {
+                bgMusic = new Music(state.BgMusicName.ToString());
+                bgMusic.Volume = 50f;
+                bgMusic.Loop = true;
+                bgMusic.Play();
+            }
+            if (bgMusicName != state.BgMusicName)
+            {
+                bgMusic.Stop();
+                bgMusic = new Music(state.BgMusicName.ToString());
+                bgMusic.Volume = 50f;
+                bgMusic.Loop = true;
+                bgMusic.Play();
+            }
+            bgMusicName = state.BgMusicName;
         }
 
         private void Draw()

@@ -17,6 +17,7 @@ namespace Platformer_The_Game
         const byte max = 255; //max for rgb drawing
         bool scale;
         IState nextState;
+        public string BgMusicName { get { return null; } }
 
         EventHandler<KeyEventArgs> KeyReleasedHandler;
         EventHandler<MouseButtonEventArgs> MouseBtnHandler;

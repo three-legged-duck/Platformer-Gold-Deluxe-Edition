@@ -12,5 +12,6 @@ namespace Platformer_The_Game
         void Draw();
         void Uninitialize();
         void OnEvent(Settings.Action a);
+        string BgMusicName { get; }
     }
 }

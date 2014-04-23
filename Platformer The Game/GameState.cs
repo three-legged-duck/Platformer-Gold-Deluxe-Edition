@@ -16,7 +16,7 @@ namespace Platformer_The_Game
 
         View view;
 
-        Music backgroundMusic;
+        public string BgMusicName { get { return "gameLoop.ogg"; } }
         Image spriteSheet;
         public List<Platform> platforms;
 
@@ -26,24 +26,13 @@ namespace Platformer_The_Game
         {
             
         }
-        bool Initialized = false;
 
         public void Initialize(Game game)
         {
-            if (Initialized)
-            {
-                // after main menu
-                backgroundMusic.Play();
-                return;
-            }
             this.game = game;
             view = new View();
             BackgroundSprite = new Sprite(new Texture("backgroundStars.bmp"));
             BackgroundSprite.Scale = new Vector2f(game.w.DefaultView.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.DefaultView.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
-            backgroundMusic = new Music("gameLoop.ogg");
-            backgroundMusic.Play();
-            backgroundMusic.Volume = 50f;
-            backgroundMusic.Loop = true;
             platforms = new List<Platform>();
 
             player = new Player(game, this, new Vector2f(50, 180));
@@ -55,7 +44,6 @@ namespace Platformer_The_Game
             platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int)game.w.Size.X - 48, 32), blockTexture, game));
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X , 32), blockTexture, game));
             platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int)game.w.Size.X - 192, 32), blockTexture, game));
-            Initialized = true;
             view.Center = player.Pos;
         }
         
@@ -91,7 +79,6 @@ namespace Platformer_The_Game
         
         public void Uninitialize()
         {
-            backgroundMusic.Stop();
         }
 
         public void OnEvent(Settings.Action action)

@@ -27,7 +27,7 @@ namespace Platformer_The_Game
 
         //Media ressources
         private static Font menuFont;
-        Music backgroundMusic;
+        public string BgMusicName { get { return "eddsworldCreditsTheme.ogg"; } }
         Image backgroundImage;
         Sprite backgroundSprite;
         Texture backgroundTexture;
@@ -46,8 +46,6 @@ namespace Platformer_The_Game
             backgroundImage = new Image(img);
             backgroundTexture = new Texture(backgroundImage);
             backgroundSprite = new Sprite(backgroundTexture);
-            backgroundMusic = new Music(music);
-            backgroundMusic.Loop = true;
         }
 
         bool Initialized = false;
@@ -55,7 +53,6 @@ namespace Platformer_The_Game
         {
             view = game.w.DefaultView;
             nextmillis = System.Environment.TickCount + 150;
-            backgroundMusic.Play();
             game.w.MouseButtonPressed += MouseClickHandler;
             game.w.MouseMoved += MouseMoveHandler; if (Initialized) return;
             this.game = game;
@@ -128,7 +125,6 @@ namespace Platformer_The_Game
         {
             game.w.MouseButtonPressed -= MouseClickHandler;
             game.w.MouseMoved -= MouseMoveHandler;
-            backgroundMusic.Stop();
         }
 
         private string RandomTextLine()

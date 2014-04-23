@@ -178,6 +178,7 @@ namespace Platformer_The_Game
                                                                   : Language.French.ToString());
                         break;
                     case 3:
+
                         game.settings.fullscreen = !game.settings.fullscreen;
                         game.RecreateWindow();
                         options.menuBtns[3].DisplayedString = GetOptionText("fullscreen", game.settings.fullscreen, game);

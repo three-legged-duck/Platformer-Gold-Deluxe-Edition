@@ -38,8 +38,8 @@ namespace Platformer_The_Game
         public bool drawTextures = true;
         public bool fullscreen = false;
         public Utils.Language language = Utils.Language.English;
-        public uint windowHeight = 600;
         public uint windowWidth = 800;
+        public uint windowHeight = 600;
 
         private Settings()
         {

@@ -9,9 +9,9 @@ namespace Platformer_The_Game
 {
     internal class Game
     {
-        private readonly Dictionary<Joystick.Axis, float> axisPressed = new Dictionary<Joystick.Axis, float>();
-        private readonly HashSet<uint> joyPressed = new HashSet<uint>();
-        private readonly HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
+        private Dictionary<Joystick.Axis, float> axisPressed = new Dictionary<Joystick.Axis, float>();
+        private HashSet<uint> joyPressed = new HashSet<uint>();
+        private HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
         public ResMan ResMan = new ResMan();
         private Music bgMusic;
         private string bgMusicName;
@@ -47,6 +47,7 @@ namespace Platformer_The_Game
 
         public void RecreateWindow()
         {
+            CleanInput();
             w.KeyPressed -= OnKeyPressed;
             w.KeyReleased -= OnKeyReleased;
             w.JoystickButtonPressed -= OnJoyPressed;
@@ -57,6 +58,13 @@ namespace Platformer_The_Game
             w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer",
                 (settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
             WindowInit();
+        }
+
+        private void CleanInput()
+        {
+            axisPressed.Clear();
+            joyPressed.Clear();
+            keyPressed.Clear();
         }
 
         private void WindowInit()

@@ -28,7 +28,9 @@ namespace Platformer_The_Game
                 state.Initialize(this);
             }
         }
-        public Font menuFont = new Font("Square.ttf");
+        
+        public ResMan ResMan = new ResMan();
+        public Font menuFont = new Font(@"res\fonts\Square.ttf");
         public Settings settings  = Settings.Load();
         Music bgMusic;
         string bgMusicName;
@@ -61,7 +63,7 @@ namespace Platformer_The_Game
         {
             w.SetFramerateLimit(60);
             w.SetKeyRepeatEnabled(false);
-            w.SetIcon(128, 128, (new Image("icon.png")).Pixels);
+            w.SetIcon(128, 128, (new Image(@"res\images\icon.png")).Pixels);
             // Setup the events
             w.KeyPressed += OnKeyPressed;
             w.KeyReleased += OnKeyReleased;
@@ -113,17 +115,13 @@ namespace Platformer_The_Game
                 state.OnEvent(settings.GetAction(state.GetType(), key));
             }
             state.Update();
-            if (state.BgMusicName != null && bgMusic == null)
-            {
-                bgMusic = new Music(state.BgMusicName.ToString());
-                bgMusic.Volume = 50f;
-                bgMusic.Loop = true;
-                bgMusic.Play();
-            }
-            if (bgMusicName != state.BgMusicName)
+            if (bgMusic != null && bgMusicName != state.BgMusicName)
             {
                 bgMusic.Stop();
-                bgMusic = new Music(state.BgMusicName.ToString());
+            }
+            if (bgMusicName != null)
+            {
+                bgMusic = new Music(@"res\music\" + state.BgMusicName.ToString());
                 bgMusic.Volume = 50f;
                 bgMusic.Loop = true;
                 bgMusic.Play();

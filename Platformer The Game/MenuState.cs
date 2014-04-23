@@ -43,7 +43,7 @@ namespace Platformer_The_Game
             MouseMoveHandler = onMouseMoved;
             menuList = new List<string>(menuItems);
             menuFont = font;
-            backgroundImage = new Image(img);
+            backgroundImage = new Image(@"res\images\" + img);
             backgroundTexture = new Texture(backgroundImage);
             backgroundSprite = new Sprite(backgroundTexture);
         }
@@ -70,7 +70,7 @@ namespace Platformer_The_Game
 
                 menuBtns.Add(menuItem);
             }
-            textLines = File.ReadAllLines(game.settings.language.ToString() + "Menu.txt");
+            textLines = File.ReadAllLines(@"res\strings\" + game.settings.language.ToString() + "Menu.txt");
             scrollingText = new Text(RandomTextLine(),menuFont);
             scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
             Initialized = true;
@@ -109,7 +109,7 @@ namespace Platformer_The_Game
             game.w.Draw(carretLeft);
             game.w.Draw(carretRight);
 
-            if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
+            /*if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
             {
                 scrollingText = new Text(RandomTextLine(), menuFont);
                 scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
@@ -118,7 +118,7 @@ namespace Platformer_The_Game
             {
                 scrollingText.Position = new Vector2f(scrollingText.Position.X - 5, scrollingText.Position.Y);
             }
-                game.w.Draw(scrollingText);
+                game.w.Draw(scrollingText);*/
         }
 
         public void Uninitialize()

@@ -30,7 +30,7 @@ namespace Platformer_The_Game
 
 
         Image image;
-        protected Sprite sprite;
+        protected ResMan.AnimatedSprite sprite;
         
         GameState gameState;
         protected readonly Game game;
@@ -47,10 +47,9 @@ namespace Platformer_The_Game
             OnGround = true;
             
             // Visual Appearance
-            image = new Image("character.png");
-            image.CreateMaskFromColor(new Color(0, 255, 0));
-            this.sprite = new Sprite(new Texture(image));
-            sprite.TextureRect = new IntRect(0, 0, 90, 94);
+            //image = new Image(@"res\sprites\character.png");
+            //image.CreateMaskFromColor(new Color(0, 255, 0));
+            this.sprite = game.ResMan.NewSprite("character", "idle");
 
             // Hitbox
             this.Hitbox = new Hitbox(new List<FloatRect> { sprite.GetLocalBounds() });
@@ -58,36 +57,32 @@ namespace Platformer_The_Game
             //state = State.Stopped;
             this.Pos = pos;
 
-            SoundBuffer = new SoundBuffer("bump.aiff");
+            SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
             sound = new Sound();
         }
 
         public void Initialize()
         { }
         
-        int updateSprite = 0;
-        int currFrame = 0;
         public void Event(Settings.Action action)
         {
             switch (action)
             {
                 case Settings.Action.Left:
                     moving = true;
-                    if (direction == Facing.Right || updateSprite-- == 0)
+                    if (direction == Facing.Right)
                     {
-                        sprite.TextureRect = new IntRect(90 * ((currFrame++ % 6) + 1), 0, -90, 94); 
-                        updateSprite = 5;
+                        sprite.Reverse();
+                        direction = Facing.Left;
                     }
-                    direction = Facing.Left;
                     break;
                 case Settings.Action.Right:
                     moving = true;
-                    if (direction == Facing.Left || updateSprite-- == 0)
+                    if (direction == Facing.Left)
                     {
-                        sprite.TextureRect = new IntRect(90 * (currFrame++ % 6), 0, 90, 94);
-                        updateSprite = 5;
+                        sprite.Reverse();
+                        direction = Facing.Right;
                     }
-                    direction = Facing.Right;
                     break;
                 case Settings.Action.Jump:
                     if (OnGround)
@@ -100,20 +95,22 @@ namespace Platformer_The_Game
                         speed.Y--;
                     }
                     break;
-
             }
         }
 
         public void Update()
         {
+            // TODO : Movement handling is pretty ugly. We could prettify it a lot.
             if (moving)
             {
+                if (sprite.Animation == "idle") sprite.Animation = "movement";
                 if (Math.Abs(speed.X) < 75) speed.X += (direction == Facing.Left ? -1 : 1);
             } // below : not moving
-            else if (-1 < speed.X && speed.X < 1) speed.X = 0;
             else
             {
-                if (speed.X > 0) speed.X--;
+                if (sprite.Animation == "movement") sprite.Animation = "idle";
+                if (-1 < speed.X && speed.X < 1) speed.X = 0;
+                else if (speed.X > 0) speed.X--;
                 else speed.X++;
             }
             if (!OnGround && speed.Y < 100)
@@ -125,17 +122,6 @@ namespace Platformer_The_Game
             _pos.Y = Math.Min(Math.Max(_pos.Y + speed.Y, 0), game.settings.windowHeight - sprite.GetLocalBounds().Height);
             if (_pos.X >= game.settings.windowWidth - sprite.GetLocalBounds().Width || _pos.X <= 1) speed.X = 0;
             Hitbox.MoveTo(_pos);
-
-            if (!moving && direction == Facing.Right)
-            {
-                sprite.TextureRect = new IntRect(0, 94, 90, 94);
-                currFrame = 0;
-            }
-            else if (!moving && direction == Facing.Left)
-            {
-                sprite.TextureRect = new IntRect(90, 94, -90, 94);
-                currFrame = 0;
-            }
 
             moving = false;
             OnGround = false;

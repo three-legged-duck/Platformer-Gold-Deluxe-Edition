@@ -57,6 +57,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\SFML.Net.2.1.5\lib\sfmlnet-audio-2.dll</HintPath>
     </Reference>
@@ -75,7 +78,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collision.cs" />
     <Compile Include="Hitbox.cs" />
+    <Compile Include="Level.cs" />
+    <Compile Include="ResMan.cs" />
     <Compile Include="SplashState.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Plateform.cs" />
@@ -116,24 +122,20 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="res\fonts\arial.ttf" />
+    <None Include="res\levels\TestLevel.json" />
     <None Include="res\music\gameLoop.ogg" />
     <None Include="res\music\eddsworldCreditsTheme.ogg" />
+    <None Include="res\sprites\character.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dlls\csfml-audio-2.dll" />
-    <Content Include="dlls\csfml-graphics-2.dll" />
-    <Content Include="dlls\csfml-window-2.dll" />
-    <Content Include="dlls\libsndfile-1.dll" />
-    <Content Include="dlls\openal32.dll" />
     <Content Include="res\images\backgroundStars.bmp" />
-    <Content Include="res\images\character.png" />
+    <Content Include="res\sprites\character.png" />
     <Content Include="res\images\floor.bmp" />
     <Content Include="icon.ico" />
     <Content Include="res\images\icon.png" />
     <Content Include="res\images\menuBg.bmp" />
     <Content Include="res\images\plateformes.png" />
     <Content Include="res\images\splash.bmp" />
-    <Content Include="res\music\bump.aiff" />
     <Content Include="res\strings\FrenchMenu.txt" />
     <Content Include="res\strings\English.xml">
       <SubType>Designer</SubType>
@@ -155,7 +157,7 @@
     <ItemGroup>
       <ResourcesFiles Include="res\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(ResourcesFiles)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(ResourcesFiles)" DestinationFolder="$(OutputPath)res\%(RecursiveDir)" />
   </Target>
   <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

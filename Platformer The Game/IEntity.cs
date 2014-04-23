@@ -13,6 +13,5 @@ namespace Platformer_The_Game
        // Vector2i Size { get; set; }
         void Update();
         void Draw();
-
     }
 }

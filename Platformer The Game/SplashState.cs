@@ -50,7 +50,7 @@ namespace Platformer_The_Game
 
         public SplashState(string img, bool doScale, IState nextState)
         {
-            SplashSprite = new Sprite(new Texture(img));
+            SplashSprite = new Sprite(new Texture(@"res\images\" + img));
             this.scale = doScale;
             this.nextState = nextState;
         }

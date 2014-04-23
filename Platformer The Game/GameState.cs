@@ -31,13 +31,13 @@ namespace Platformer_The_Game
         {
             this.game = game;
             view = new View();
-            BackgroundSprite = new Sprite(new Texture("backgroundStars.bmp"));
+            BackgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.bmp"));
             BackgroundSprite.Scale = new Vector2f(game.w.DefaultView.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.DefaultView.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
             platforms = new List<Platform>();
 
             player = new Player(game, this, new Vector2f(50, 180));
             
-            spriteSheet = new Image("plateformes.png");
+            spriteSheet = new Image(@"res\images\plateformes.png");
             spriteSheet.CreateMaskFromColor(new Color(0,255,0));
             Texture blockTexture = new Texture(spriteSheet, new IntRect(12 * 32, 0, 32, 32));
             

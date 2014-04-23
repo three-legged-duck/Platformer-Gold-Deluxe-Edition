@@ -1,0 +1,15 @@
+﻿{
+    "entityTypes": {
+        "player": {
+            "texture": "character.png"
+        }
+    },
+    "entities": [
+        {
+            "type": "platform",
+            "x": 24,
+            "y": 32, 
+            "": ""
+        }
+    ]
+}

@@ -60,7 +60,7 @@ namespace Platformer_The_Game
                 boundingBox.OutlineColor = Color.Red;
                 boundingBox.FillColor = Color.Transparent;
                 boundingBox.OutlineThickness = 3;
-                target.Draw(boundingBox);
+                boundingBox.Draw(target, states); // Pass-through to SFML's real function.
             }
         }
     }

@@ -119,7 +119,7 @@ namespace Platformer_The_Game
             {
                 bgMusic.Stop();
             }
-            if (bgMusicName != null)
+            else if (bgMusicName != state.BgMusicName && bgMusicName != null)
             {
                 bgMusic = new Music(@"res\music\" + state.BgMusicName.ToString());
                 bgMusic.Volume = 50f;

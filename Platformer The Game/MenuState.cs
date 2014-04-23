@@ -109,7 +109,7 @@ namespace Platformer_The_Game
             game.w.Draw(carretLeft);
             game.w.Draw(carretRight);
 
-            /*if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
+            if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
             {
                 scrollingText = new Text(RandomTextLine(), menuFont);
                 scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
@@ -118,7 +118,7 @@ namespace Platformer_The_Game
             {
                 scrollingText.Position = new Vector2f(scrollingText.Position.X - 5, scrollingText.Position.Y);
             }
-                game.w.Draw(scrollingText);*/
+                game.w.Draw(scrollingText);
         }
 
         public void Uninitialize()

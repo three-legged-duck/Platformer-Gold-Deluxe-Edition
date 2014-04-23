@@ -93,7 +93,11 @@ namespace Platformer_The_Game
                     if (OnGround)
                     {
                         OnGround = false;
-                        speed.Y = -18;
+                        speed.Y = -15;
+                    }
+                    else if (!OnGround && speed.Y < -10)
+                    {
+                        speed.Y--;
                     }
                     break;
 
@@ -112,11 +116,14 @@ namespace Platformer_The_Game
                 if (speed.X > 0) speed.X--;
                 else speed.X++;
             }
-            if (!OnGround && speed.Y < 100) speed.Y++;
+            if (!OnGround && speed.Y < 100)
+            {
+                speed.Y++;
+            }
             else if (OnGround && speed.Y != 0) speed.Y = 0;
-            _pos.X = Math.Min(Math.Max(_pos.X + speed.X, 0), 800 - sprite.GetLocalBounds().Width);
-            _pos.Y = Math.Min(Math.Max(_pos.Y + speed.Y, 0), 600 - sprite.GetLocalBounds().Height);
-            if (_pos.X >= 800 - sprite.GetLocalBounds().Width || _pos.X <= 1) speed.X = 0;
+            _pos.X = Math.Min(Math.Max(_pos.X + speed.X, 0), game.settings.windowWidth - sprite.GetLocalBounds().Width);
+            _pos.Y = Math.Min(Math.Max(_pos.Y + speed.Y, 0), game.settings.windowHeight - sprite.GetLocalBounds().Height);
+            if (_pos.X >= game.settings.windowWidth - sprite.GetLocalBounds().Width || _pos.X <= 1) speed.X = 0;
             Hitbox.MoveTo(_pos);
 
             if (!moving && direction == Facing.Right)

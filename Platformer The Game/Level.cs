@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using SFML.Window;
 
 namespace Platformer_The_Game
 {
@@ -11,17 +8,19 @@ namespace Platformer_The_Game
     {
         public ICollection
     }*/
-    class Level
+
+    internal class Level
     {
+        public delegate void LoadProgressHandler(LoadProgressArgs args);
+
         public HashSet<IEntity> entities = new HashSet<IEntity>();
+
         private Level(HashSet<IEntity> entities)
         {
             this.entities = entities;
         }
 
 
-        
-        public delegate void LoadProgressHandler(LoadProgressArgs args);
         public event LoadProgressHandler LoadProgress;
 
         public static Level LoadLevel(string levelName)
@@ -45,8 +44,9 @@ namespace Platformer_The_Game
             }
         }
 
-        public class LoadProgressArgs : EventArgs {
-            int percents;
+        public class LoadProgressArgs : EventArgs
+        {
+            private int percents;
         }
     }
 }

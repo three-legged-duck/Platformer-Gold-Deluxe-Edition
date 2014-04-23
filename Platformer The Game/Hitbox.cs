@@ -1,25 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using SFML.Graphics;
 using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    class Hitbox : Drawable
+    internal class Hitbox : Drawable
     {
-        public List<FloatRect> shapes;
         public List<FloatRect> effectiveShapes;
+        public List<FloatRect> shapes;
+
         public Hitbox(List<FloatRect> shape)
         {
-            this.shapes = shape;
-            this.effectiveShapes = new List<FloatRect>(shapes.Count);
+            shapes = shape;
+            effectiveShapes = new List<FloatRect>(shapes.Count);
         }
+
+        public void Draw(RenderTarget target, RenderStates states)
+        {
+            foreach (FloatRect rect in effectiveShapes)
+            {
+                var boundingBox = new RectangleShape(new Vector2f(rect.Width, rect.Height));
+                boundingBox.Position = new Vector2f(rect.Left, rect.Top);
+                boundingBox.OutlineColor = Color.Red;
+                boundingBox.FillColor = Color.Transparent;
+                boundingBox.OutlineThickness = 3;
+                boundingBox.Draw(target, states); // Pass-through to SFML's real function.
+            }
+        }
+
         public void MoveTo(Vector2f newPos) // Called in Unit.Update()
         {
             effectiveShapes.Clear();
-            foreach(FloatRect currShape in shapes)
+            foreach (FloatRect currShape in shapes)
             {
                 FloatRect copy = currShape;
                 copy.Left += newPos.X;
@@ -31,7 +43,7 @@ namespace Platformer_The_Game
         public bool Collides(Hitbox other)
         {
             FloatRect overlap;
-            return Collides(other, out overlap); 
+            return Collides(other, out overlap);
         }
 
         public bool Collides(Hitbox other, out FloatRect overlap)
@@ -51,17 +63,5 @@ namespace Platformer_The_Game
         }
 
         // Utility method
-        public void Draw(RenderTarget target, RenderStates states)
-        {
-            foreach (FloatRect rect in this.effectiveShapes)
-            {
-                RectangleShape boundingBox = new RectangleShape(new Vector2f(rect.Width, rect.Height));
-                boundingBox.Position = new Vector2f(rect.Left, rect.Top);
-                boundingBox.OutlineColor = Color.Red;
-                boundingBox.FillColor = Color.Transparent;
-                boundingBox.OutlineThickness = 3;
-                boundingBox.Draw(target, states); // Pass-through to SFML's real function.
-            }
-        }
     }
 }

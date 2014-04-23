@@ -1,20 +1,36 @@
-﻿using SFML.Graphics;
-using SFML.Window;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
 using System.IO;
 using SFML.Audio;
+using SFML.Graphics;
+using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    class Game
+    internal class Game
     {
+        private readonly Dictionary<Joystick.Axis, float> axisPressed = new Dictionary<Joystick.Axis, float>();
+        private readonly HashSet<uint> joyPressed = new HashSet<uint>();
+        private readonly HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
+        public ResMan ResMan = new ResMan();
+        private Music bgMusic;
+        private string bgMusicName;
+        public Font menuFont = new Font(@"res\fonts\Square.ttf");
+        public Settings settings = Settings.Load();
+        private IState state;
         public RenderWindow w;
-        IState state;
+
+        public Game()
+        {
+            //Load ressources
+            Utils.LoadTranslations();
+
+            //Load main window
+            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer",
+                (settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
+            WindowInit();
+        }
+
         public IState State
         {
             get { return state; }
@@ -28,22 +44,6 @@ namespace Platformer_The_Game
                 state.Initialize(this);
             }
         }
-        
-        public ResMan ResMan = new ResMan();
-        public Font menuFont = new Font(@"res\fonts\Square.ttf");
-        public Settings settings  = Settings.Load();
-        Music bgMusic;
-        string bgMusicName;
-
-        public Game()
-        {
-            //Load ressources
-            Utils.LoadTranslations();
-
-            //Load main window
-            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer", (settings.fullscreen) ? SFML.Window.Styles.Fullscreen : SFML.Window.Styles.Close);
-            WindowInit();
-        }
 
         public void RecreateWindow()
         {
@@ -54,9 +54,9 @@ namespace Platformer_The_Game
             w.JoystickMoved -= OnJoyAxisMoved;
             w.Closed -= OnClosed;
             w.Close();
-            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer", (settings.fullscreen) ? SFML.Window.Styles.Fullscreen : SFML.Window.Styles.Close);
+            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer",
+                (settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
             WindowInit();
-
         }
 
         private void WindowInit()
@@ -75,13 +75,12 @@ namespace Platformer_The_Game
 
         public void RunMainLoop()
         {
-
             Initialize();
 
             MenuState menu = Utils.CreateMainMenu(this);
 
             State = new SplashState("splash.bmp", true, menu);
-            
+
             while (w.IsOpen())
             {
                 w.DispatchEvents();
@@ -106,7 +105,7 @@ namespace Platformer_The_Game
             {
                 state.OnEvent(settings.GetAction(state.GetType(), key));
             }
-            foreach (KeyValuePair<Joystick.Axis, float> axis in axisPressed)
+            foreach (var axis in axisPressed)
             {
                 state.OnEvent(settings.GetAction(state.GetType(), axis.Key, axis.Value));
             }
@@ -121,7 +120,7 @@ namespace Platformer_The_Game
             }
             else if (bgMusicName != state.BgMusicName && bgMusicName != null)
             {
-                bgMusic = new Music(@"res\music\" + state.BgMusicName.ToString());
+                bgMusic = new Music(@"res\music\" + state.BgMusicName);
                 bgMusic.Volume = 50f;
                 bgMusic.Loop = true;
                 bgMusic.Play();
@@ -134,7 +133,6 @@ namespace Platformer_The_Game
             state.Draw();
         }
 
-        HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
         private void OnKeyPressed(object sender, KeyEventArgs e)
         {
             keyPressed.Add(e.Code);
@@ -155,7 +153,6 @@ namespace Platformer_The_Game
             keyPressed.Remove(e.Code);
         }
 
-        HashSet<uint> joyPressed = new HashSet<uint>();
         private void OnJoyPressed(object sender, JoystickButtonEventArgs e)
         {
             joyPressed.Add(e.Button);
@@ -166,7 +163,6 @@ namespace Platformer_The_Game
             joyPressed.Remove(e.Button);
         }
 
-        Dictionary<Joystick.Axis, float> axisPressed = new Dictionary<Joystick.Axis, float>();
         private void OnJoyAxisMoved(object sender, JoystickMoveEventArgs args)
         {
             if (args.Position < -50 || args.Position > 50)
@@ -183,7 +179,7 @@ namespace Platformer_The_Game
         public void Close()
         {
             w.Close();
-            System.Environment.Exit(0);
+            Environment.Exit(0);
         }
     }
 }

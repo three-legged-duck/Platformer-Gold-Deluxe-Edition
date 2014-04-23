@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 
 namespace Platformer_The_Game
 {
-    class SideBar
+    internal class SideBar
     {
-        int x;
-        int y;
-        int[] elements;
+        private int[] elements;
+        private int x;
+        private int y;
     }
 
-    class LevelEditor
+    internal class LevelEditor
     {
-        RenderWindow w;
+        private RenderWindow w;
 
         public LevelEditor(RenderWindow w)
         {
@@ -24,12 +20,10 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            
         }
 
         public void Draw()
         {
-
         }
     }
 }

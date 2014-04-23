@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SFML.Window;
-using SFML.Graphics;
-using System.Xml;
 using System.IO;
+using System.Text;
+using System.Xml;
+using SFML.Graphics;
+using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    static class Utils
+    internal static class Utils
     {
-        public enum Language { French, English };
+        public enum Language
+        {
+            French,
+            English
+        };
 
         //Translation files
         public static XmlDocument frenchStrings = new XmlDocument();
@@ -22,9 +24,9 @@ namespace Platformer_The_Game
             long result = 0;
             int shift = 0;
             int b;
-            while ((b = stream.ReadByte()) != -1) 
+            while ((b = stream.ReadByte()) != -1)
             {
-                result |= (b & 0x7F) << shift++ * 7;
+                result |= (b & 0x7F) << shift++*7;
 
                 if (shift > 5) throw new Exception("VarInt too big");
 
@@ -38,12 +40,13 @@ namespace Platformer_The_Game
         {
             while (true)
             {
-                if ((value & 0xFFFFFF80) == 0) {
-                    stream.WriteByte((byte)value);
+                if ((value & 0xFFFFFF80) == 0)
+                {
+                    stream.WriteByte((byte) value);
                     return;
                 }
 
-                stream.WriteByte((byte)(value & 0x7F | 0x80));
+                stream.WriteByte((byte) (value & 0x7F | 0x80));
                 value >>= 7;
             }
         }
@@ -51,20 +54,20 @@ namespace Platformer_The_Game
         public static string ReadString(this Stream stream)
         {
             long len = stream.ReadVarInt();
-            byte[] strBytes = new byte[len];
+            var strBytes = new byte[len];
             int offset = 0;
             do
             {
-                int bytesRead = stream.Read(strBytes, offset, (int)len - offset);
+                int bytesRead = stream.Read(strBytes, offset, (int) len - offset);
                 offset += bytesRead;
             } while (offset < len);
-            return System.Text.Encoding.UTF8.GetString(strBytes);
+            return Encoding.UTF8.GetString(strBytes);
         }
 
         public static void WriteString(this Stream stream, string text)
         {
             stream.WriteVarInt(text.Length);
-            byte[] strBytes = System.Text.Encoding.UTF8.GetBytes(text);
+            byte[] strBytes = Encoding.UTF8.GetBytes(text);
             stream.Write(strBytes, 0, strBytes.Length);
         }
 
@@ -87,24 +90,34 @@ namespace Platformer_The_Game
                     translatedString = englishStrings.SelectNodes(nodeSearch);
                     break;
             }
-            try { return translatedString.Item(0).InnerText; }
+            try
+            {
+                return translatedString.Item(0).InnerText;
+            }
             catch
             {
-                try { return (englishStrings.SelectNodes(nodeSearch)).Item(0).InnerText; }
-                catch { return key; }
+                try
+                {
+                    return (englishStrings.SelectNodes(nodeSearch)).Item(0).InnerText;
+                }
+                catch
+                {
+                    return key;
+                }
             }
         }
 
         public static RectangleShape NewRectangle(float coordX, float coordY, float sizeX, float sizeY)
         {
-            RectangleShape shape = new RectangleShape(new Vector2f(coordX, coordY));
+            var shape = new RectangleShape(new Vector2f(coordX, coordY));
             shape.Position = new Vector2f(sizeX, sizeY);
             return shape;
         }
 
         public static MenuState CreateMainMenu(Game game)
         {
-            MenuState menu = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", GetString("play", game), GetString("settings", game), GetString("quit", game));
+            var menu = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", GetString("play", game),
+                GetString("settings", game), GetString("quit", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.selectedPos)
@@ -125,27 +138,30 @@ namespace Platformer_The_Game
 
         public static MenuState CreateOptionsMenu(Game game, IState returnState)
         {
-            string[] menuItems = new string[] 
+            string[] menuItems =
             {
                 GetOptionText("drawTextures", game.settings.drawTextures, game),
                 GetOptionText("drawHitboxes", game.settings.drawHitbox, game),
-                GetString("language", game) + " : "+ (game.settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
+                GetString("language", game) + " : " +
+                (game.settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
                 GetOptionText("fullscreen", game.settings.fullscreen, game),
-                GetString("back",game)
+                GetString("back", game)
             };
-            MenuState options = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
-            
+            var options = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
+
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.selectedPos)
                 {
                     case 0:
                         game.settings.drawTextures = !game.settings.drawTextures;
-                        options.menuBtns[0].DisplayedString = GetOptionText("drawTextures", game.settings.drawTextures, game);
+                        options.menuBtns[0].DisplayedString = GetOptionText("drawTextures", game.settings.drawTextures,
+                            game);
                         break;
                     case 1:
                         game.settings.drawHitbox = !game.settings.drawHitbox;
-                        options.menuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.settings.drawHitbox, game);
+                        options.menuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.settings.drawHitbox,
+                            game);
                         break;
                     case 2:
                         if (game.settings.language == Language.English)
@@ -156,9 +172,12 @@ namespace Platformer_The_Game
                         {
                             game.settings.language = Language.English;
                         }
-                        options.menuBtns[2].DisplayedString = GetString("language", game) + " : " + (game.settings.language == Language.English ? Language.English.ToString() : Language.French.ToString());
+                        options.menuBtns[2].DisplayedString = GetString("language", game) + " : " +
+                                                              (game.settings.language == Language.English
+                                                                  ? Language.English.ToString()
+                                                                  : Language.French.ToString());
                         break;
-                    case 3 :
+                    case 3:
                         game.settings.fullscreen = !game.settings.fullscreen;
                         game.RecreateWindow();
                         options.menuBtns[3].DisplayedString = GetOptionText("fullscreen", game.settings.fullscreen, game);

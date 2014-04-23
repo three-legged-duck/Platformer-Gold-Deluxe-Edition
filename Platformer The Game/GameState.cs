@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SFML.Window;
+﻿using System.Collections.Generic;
 using SFML.Graphics;
-using SFML.Audio;
-using System.Diagnostics;
+using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    class GameState : IState
+    internal class GameState : IState
     {
-        Game game;
-        Player player;
-
-        View view;
-
-        public string BgMusicName { get { return "gameLoop.ogg"; } }
-        Image spriteSheet;
+        private Sprite BackgroundSprite;
+        private Game game;
         public List<Platform> platforms;
+        private Player player;
+        private Image spriteSheet;
 
-        Sprite BackgroundSprite;
+        private View view;
 
-        public GameState()
+        public string BgMusicName
         {
-            
+            get { return "gameLoop.ogg"; }
         }
 
         public void Initialize(Game game)
@@ -32,21 +24,25 @@ namespace Platformer_The_Game
             this.game = game;
             view = new View();
             BackgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.bmp"));
-            BackgroundSprite.Scale = new Vector2f(game.w.DefaultView.Size.X / BackgroundSprite.GetGlobalBounds().Width, game.w.DefaultView.Size.Y / BackgroundSprite.GetGlobalBounds().Height);
+            BackgroundSprite.Scale = new Vector2f(game.w.DefaultView.Size.X/BackgroundSprite.GetGlobalBounds().Width,
+                game.w.DefaultView.Size.Y/BackgroundSprite.GetGlobalBounds().Height);
             platforms = new List<Platform>();
 
             player = new Player(game, this, new Vector2f(50, 180));
-            
+
             spriteSheet = new Image(@"res\images\plateformes.png");
-            spriteSheet.CreateMaskFromColor(new Color(0,255,0));
-            Texture blockTexture = new Texture(spriteSheet, new IntRect(12 * 32, 0, 32, 32));
-            
-            platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int)game.w.Size.X - 48, 32), blockTexture, game));
-            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int)game.w.Size.X , 32), blockTexture, game));
-            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int)game.w.Size.X - 192, 32), blockTexture, game));
+            spriteSheet.CreateMaskFromColor(new Color(0, 255, 0));
+            var blockTexture = new Texture(spriteSheet, new IntRect(12*32, 0, 32, 32));
+
+            platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int) game.w.Size.X - 48, 32), blockTexture,
+                game));
+            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int) game.w.Size.X, 32),
+                blockTexture, game));
+            platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int) game.w.Size.X - 192, 32),
+                blockTexture, game));
             view.Center = player.Pos;
         }
-        
+
         public void Draw()
         {
             game.w.SetView(game.w.DefaultView);
@@ -58,14 +54,14 @@ namespace Platformer_The_Game
             }
             player.Draw();
         }
-        
+
         public void Update()
         {
             foreach (Platform plateform in platforms)
                 plateform.Update();
             Vector2f oldPos = player.Pos;
             player.Update();
-            
+
             foreach (Platform platform in platforms)
             {
                 FloatRect rect;
@@ -76,7 +72,7 @@ namespace Platformer_The_Game
             }
             view.Center = player.Pos;
         }
-        
+
         public void Uninitialize()
         {
         }
@@ -86,7 +82,9 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Pause:
-                    MenuState pause = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", Utils.GetString("resume", game), Utils.GetString("settings", game), Utils.GetString("backMain", game));
+                    var pause = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg",
+                        Utils.GetString("resume", game), Utils.GetString("settings", game),
+                        Utils.GetString("backMain", game));
                     pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
                     {
                         switch (args.selectedPos)
@@ -95,10 +93,10 @@ namespace Platformer_The_Game
                                 game.State = this;
                                 break;
                             case 1:
-                                game.State = Utils.CreateOptionsMenu(this.game, pause);
+                                game.State = Utils.CreateOptionsMenu(game, pause);
                                 break;
                             case 2:
-                                game.State = Utils.CreateMainMenu(this.game);
+                                game.State = Utils.CreateMainMenu(game);
                                 break;
                         }
                     };

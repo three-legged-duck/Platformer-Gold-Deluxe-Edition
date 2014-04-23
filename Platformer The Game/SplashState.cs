@@ -1,34 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SFML.Graphics;
 using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    class SplashState : IState
+    internal class SplashState : IState
     {
-        Game game;
+        private const byte max = 255; //max for rgb drawing
+        private readonly Sprite SplashSprite;
+        private readonly IState nextState;
+        private readonly bool scale;
+        private bool IsFadeOut;
 
-        View view;
-        Sprite SplashSprite;
-        byte alpha = 0;
-        const byte max = 255; //max for rgb drawing
-        bool scale;
-        IState nextState;
-        public string BgMusicName { get { return null; } }
+        private EventHandler<KeyEventArgs> KeyReleasedHandler;
+        private EventHandler<MouseButtonEventArgs> MouseBtnHandler;
+        private byte alpha;
+        private Game game;
 
-        EventHandler<KeyEventArgs> KeyReleasedHandler;
-        EventHandler<MouseButtonEventArgs> MouseBtnHandler;
+        private View view;
+
+        public SplashState(string img, bool doScale, IState nextState)
+        {
+            SplashSprite = new Sprite(new Texture(@"res\images\" + img));
+            scale = doScale;
+            this.nextState = nextState;
+        }
+
+        public string BgMusicName
+        {
+            get { return null; }
+        }
+
         public void Initialize(Game g)
         {
-            this.game = g;
+            game = g;
             view = new View();
-            KeyReleasedHandler = delegate(object sender, KeyEventArgs args)
-            {
-                EndSplash();
-            };
+            KeyReleasedHandler = delegate { EndSplash(); };
 
             MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
             {
@@ -44,24 +51,17 @@ namespace Platformer_The_Game
 
             if (scale)
             {
-                SplashSprite.Scale = new Vector2f(view.Size.X / SplashSprite.GetGlobalBounds().Width, view.Size.Y / SplashSprite.GetGlobalBounds().Height);
+                SplashSprite.Scale = new Vector2f(view.Size.X/SplashSprite.GetGlobalBounds().Width,
+                    view.Size.Y/SplashSprite.GetGlobalBounds().Height);
             }
         }
 
-        public SplashState(string img, bool doScale, IState nextState)
-        {
-            SplashSprite = new Sprite(new Texture(@"res\images\" + img));
-            this.scale = doScale;
-            this.nextState = nextState;
-        }
-
-        bool IsFadeOut = false;
         public void Update()
         {
             if (!IsFadeOut)
             {
                 SplashSprite.Color = new Color(max, max, max, alpha);
-                alpha = (byte)Math.Min(alpha + 4 , 255);
+                alpha = (byte) Math.Min(alpha + 4, 255);
                 if (alpha >= 255)
                 {
                     IsFadeOut = true;
@@ -70,7 +70,7 @@ namespace Platformer_The_Game
             else
             {
                 SplashSprite.Color = new Color(max, max, max, alpha);
-                alpha = (byte)Math.Max(alpha - 4, 0);
+                alpha = (byte) Math.Max(alpha - 4, 0);
                 if (alpha <= 0)
                 {
                     EndSplash();
@@ -84,11 +84,6 @@ namespace Platformer_The_Game
             game.w.Draw(SplashSprite);
         }
 
-        public void EndSplash()
-        {
-            game.State = nextState;
-        }
-
         public void Uninitialize()
         {
             game.w.KeyReleased -= KeyReleasedHandler;
@@ -98,6 +93,11 @@ namespace Platformer_The_Game
         public void OnEvent(Settings.Action a)
         {
             //EndSplash();
+        }
+
+        public void EndSplash()
+        {
+            game.State = nextState;
         }
     }
 }

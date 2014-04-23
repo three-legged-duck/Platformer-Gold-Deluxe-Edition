@@ -1,69 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.Window;
-using System.Diagnostics;
-using SFML.Audio;
 
 namespace Platformer_The_Game
 {
-
-
-    class Player
+    internal class Player
     {
-        enum Facing { Left, Right };
-        Facing direction;
-        bool moving;
+        private readonly SoundBuffer SoundBuffer;
+        protected readonly Game game;
+        private readonly Sound sound;
+        public Hitbox Hitbox;
         public bool OnGround;
 
+        private Vector2f _pos;
+        private Facing direction;
+        private GameState gameState;
+
+
+        private Image image;
+        private bool moving;
         protected Vector2f speed; // TODO : Why no int ?
-        Vector2f _pos;
+        protected ResMan.AnimatedSprite sprite;
+
+        public Player(Game game, GameState state, Vector2f pos)
+        {
+            this.game = game;
+            gameState = state;
+
+            direction = Facing.Right;
+            OnGround = true;
+
+            // Visual Appearance
+            //image = new Image(@"res\sprites\character.png");
+            //image.CreateMaskFromColor(new Color(0, 255, 0));
+            sprite = game.ResMan.NewSprite("character", "idle");
+
+            // Hitbox
+            Hitbox = new Hitbox(new List<FloatRect> {sprite.GetLocalBounds()});
+            direction = Facing.Right;
+            //state = State.Stopped;
+            Pos = pos;
+
+            SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
+            sound = new Sound();
+        }
+
         public Vector2f Pos
         {
             get { return _pos; }
             set { _pos = value; }
         }
 
-        public Hitbox Hitbox;
-
-
-        Image image;
-        protected ResMan.AnimatedSprite sprite;
-        
-        GameState gameState;
-        protected readonly Game game;
-
-        SoundBuffer SoundBuffer;
-        Sound sound;
-
-        public Player(Game game, GameState state, Vector2f pos)
+        public void Initialize()
         {
-            this.game = game;
-            this.gameState = state;
-            
-            direction = Facing.Right;
-            OnGround = true;
-            
-            // Visual Appearance
-            //image = new Image(@"res\sprites\character.png");
-            //image.CreateMaskFromColor(new Color(0, 255, 0));
-            this.sprite = game.ResMan.NewSprite("character", "idle");
-
-            // Hitbox
-            this.Hitbox = new Hitbox(new List<FloatRect> { sprite.GetLocalBounds() });
-            direction = Facing.Right;
-            //state = State.Stopped;
-            this.Pos = pos;
-
-            SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
-            sound = new Sound();
         }
 
-        public void Initialize()
-        { }
-        
         public void Event(Settings.Action action)
         {
             switch (action)
@@ -138,7 +131,6 @@ namespace Platformer_The_Game
 
         public void Uninitialize()
         {
-
         }
 
 
@@ -162,5 +154,11 @@ namespace Platformer_The_Game
                 speed.Y = 0;
             }
         }
+
+        private enum Facing
+        {
+            Left,
+            Right
+        };
     }
 }

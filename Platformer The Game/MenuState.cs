@@ -1,43 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using SFML.Graphics;
 using SFML.Window;
-using SFML.Audio;
-using System.IO;
 
 namespace Platformer_The_Game
 {
-    class MenuState : IState
+    internal class MenuState : IState
     {
-        const int carretLeftPos = 50;
-        const int carretRightPos = 25;
+        public delegate void onItemSelected(object sender, ItemSelectedEventArgs args);
 
-        Game game;
-        View view;
+        private const int carretLeftPos = 50;
+        private const int carretRightPos = 25;
+        private static Font menuFont;
 
-        List<string> menuList;
-        public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
-        Text carretLeft, carretRight;
-        int selectedPos;
-
-        EventHandler<MouseButtonEventArgs> MouseClickHandler;
-        EventHandler<MouseMoveEventArgs> MouseMoveHandler;
+        private readonly EventHandler<MouseButtonEventArgs> MouseClickHandler;
+        private readonly EventHandler<MouseMoveEventArgs> MouseMoveHandler;
 
         //Media ressources
-        private static Font menuFont;
-        public string BgMusicName { get { return "eddsworldCreditsTheme.ogg"; } }
-        Image backgroundImage;
-        Sprite backgroundSprite;
-        Texture backgroundTexture;
+        private readonly Sprite backgroundSprite;
+        private readonly List<string> menuList;
+        private readonly Random rng = new Random();
+        private bool Initialized;
+        private Image backgroundImage;
+        private Texture backgroundTexture;
+        private Text carretLeft, carretRight;
+        private Game game;
+        public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
+        private int nextmillis;
 
         //Scrolling text
-        Text scrollingText;
-        string[] textLines;
-        Random rng = new Random();
+        private Text scrollingText;
+        private int selectedPos;
+        private string[] textLines;
+        private View view;
 
-        public MenuState (Font font,string img, string music, params string[] menuItems)
+        public MenuState(Font font, string img, string music, params string[] menuItems)
         {
             MouseClickHandler = onMousePressed;
             MouseMoveHandler = onMouseMoved;
@@ -48,52 +46,58 @@ namespace Platformer_The_Game
             backgroundSprite = new Sprite(backgroundTexture);
         }
 
-        bool Initialized = false;
+        public string BgMusicName
+        {
+            get { return "eddsworldCreditsTheme.ogg"; }
+        }
+
         public void Initialize(Game game)
         {
             view = game.w.DefaultView;
-            nextmillis = System.Environment.TickCount + 150;
+            nextmillis = Environment.TickCount + 150;
             game.w.MouseButtonPressed += MouseClickHandler;
-            game.w.MouseMoved += MouseMoveHandler; if (Initialized) return;
+            game.w.MouseMoved += MouseMoveHandler;
+            if (Initialized) return;
             this.game = game;
-            backgroundSprite.Scale = new Vector2f(view.Size.X / backgroundSprite.GetLocalBounds().Width, view.Size.Y / backgroundSprite.GetLocalBounds().Height);
+            backgroundSprite.Scale = new Vector2f(view.Size.X/backgroundSprite.GetLocalBounds().Width,
+                view.Size.Y/backgroundSprite.GetLocalBounds().Height);
             carretLeft = new Text("- ", menuFont);
             carretRight = new Text(" -", menuFont);
             for (int i = 0; i < menuList.Count; i++)
             {
-                Text menuItem = new Text(menuList[i], menuFont);
-                uint itemWidth = (uint)menuItem.GetLocalBounds().Width;
+                var menuItem = new Text(menuList[i], menuFont);
+                var itemWidth = (uint) menuItem.GetLocalBounds().Width;
                 uint itemHeight = menuItem.CharacterSize;
 
-                menuItem.Position = new Vector2f(view.Size.X / 2 - itemWidth / 2,
-                    view.Size.Y / 2 - menuList.Count * itemHeight / 2 + i * itemHeight);
+                menuItem.Position = new Vector2f(view.Size.X/2 - itemWidth/2,
+                    view.Size.Y/2 - menuList.Count*itemHeight/2 + i*itemHeight);
 
                 menuBtns.Add(menuItem);
             }
-            textLines = File.ReadAllLines(@"res\strings\" + game.settings.language.ToString() + "Menu.txt");
-            scrollingText = new Text(RandomTextLine(),menuFont);
-            scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
+            textLines = File.ReadAllLines(@"res\strings\" + game.settings.language + "Menu.txt");
+            scrollingText = new Text(RandomTextLine(), menuFont);
+            scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height*2));
             Initialized = true;
         }
 
         public void Update()
         {
             Text item = menuBtns[selectedPos];
-            uint itemWidth = (uint)item.GetLocalBounds().Width;
+            var itemWidth = (uint) item.GetLocalBounds().Width;
             uint itemHeight = item.CharacterSize;
 
-            carretLeft.Position = new Vector2f(view.Size.X / 2 - itemWidth / 2 - carretLeftPos,
-                view.Size.Y / 2 - menuList.Count * itemHeight / 2 + selectedPos * itemHeight);
+            carretLeft.Position = new Vector2f(view.Size.X/2 - itemWidth/2 - carretLeftPos,
+                view.Size.Y/2 - menuList.Count*itemHeight/2 + selectedPos*itemHeight);
 
-            carretRight.Position = new Vector2f(view.Size.X / 2 + itemWidth / 2 + carretRightPos,
-                view.Size.Y / 2 - menuList.Count * itemHeight / 2 + selectedPos * itemHeight);
+            carretRight.Position = new Vector2f(view.Size.X/2 + itemWidth/2 + carretRightPos,
+                view.Size.Y/2 - menuList.Count*itemHeight/2 + selectedPos*itemHeight);
         }
 
         public void Draw()
         {
             game.w.SetView(view);
             game.w.Draw(backgroundSprite);
-            for (int i = 0;i < menuBtns.Count;i++)
+            for (int i = 0; i < menuBtns.Count; i++)
             {
                 Text t = menuBtns[i];
                 if (i == selectedPos)
@@ -112,19 +116,54 @@ namespace Platformer_The_Game
             if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
             {
                 scrollingText = new Text(RandomTextLine(), menuFont);
-                scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height * 2));
+                scrollingText.Position = new Vector2f(view.Size.X,
+                    view.Size.Y - (scrollingText.GetLocalBounds().Height*2));
             }
             else
             {
                 scrollingText.Position = new Vector2f(scrollingText.Position.X - 5, scrollingText.Position.Y);
             }
-                game.w.Draw(scrollingText);
+            game.w.Draw(scrollingText);
         }
 
         public void Uninitialize()
         {
             game.w.MouseButtonPressed -= MouseClickHandler;
             game.w.MouseMoved -= MouseMoveHandler;
+        }
+
+        public void OnEvent(Settings.Action action)
+        {
+            if (nextmillis > Environment.TickCount)
+            {
+                return;
+            }
+            switch (action)
+            {
+                case Settings.Action.Up:
+                    selectedPos = selectedPos - 1;
+                    break;
+                case Settings.Action.Down:
+                    selectedPos = selectedPos + 1;
+                    break;
+                case Settings.Action.Use:
+                    if (ItemSelected != null)
+                    {
+                        ItemSelected(this, new ItemSelectedEventArgs(selectedPos, menuList));
+                    }
+                    break;
+            }
+
+            if (selectedPos < 0)
+            {
+                selectedPos = menuList.Count - 1;
+            }
+            if (selectedPos >= menuList.Count)
+            {
+                selectedPos = 0;
+            }
+
+            nextmillis = Environment.TickCount + 150;
         }
 
         private string RandomTextLine()
@@ -168,52 +207,18 @@ namespace Platformer_The_Game
                 fr.Width + carretLeftPos + carretRightPos, fr.Height);
         }
 
-        int nextmillis;
-        public void OnEvent(Settings.Action action)
-        {
-            if (nextmillis > Environment.TickCount)
-            {
-                return;
-            }
-            switch (action)
-            {
-                case Settings.Action.Up:
-                    selectedPos = selectedPos - 1;
-                    break;
-                case Settings.Action.Down:
-                    selectedPos = selectedPos + 1;
-                    break;
-                case Settings.Action.Use:
-                    if (ItemSelected != null)
-                    {
-                        ItemSelected(this, new ItemSelectedEventArgs(selectedPos, menuList));
-                    }
-                    break;
-            }
-
-            if (selectedPos < 0)
-            {
-                selectedPos = menuList.Count - 1;
-            }
-            if (selectedPos >= menuList.Count)
-            {
-                selectedPos = 0;
-            }
-
-            nextmillis = Environment.TickCount + 150;
-        }
+        public event onItemSelected ItemSelected;
 
         public class ItemSelectedEventArgs : EventArgs
         {
+            public List<string> menuList;
+            public int selectedPos;
+
             public ItemSelectedEventArgs(int selectedPos, List<string> menuList)
             {
                 this.menuList = menuList;
                 this.selectedPos = selectedPos;
             }
-            public List<string> menuList;
-            public int selectedPos;
         }
-        public delegate void onItemSelected(object sender, ItemSelectedEventArgs args);
-        public event onItemSelected ItemSelected;
     }
 }

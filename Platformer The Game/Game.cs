@@ -71,7 +71,7 @@ namespace Platformer_The_Game
         {
             W.SetFramerateLimit(60);
             W.SetKeyRepeatEnabled(false);
-            W.SetIcon(128, 128, (new Image(@"res\images\icon.png")).Pixels);
+            W.SetIcon(32, 32, (new Image(@"res\images\icon.png")).Pixels);
             // Setup the events
             W.KeyPressed += OnKeyPressed;
             W.KeyReleased += OnKeyReleased;

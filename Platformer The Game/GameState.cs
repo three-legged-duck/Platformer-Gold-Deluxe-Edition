@@ -24,8 +24,8 @@ namespace Platformer_The_Game
             _game = game;
             _view = new View();
             _backgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.bmp"));
-            _backgroundSprite.Scale = new Vector2f(game.w.DefaultView.Size.X/_backgroundSprite.GetGlobalBounds().Width,
-                game.w.DefaultView.Size.Y/_backgroundSprite.GetGlobalBounds().Height);
+            _backgroundSprite.Scale = new Vector2f(game.W.DefaultView.Size.X/_backgroundSprite.GetGlobalBounds().Width,
+                game.W.DefaultView.Size.Y/_backgroundSprite.GetGlobalBounds().Height);
             Platforms = new List<Platform>();
 
             _player = new Player(game, new Vector2f(50, 180));
@@ -34,20 +34,22 @@ namespace Platformer_The_Game
             _spriteSheet.CreateMaskFromColor(new Color(0, 255, 0));
             var blockTexture = new Texture(_spriteSheet, new IntRect(12*32, 0, 32, 32));
 
-            Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int) game.w.Size.X - 48, 32), blockTexture,
+            Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int) game.W.Size.X - 48, 32), blockTexture,
                 game));
-            Platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 30), new Vector2i((int) game.w.Size.X, 32),
+            Platforms.Add(new Platform(new Vector2f(0, game.W.Size.Y - 30), new Vector2i((int) game.W.Size.X, 32),
                 blockTexture, game));
-            Platforms.Add(new Platform(new Vector2f(0, game.w.Size.Y - 180), new Vector2i((int) game.w.Size.X - 192, 32),
+            Platforms.Add(new Platform(new Vector2f(0, game.W.Size.Y - 180), new Vector2i((int) game.W.Size.X - 192, 32),
                 blockTexture, game));
             _view.Center = _player.Pos;
         }
 
         public void Draw()
         {
-            _game.w.SetView(_game.w.DefaultView);
-            _game.w.Draw(_backgroundSprite);
-            _game.w.SetView(_view);
+            _game.W.SetView(_game.W.DefaultView);
+            _game.W.Draw(_backgroundSprite);
+            Text lifeText = new Text(Utils.GetString("life",_game) + " : " + _player.Life, _game.MenuFont, 15) { Position = new Vector2f(0, 0) };
+            _game.W.Draw(lifeText);
+            _game.W.SetView(_view);
             foreach (Platform plateform in Platforms)
             {
                 plateform.Draw();
@@ -82,7 +84,7 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Pause:
-                    var pause = new MenuState(_game.menuFont, "menuBg.bmp",
+                    var pause = new MenuState(_game.MenuFont, "menuBg.bmp", true,
                         Utils.GetString("resume", _game), Utils.GetString("settings", _game),
                         Utils.GetString("backMain", _game));
                     pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
@@ -101,6 +103,9 @@ namespace Platformer_The_Game
                         }
                     };
                     _game.State = pause;
+                    break;
+                case Settings.Action.DebugDamage:
+                    _player.GetDamage(10);
                     break;
                 default:
                     _player.Event(action);

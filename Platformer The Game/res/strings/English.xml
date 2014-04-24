@@ -20,5 +20,9 @@
   <!-- Pause menu -->
   <string name="resume">Resume</string>
   <string name="backMain">Main menu</string>
+  
+  <!-- In-game GUI -->
+  <string name="life">Life</string>
+  <string name="speed">Speed</string>
 
 </resources>

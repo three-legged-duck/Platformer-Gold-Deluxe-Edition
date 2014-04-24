@@ -21,4 +21,8 @@
   <string name="resume">Reprendre</string>
   <string name="backMain">Retour au menu principal</string>
 
+  <!-- In-game GUI -->
+  <string name="life">Vie</string>
+  <string name="speed">Vitesse</string>
+
 </resources>

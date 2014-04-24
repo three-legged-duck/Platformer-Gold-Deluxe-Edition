@@ -45,8 +45,8 @@ namespace Platformer_The_Game
                 }
             };
 
-            g.w.KeyReleased += KeyReleasedHandler;
-            g.w.MouseButtonPressed += MouseBtnHandler;
+            g.W.KeyReleased += KeyReleasedHandler;
+            g.W.MouseButtonPressed += MouseBtnHandler;
 
 
             if (scale)
@@ -80,14 +80,14 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
-            game.w.SetView(view);
-            game.w.Draw(SplashSprite);
+            game.W.SetView(view);
+            game.W.Draw(SplashSprite);
         }
 
         public void Uninitialize()
         {
-            game.w.KeyReleased -= KeyReleasedHandler;
-            game.w.MouseButtonPressed -= MouseBtnHandler;
+            game.W.KeyReleased -= KeyReleasedHandler;
+            game.W.MouseButtonPressed -= MouseBtnHandler;
         }
 
         public void OnEvent(Settings.Action a)

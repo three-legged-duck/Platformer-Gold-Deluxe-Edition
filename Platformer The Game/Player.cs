@@ -9,23 +9,25 @@ namespace Platformer_The_Game
     internal class Player
     {
         private readonly SoundBuffer _soundBuffer;
-        protected readonly Game Game;
+        Game Game;
         private readonly Sound _sound;
         public Hitbox Hitbox;
         public bool OnGround;
 
         private Vector2f _pos;
         private Facing _direction;
+        public int Life;
 
 
         private bool _moving;
-        protected Vector2f Speed; // TODO : Why no int ?
+        public Vector2f Speed; // TODO : Why no int ?
         protected ResMan.AnimatedSprite Sprite;
 
         public Player(Game game, Vector2f pos)
         {
             Game = game;
 
+            Life = 100;
             _direction = Facing.Right;
             OnGround = true;
 
@@ -109,9 +111,9 @@ namespace Platformer_The_Game
                 Speed.Y++;
             }
             else if (OnGround && Math.Abs(Speed.Y) > 0.1) Speed.Y = 0;
-            _pos.X = Math.Min(Math.Max(_pos.X + Speed.X, 0), Game.settings.windowWidth - Sprite.GetLocalBounds().Width);
-            _pos.Y = Math.Min(Math.Max(_pos.Y + Speed.Y, 0), Game.settings.windowHeight - Sprite.GetLocalBounds().Height);
-            if (_pos.X >= Game.settings.windowWidth - Sprite.GetLocalBounds().Width || _pos.X <= 1) Speed.X = 0;
+            _pos.X = Math.Min(Math.Max(_pos.X + Speed.X, 0), Game.Settings.windowWidth - Sprite.GetLocalBounds().Width);
+            _pos.Y = Math.Min(Math.Max(_pos.Y + Speed.Y, 0), Game.Settings.windowHeight - Sprite.GetLocalBounds().Height);
+            if (_pos.X >= Game.Settings.windowWidth - Sprite.GetLocalBounds().Width || _pos.X <= 1) Speed.X = 0;
             Hitbox.MoveTo(_pos);
 
             _moving = false;
@@ -121,16 +123,42 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
-            if (Game.settings.drawTextures)
-                Game.w.Draw(Sprite);
-            if (Game.settings.drawHitbox)
-                Game.w.Draw(Hitbox);
+            if (Game.Settings.drawTextures)
+                Game.W.Draw(Sprite);
+            if (Game.Settings.drawHitbox)
+                Game.W.Draw(Hitbox);
+            if (Sprite.Color.A != 255)
+            {
+                Sprite.Color = new Color(Sprite.Color.R, Sprite.Color.G, Sprite.Color.B, 255);
+            }
         }
 
         public void Uninitialize()
         {
         }
 
+        public void GetDamage(int dmg)
+        {
+            Sprite.Color = new Color(Sprite.Color.R,Sprite.Color.G,Sprite.Color.B,128);
+            Life -= dmg;
+            if (Life < 0)
+            {
+                MenuState gameoverMenuState = new MenuState(Game.MenuFont, "gameoverBg.bmp", false, Utils.GetString("backMain", Game), Utils.GetString("quit", Game));
+                gameoverMenuState.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+                {
+                    switch (args.SelectedPos)
+                    {
+                        case 0:
+                            Game.State = Utils.CreateMainMenu(Game);
+                            break;
+                        case 1:
+                            Game.Close();
+                            break;
+                    }
+                };
+                Game.State = gameoverMenuState;
+            }
+        }
 
         public void Collided(Platform platform, FloatRect collision)
         {

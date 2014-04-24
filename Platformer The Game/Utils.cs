@@ -81,7 +81,7 @@ namespace Platformer_The_Game
         {
             string nodeSearch = "//string[@name='" + key + "']";
             XmlNodeList translatedString;
-            switch (game.settings.language)
+            switch (game.Settings.language)
             {
                 case Language.French:
                     translatedString = frenchStrings.SelectNodes(nodeSearch);
@@ -116,7 +116,7 @@ namespace Platformer_The_Game
 
         public static MenuState CreateMainMenu(Game game)
         {
-            var menu = new MenuState(game.menuFont, "menuBg.bmp", GetString("play", game),
+            var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("play", game),
                 GetString("settings", game), GetString("quit", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
@@ -140,48 +140,48 @@ namespace Platformer_The_Game
         {
             string[] menuItems =
             {
-                GetOptionText("drawTextures", game.settings.drawTextures, game),
-                GetOptionText("drawHitboxes", game.settings.drawHitbox, game),
+                GetOptionText("drawTextures", game.Settings.drawTextures, game),
+                GetOptionText("drawHitboxes", game.Settings.drawHitbox, game),
                 GetString("language", game) + " : " +
-                (game.settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
-                GetOptionText("fullscreen", game.settings.fullscreen, game),
+                (game.Settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
+                GetOptionText("fullscreen", game.Settings.fullscreen, game),
                 GetString("back", game)
             };
-            var options = new MenuState(game.menuFont, "menuBg.bmp", menuItems);
+            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
 
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.SelectedPos)
                 {
                     case 0:
-                        game.settings.drawTextures = !game.settings.drawTextures;
-                        options.MenuBtns[0].DisplayedString = GetOptionText("drawTextures", game.settings.drawTextures,
+                        game.Settings.drawTextures = !game.Settings.drawTextures;
+                        options.MenuBtns[0].DisplayedString = GetOptionText("drawTextures", game.Settings.drawTextures,
                             game);
                         break;
                     case 1:
-                        game.settings.drawHitbox = !game.settings.drawHitbox;
-                        options.MenuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.settings.drawHitbox,
+                        game.Settings.drawHitbox = !game.Settings.drawHitbox;
+                        options.MenuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.Settings.drawHitbox,
                             game);
                         break;
                     case 2:
-                        if (game.settings.language == Language.English)
+                        if (game.Settings.language == Language.English)
                         {
-                            game.settings.language = Language.French;
+                            game.Settings.language = Language.French;
                         }
                         else
                         {
-                            game.settings.language = Language.English;
+                            game.Settings.language = Language.English;
                         }
                         options.MenuBtns[2].DisplayedString = GetString("language", game) + " : " +
-                                                              (game.settings.language == Language.English
+                                                              (game.Settings.language == Language.English
                                                                   ? Language.English.ToString()
                                                                   : Language.French.ToString());
                         break;
                     case 3:
 
-                        game.settings.fullscreen = !game.settings.fullscreen;
+                        game.Settings.fullscreen = !game.Settings.fullscreen;
                         game.RecreateWindow();
-                        options.MenuBtns[3].DisplayedString = GetOptionText("fullscreen", game.settings.fullscreen, game);
+                        options.MenuBtns[3].DisplayedString = GetOptionText("fullscreen", game.Settings.fullscreen, game);
                         break;
                     case 4:
                         game.State = returnState;

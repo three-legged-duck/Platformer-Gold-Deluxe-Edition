@@ -13,12 +13,12 @@ namespace Platformer_The_Game
         private HashSet<uint> joyPressed = new HashSet<uint>();
         private HashSet<Keyboard.Key> keyPressed = new HashSet<Keyboard.Key>();
         public ResMan ResMan = new ResMan();
-        private Music bgMusic;
-        private string bgMusicName;
-        public Font menuFont = new Font(@"res\fonts\Square.ttf");
-        public Settings settings = Settings.Load();
-        private IState state;
-        public RenderWindow w;
+        private Music _bgMusic;
+        private string _bgMusicName;
+        public Font MenuFont = new Font(@"res\fonts\Square.ttf");
+        public Settings Settings = Settings.Load();
+        private IState _state;
+        public RenderWindow W;
 
         public Game()
         {
@@ -26,37 +26,37 @@ namespace Platformer_The_Game
             Utils.LoadTranslations();
 
             //Load main window
-            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer",
-                (settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
+            W = new RenderWindow(new VideoMode(Settings.windowWidth, Settings.windowHeight), "Platformer",
+                (Settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
             WindowInit();
         }
 
         public IState State
         {
-            get { return state; }
+            get { return _state; }
             set
             {
-                if (state != null)
+                if (_state != null)
                 {
-                    state.Uninitialize();
+                    _state.Uninitialize();
                 }
-                state = value;
-                state.Initialize(this);
+                _state = value;
+                _state.Initialize(this);
             }
         }
 
         public void RecreateWindow()
         {
             CleanInput();
-            w.KeyPressed -= OnKeyPressed;
-            w.KeyReleased -= OnKeyReleased;
-            w.JoystickButtonPressed -= OnJoyPressed;
-            w.JoystickButtonReleased -= OnJoyReleased;
-            w.JoystickMoved -= OnJoyAxisMoved;
-            w.Closed -= OnClosed;
-            w.Close();
-            w = new RenderWindow(new VideoMode(settings.windowWidth, settings.windowHeight), "Platformer",
-                (settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
+            W.KeyPressed -= OnKeyPressed;
+            W.KeyReleased -= OnKeyReleased;
+            W.JoystickButtonPressed -= OnJoyPressed;
+            W.JoystickButtonReleased -= OnJoyReleased;
+            W.JoystickMoved -= OnJoyAxisMoved;
+            W.Closed -= OnClosed;
+            W.Close();
+            W = new RenderWindow(new VideoMode(Settings.windowWidth, Settings.windowHeight), "Platformer",
+                (Settings.fullscreen) ? Styles.Fullscreen : Styles.Close);
             WindowInit();
         }
 
@@ -69,16 +69,16 @@ namespace Platformer_The_Game
 
         private void WindowInit()
         {
-            w.SetFramerateLimit(60);
-            w.SetKeyRepeatEnabled(false);
-            w.SetIcon(128, 128, (new Image(@"res\images\icon.png")).Pixels);
+            W.SetFramerateLimit(60);
+            W.SetKeyRepeatEnabled(false);
+            W.SetIcon(128, 128, (new Image(@"res\images\icon.png")).Pixels);
             // Setup the events
-            w.KeyPressed += OnKeyPressed;
-            w.KeyReleased += OnKeyReleased;
-            w.JoystickButtonPressed += OnJoyPressed;
-            w.JoystickButtonReleased += OnJoyReleased;
-            w.JoystickMoved += OnJoyAxisMoved;
-            w.Closed += OnClosed;
+            W.KeyPressed += OnKeyPressed;
+            W.KeyReleased += OnKeyReleased;
+            W.JoystickButtonPressed += OnJoyPressed;
+            W.JoystickButtonReleased += OnJoyReleased;
+            W.JoystickMoved += OnJoyAxisMoved;
+            W.Closed += OnClosed;
         }
 
         public void RunMainLoop()
@@ -89,17 +89,17 @@ namespace Platformer_The_Game
 
             State = new SplashState("splash.bmp", true, menu);
 
-            while (w.IsOpen())
+            while (W.IsOpen())
             {
-                w.DispatchEvents();
+                W.DispatchEvents();
 
                 // Tick update
                 Update();
 
                 // Drawing the window
-                w.Clear(Color.Black);
+                W.Clear(Color.Black);
                 Draw();
-                w.Display();
+                W.Display();
             }
         }
 
@@ -111,34 +111,32 @@ namespace Platformer_The_Game
         {
             foreach (Keyboard.Key key in keyPressed)
             {
-                state.OnEvent(settings.GetAction(state.GetType(), key));
+                _state.OnEvent(Settings.GetAction(_state.GetType(), key));
             }
             foreach (var axis in axisPressed)
             {
-                state.OnEvent(settings.GetAction(state.GetType(), axis.Key, axis.Value));
+                _state.OnEvent(Settings.GetAction(_state.GetType(), axis.Key, axis.Value));
             }
             foreach (uint key in joyPressed)
             {
-                state.OnEvent(settings.GetAction(state.GetType(), key));
+                _state.OnEvent(Settings.GetAction(_state.GetType(), key));
             }
-            state.Update();
-            if (bgMusic != null && bgMusicName != state.BgMusicName)
+            _state.Update();
+            if (_bgMusic != null && _bgMusicName != _state.BgMusicName)
             {
-                bgMusic.Stop();
+                _bgMusic.Stop();
             }
-            else if (bgMusicName != state.BgMusicName && bgMusicName != null)
+            else if (_bgMusicName != _state.BgMusicName && _bgMusicName != null)
             {
-                bgMusic = new Music(@"res\music\" + state.BgMusicName);
-                bgMusic.Volume = 50f;
-                bgMusic.Loop = true;
-                bgMusic.Play();
+                _bgMusic = new Music(@"res\music\" + _state.BgMusicName) {Volume = 50f, Loop = true};
+                _bgMusic.Play();
             }
-            bgMusicName = state.BgMusicName;
+            _bgMusicName = _state.BgMusicName;
         }
 
         private void Draw()
         {
-            state.Draw();
+            _state.Draw();
         }
 
         private void OnKeyPressed(object sender, KeyEventArgs e)
@@ -155,7 +153,7 @@ namespace Platformer_The_Game
                     Directory.CreateDirectory("screenshots");
                 }
                 string filename = String.Format("screenshots\\screen_{0}.png", DateTime.Now.ToFileTimeUtc());
-                w.Capture().SaveToFile(filename);
+                W.Capture().SaveToFile(filename);
             }
 
             keyPressed.Remove(e.Code);
@@ -186,7 +184,7 @@ namespace Platformer_The_Game
 
         public void Close()
         {
-            w.Close();
+            W.Close();
             Environment.Exit(0);
         }
     }

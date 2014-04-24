@@ -28,14 +28,16 @@ namespace Platformer_The_Game
         private int _nextmillis;
 
         //Scrolling text
+        private bool scrollingTextActivated;
         private Text _scrollingText;
         private int _selectedPos;
         private string[] _textLines;
         private View _view;
 
         // ReSharper disable PossibleLossOfFraction
-        public MenuState(Font font, string img, params string[] menuItems)
+        public MenuState(Font font, string img, bool hasScrollingText, params string[] menuItems)
         {
+            scrollingTextActivated = hasScrollingText;
             _mouseClickHandler = OnMousePressed;
             _mouseMoveHandler = OnMouseMoved;
             _menuList = new List<string>(menuItems);
@@ -52,10 +54,10 @@ namespace Platformer_The_Game
 
         public void Initialize(Game game)
         {
-            _view = game.w.DefaultView;
+            _view = game.W.DefaultView;
             _nextmillis = Environment.TickCount + 150;
-            game.w.MouseButtonPressed += _mouseClickHandler;
-            game.w.MouseMoved += _mouseMoveHandler;
+            game.W.MouseButtonPressed += _mouseClickHandler;
+            game.W.MouseMoved += _mouseMoveHandler;
             if (_initialized) return;
             _game = game;
             _backgroundSprite.Scale = new Vector2f(_view.Size.X/_backgroundSprite.GetLocalBounds().Width,
@@ -73,9 +75,13 @@ namespace Platformer_The_Game
 
                 MenuBtns.Add(menuItem);
             }
-            _textLines = File.ReadAllLines(@"res\strings\" + game.settings.language + "Menu.txt");
-            _scrollingText = new Text(RandomTextLine(), _menuFont);
-            _scrollingText.Position = new Vector2f(_view.Size.X, _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
+            if (scrollingTextActivated)
+            {
+                _textLines = File.ReadAllLines(@"res\strings\" + game.Settings.language + "Menu.txt");
+                _scrollingText = new Text(RandomTextLine(), _menuFont);
+                _scrollingText.Position = new Vector2f(_view.Size.X,
+                    _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
+            }
             _initialized = true;
         }
 
@@ -94,8 +100,8 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
-            _game.w.SetView(_view);
-            _game.w.Draw(_backgroundSprite);
+            _game.W.SetView(_view);
+            _game.W.Draw(_backgroundSprite);
             for (int i = 0; i < MenuBtns.Count; i++)
             {
                 Text t = MenuBtns[i];
@@ -107,28 +113,31 @@ namespace Platformer_The_Game
                 {
                     t.Color = new Color(t.Color.R, t.Color.G, t.Color.B, 150);
                 }
-                _game.w.Draw(t);
+                _game.W.Draw(t);
             }
-            _game.w.Draw(_carretLeft);
-            _game.w.Draw(_carretRight);
+            _game.W.Draw(_carretLeft);
+            _game.W.Draw(_carretRight);
 
-            if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
+            if (scrollingTextActivated)
             {
-                _scrollingText = new Text(RandomTextLine(), _menuFont);
-                _scrollingText.Position = new Vector2f(_view.Size.X,
-                    _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
+                if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
+                {
+                    _scrollingText = new Text(RandomTextLine(), _menuFont);
+                    _scrollingText.Position = new Vector2f(_view.Size.X,
+                        _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
+                }
+                else
+                {
+                    _scrollingText.Position = new Vector2f(_scrollingText.Position.X - 5, _scrollingText.Position.Y);
+                }
+                _game.W.Draw(_scrollingText);
             }
-            else
-            {
-                _scrollingText.Position = new Vector2f(_scrollingText.Position.X - 5, _scrollingText.Position.Y);
-            }
-            _game.w.Draw(_scrollingText);
         }
 
         public void Uninitialize()
         {
-            _game.w.MouseButtonPressed -= _mouseClickHandler;
-            _game.w.MouseMoved -= _mouseMoveHandler;
+            _game.W.MouseButtonPressed -= _mouseClickHandler;
+            _game.W.MouseMoved -= _mouseMoveHandler;
         }
 
         public void OnEvent(Settings.Action action)
@@ -178,7 +187,7 @@ namespace Platformer_The_Game
             }
             for (int i = 0; i < MenuBtns.Count; i++)
             {
-                Vector2f mousePos = _game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
+                Vector2f mousePos = _game.W.MapPixelToCoords(new Vector2i(args.X, args.Y));
                 FloatRect realRect = getRealRect(MenuBtns[i].GetGlobalBounds());
                 if (realRect.Contains(mousePos.X, mousePos.Y))
                 {
@@ -191,7 +200,7 @@ namespace Platformer_The_Game
         {
             for (int i = 0; i < MenuBtns.Count; i++)
             {
-                Vector2f mousePos = _game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
+                Vector2f mousePos = _game.W.MapPixelToCoords(new Vector2i(args.X, args.Y));
                 FloatRect realRect = getRealRect(MenuBtns[i].GetGlobalBounds());
                 if (realRect.Contains(mousePos.X, mousePos.Y))
                 {

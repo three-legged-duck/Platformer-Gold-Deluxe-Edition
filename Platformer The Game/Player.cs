@@ -8,7 +8,6 @@ namespace Platformer_The_Game
 {
     internal class Player
     {
-        private readonly SoundBuffer _soundBuffer;
         Game Game;
         private readonly Sound _sound;
         public Hitbox Hitbox;
@@ -39,7 +38,6 @@ namespace Platformer_The_Game
             _direction = Facing.Right;
             Pos = pos;
 
-            _soundBuffer = new SoundBuffer(@"res\music\bump.aiff");
             _sound = new Sound();
         }
 
@@ -139,6 +137,8 @@ namespace Platformer_The_Game
 
         public void GetDamage(int dmg)
         {
+            _sound.SoundBuffer = new SoundBuffer(@"res\music\hurt.aiff"); ;
+            _sound.Play();
             Sprite.Color = new Color(Sprite.Color.R,Sprite.Color.G,Sprite.Color.B,128);
             Life -= dmg;
             if (Life <= 0)
@@ -172,7 +172,7 @@ namespace Platformer_The_Game
             }
             else
             {
-                _sound.SoundBuffer = _soundBuffer;
+                _sound.SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
                 _sound.Play();
                 _pos.Y = collision.Top + collision.Height;
                 Hitbox.MoveTo(_pos);

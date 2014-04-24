@@ -137,7 +137,7 @@ namespace Platformer_The_Game
 
         public void GetDamage(int dmg)
         {
-            _sound.SoundBuffer = new SoundBuffer(@"res\music\hurt.aiff"); ;
+            _sound.SoundBuffer = new SoundBuffer(@"res\music\hurt.aiff");
             _sound.Play();
             Sprite.Color = new Color(Sprite.Color.R,Sprite.Color.G,Sprite.Color.B,128);
             Life -= dmg;

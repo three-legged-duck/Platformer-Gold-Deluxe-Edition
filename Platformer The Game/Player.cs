@@ -8,43 +8,37 @@ namespace Platformer_The_Game
 {
     internal class Player
     {
-        private readonly SoundBuffer SoundBuffer;
-        protected readonly Game game;
-        private readonly Sound sound;
+        private readonly SoundBuffer _soundBuffer;
+        protected readonly Game Game;
+        private readonly Sound _sound;
         public Hitbox Hitbox;
         public bool OnGround;
 
         private Vector2f _pos;
-        private Facing direction;
-        private GameState gameState;
+        private Facing _direction;
 
 
-        private Image image;
-        private bool moving;
-        protected Vector2f speed; // TODO : Why no int ?
-        protected ResMan.AnimatedSprite sprite;
+        private bool _moving;
+        protected Vector2f Speed; // TODO : Why no int ?
+        protected ResMan.AnimatedSprite Sprite;
 
-        public Player(Game game, GameState state, Vector2f pos)
+        public Player(Game game, Vector2f pos)
         {
-            this.game = game;
-            gameState = state;
+            Game = game;
 
-            direction = Facing.Right;
+            _direction = Facing.Right;
             OnGround = true;
 
             // Visual Appearance
-            //image = new Image(@"res\sprites\character.png");
-            //image.CreateMaskFromColor(new Color(0, 255, 0));
-            sprite = game.ResMan.NewSprite("character", "idle");
+            Sprite = game.ResMan.NewSprite("character", "idle");
 
             // Hitbox
-            Hitbox = new Hitbox(new List<FloatRect> {sprite.GetLocalBounds()});
-            direction = Facing.Right;
-            //state = State.Stopped;
+            Hitbox = new Hitbox(new List<FloatRect> {Sprite.GetLocalBounds()});
+            _direction = Facing.Right;
             Pos = pos;
 
-            SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
-            sound = new Sound();
+            _soundBuffer = new SoundBuffer(@"res\music\bump.aiff");
+            _sound = new Sound();
         }
 
         public Vector2f Pos
@@ -62,30 +56,30 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Left:
-                    moving = true;
-                    if (direction == Facing.Right)
+                    _moving = true;
+                    if (_direction == Facing.Right)
                     {
-                        sprite.Reverse();
-                        direction = Facing.Left;
+                        Sprite.Reverse();
+                        _direction = Facing.Left;
                     }
                     break;
                 case Settings.Action.Right:
-                    moving = true;
-                    if (direction == Facing.Left)
+                    _moving = true;
+                    if (_direction == Facing.Left)
                     {
-                        sprite.Reverse();
-                        direction = Facing.Right;
+                        Sprite.Reverse();
+                        _direction = Facing.Right;
                     }
                     break;
                 case Settings.Action.Jump:
                     if (OnGround)
                     {
                         OnGround = false;
-                        speed.Y = -15;
+                        Speed.Y = -15;
                     }
-                    else if (!OnGround && speed.Y < -10)
+                    else if (!OnGround && Speed.Y < -10)
                     {
-                        speed.Y--;
+                        Speed.Y--;
                     }
                     break;
             }
@@ -94,39 +88,43 @@ namespace Platformer_The_Game
         public void Update()
         {
             // TODO : Movement handling is pretty ugly. We could prettify it a lot.
-            if (moving)
+            if (_moving)
             {
-                if (sprite.Animation == "idle") sprite.Animation = "movement";
-                if (Math.Abs(speed.X) < 75) speed.X += (direction == Facing.Left ? -1 : 1);
+                if (Sprite.Animation == "idle") Sprite.Animation = "movement";
+                if (Math.Abs(Speed.X) < 75) Speed.X += (_direction == Facing.Left ? -1 : 1);
             } // below : not moving
             else
             {
-                if (sprite.Animation == "movement") sprite.Animation = "idle";
-                if (-1 < speed.X && speed.X < 1) speed.X = 0;
-                else if (speed.X > 0) speed.X--;
-                else speed.X++;
+                if (Sprite.Animation == "movement") Sprite.Animation = "idle";
+                if (-1 < Speed.X && Speed.X < 1) Speed.X = 0;
+                else if (Speed.X > 0) Speed.X--;
+                else Speed.X++;
             }
-            if (!OnGround && speed.Y < 100)
+            if (!OnGround && Math.Abs(_pos.Y) < 0.1)
             {
-                speed.Y++;
+                Speed.Y++;
             }
-            else if (OnGround && speed.Y != 0) speed.Y = 0;
-            _pos.X = Math.Min(Math.Max(_pos.X + speed.X, 0), game.settings.windowWidth - sprite.GetLocalBounds().Width);
-            _pos.Y = Math.Min(Math.Max(_pos.Y + speed.Y, 0), game.settings.windowHeight - sprite.GetLocalBounds().Height);
-            if (_pos.X >= game.settings.windowWidth - sprite.GetLocalBounds().Width || _pos.X <= 1) speed.X = 0;
+            if (!OnGround && Speed.Y < 100)
+            {
+                Speed.Y++;
+            }
+            else if (OnGround && Math.Abs(Speed.Y) > 0.1) Speed.Y = 0;
+            _pos.X = Math.Min(Math.Max(_pos.X + Speed.X, 0), Game.settings.windowWidth - Sprite.GetLocalBounds().Width);
+            _pos.Y = Math.Min(Math.Max(_pos.Y + Speed.Y, 0), Game.settings.windowHeight - Sprite.GetLocalBounds().Height);
+            if (_pos.X >= Game.settings.windowWidth - Sprite.GetLocalBounds().Width || _pos.X <= 1) Speed.X = 0;
             Hitbox.MoveTo(_pos);
 
-            moving = false;
+            _moving = false;
             OnGround = false;
-            sprite.Position = _pos;
+            Sprite.Position = _pos;
         }
 
         public void Draw()
         {
-            if (game.settings.drawTextures)
-                game.w.Draw(sprite);
-            if (game.settings.drawHitbox)
-                game.w.Draw(Hitbox);
+            if (Game.settings.drawTextures)
+                Game.w.Draw(Sprite);
+            if (Game.settings.drawHitbox)
+                Game.w.Draw(Hitbox);
         }
 
         public void Uninitialize()
@@ -136,22 +134,22 @@ namespace Platformer_The_Game
 
         public void Collided(Platform platform, FloatRect collision)
         {
-            if (platform.Pos.Y + platform.hitbox.effectiveShapes[0].Height > Pos.Y + sprite.GetLocalBounds().Height)
+            if (platform.Pos.Y + platform.hitbox.effectiveShapes[0].Height > Pos.Y + Sprite.GetLocalBounds().Height)
             {
-                _pos.Y = collision.Top - sprite.TextureRect.Height;
+                _pos.Y = collision.Top - Sprite.TextureRect.Height;
                 Hitbox.MoveTo(_pos);
-                sprite.Position = _pos;
-                speed.Y = 0;
+                Sprite.Position = _pos;
+                Speed.Y = 0;
                 OnGround = true;
             }
             else
             {
-                sound.SoundBuffer = SoundBuffer;
-                sound.Play();
+                _sound.SoundBuffer = _soundBuffer;
+                _sound.Play();
                 _pos.Y = collision.Top + collision.Height;
                 Hitbox.MoveTo(_pos);
-                sprite.Position = _pos;
-                speed.Y = 0;
+                Sprite.Position = _pos;
+                Speed.Y = 0;
             }
         }
 

@@ -8,42 +8,41 @@ namespace Platformer_The_Game
 {
     internal class MenuState : IState
     {
-        public delegate void onItemSelected(object sender, ItemSelectedEventArgs args);
+        public delegate void OnItemSelected(object sender, ItemSelectedEventArgs args);
 
-        private const int carretLeftPos = 50;
-        private const int carretRightPos = 25;
-        private static Font menuFont;
+        private const int CarretLeftPos = 50;
+        private const int CarretRightPos = 25;
+        private static Font _menuFont;
 
-        private readonly EventHandler<MouseButtonEventArgs> MouseClickHandler;
-        private readonly EventHandler<MouseMoveEventArgs> MouseMoveHandler;
+        private readonly EventHandler<MouseButtonEventArgs> _mouseClickHandler;
+        private readonly EventHandler<MouseMoveEventArgs> _mouseMoveHandler;
 
         //Media ressources
-        private readonly Sprite backgroundSprite;
-        private readonly List<string> menuList;
-        private readonly Random rng = new Random();
-        private bool Initialized;
-        private Image backgroundImage;
-        private Texture backgroundTexture;
-        private Text carretLeft, carretRight;
-        private Game game;
-        public List<Text> menuBtns = new List<Text>(); // FIXME : Ugly options menu hack
-        private int nextmillis;
+        private readonly Sprite _backgroundSprite;
+        private readonly List<string> _menuList;
+        private readonly Random _rng = new Random();
+        private bool _initialized;
+        private Text _carretLeft, _carretRight;
+        private Game _game;
+        public List<Text> MenuBtns = new List<Text>(); // FIXME : Ugly options menu hack
+        private int _nextmillis;
 
         //Scrolling text
-        private Text scrollingText;
-        private int selectedPos;
-        private string[] textLines;
-        private View view;
+        private Text _scrollingText;
+        private int _selectedPos;
+        private string[] _textLines;
+        private View _view;
 
-        public MenuState(Font font, string img, string music, params string[] menuItems)
+        // ReSharper disable PossibleLossOfFraction
+        public MenuState(Font font, string img, params string[] menuItems)
         {
-            MouseClickHandler = onMousePressed;
-            MouseMoveHandler = onMouseMoved;
-            menuList = new List<string>(menuItems);
-            menuFont = font;
-            backgroundImage = new Image(@"res\images\" + img);
-            backgroundTexture = new Texture(backgroundImage);
-            backgroundSprite = new Sprite(backgroundTexture);
+            _mouseClickHandler = OnMousePressed;
+            _mouseMoveHandler = OnMouseMoved;
+            _menuList = new List<string>(menuItems);
+            _menuFont = font;
+            Image backgroundImage = new Image(@"res\images\" + img);
+            Texture backgroundTexture = new Texture(backgroundImage);
+            _backgroundSprite = new Sprite(backgroundTexture);
         }
 
         public string BgMusicName
@@ -53,54 +52,54 @@ namespace Platformer_The_Game
 
         public void Initialize(Game game)
         {
-            view = game.w.DefaultView;
-            nextmillis = Environment.TickCount + 150;
-            game.w.MouseButtonPressed += MouseClickHandler;
-            game.w.MouseMoved += MouseMoveHandler;
-            if (Initialized) return;
-            this.game = game;
-            backgroundSprite.Scale = new Vector2f(view.Size.X/backgroundSprite.GetLocalBounds().Width,
-                view.Size.Y/backgroundSprite.GetLocalBounds().Height);
-            carretLeft = new Text("- ", menuFont);
-            carretRight = new Text(" -", menuFont);
-            for (int i = 0; i < menuList.Count; i++)
+            _view = game.w.DefaultView;
+            _nextmillis = Environment.TickCount + 150;
+            game.w.MouseButtonPressed += _mouseClickHandler;
+            game.w.MouseMoved += _mouseMoveHandler;
+            if (_initialized) return;
+            _game = game;
+            _backgroundSprite.Scale = new Vector2f(_view.Size.X/_backgroundSprite.GetLocalBounds().Width,
+                _view.Size.Y/_backgroundSprite.GetLocalBounds().Height);
+            _carretLeft = new Text("- ", _menuFont);
+            _carretRight = new Text(" -", _menuFont);
+            for (int i = 0; i < _menuList.Count; i++)
             {
-                var menuItem = new Text(menuList[i], menuFont);
+                var menuItem = new Text(_menuList[i], _menuFont);
                 var itemWidth = (uint) menuItem.GetLocalBounds().Width;
                 uint itemHeight = menuItem.CharacterSize;
 
-                menuItem.Position = new Vector2f(view.Size.X/2 - itemWidth/2,
-                    view.Size.Y/2 - menuList.Count*itemHeight/2 + i*itemHeight);
+                menuItem.Position = new Vector2f(_view.Size.X/2 - itemWidth/2,
+                    _view.Size.Y/2 - _menuList.Count*itemHeight/2 + i*itemHeight);
 
-                menuBtns.Add(menuItem);
+                MenuBtns.Add(menuItem);
             }
-            textLines = File.ReadAllLines(@"res\strings\" + game.settings.language + "Menu.txt");
-            scrollingText = new Text(RandomTextLine(), menuFont);
-            scrollingText.Position = new Vector2f(view.Size.X, view.Size.Y - (scrollingText.GetLocalBounds().Height*2));
-            Initialized = true;
+            _textLines = File.ReadAllLines(@"res\strings\" + game.settings.language + "Menu.txt");
+            _scrollingText = new Text(RandomTextLine(), _menuFont);
+            _scrollingText.Position = new Vector2f(_view.Size.X, _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
+            _initialized = true;
         }
 
         public void Update()
         {
-            Text item = menuBtns[selectedPos];
+            Text item = MenuBtns[_selectedPos];
             var itemWidth = (uint) item.GetLocalBounds().Width;
             uint itemHeight = item.CharacterSize;
 
-            carretLeft.Position = new Vector2f(view.Size.X/2 - itemWidth/2 - carretLeftPos,
-                view.Size.Y/2 - menuList.Count*itemHeight/2 + selectedPos*itemHeight);
+            _carretLeft.Position = new Vector2f(_view.Size.X/2 - itemWidth/2 - CarretLeftPos,
+                _view.Size.Y/2 - _menuList.Count*itemHeight/2 + _selectedPos*itemHeight);
 
-            carretRight.Position = new Vector2f(view.Size.X/2 + itemWidth/2 + carretRightPos,
-                view.Size.Y/2 - menuList.Count*itemHeight/2 + selectedPos*itemHeight);
+            _carretRight.Position = new Vector2f(_view.Size.X/2 + itemWidth/2 + CarretRightPos,
+                _view.Size.Y/2 - _menuList.Count*itemHeight/2 + _selectedPos*itemHeight);
         }
 
         public void Draw()
         {
-            game.w.SetView(view);
-            game.w.Draw(backgroundSprite);
-            for (int i = 0; i < menuBtns.Count; i++)
+            _game.w.SetView(_view);
+            _game.w.Draw(_backgroundSprite);
+            for (int i = 0; i < MenuBtns.Count; i++)
             {
-                Text t = menuBtns[i];
-                if (i == selectedPos)
+                Text t = MenuBtns[i];
+                if (i == _selectedPos)
                 {
                     t.Color = new Color(t.Color.R, t.Color.G, t.Color.B, 255);
                 }
@@ -108,79 +107,79 @@ namespace Platformer_The_Game
                 {
                     t.Color = new Color(t.Color.R, t.Color.G, t.Color.B, 150);
                 }
-                game.w.Draw(t);
+                _game.w.Draw(t);
             }
-            game.w.Draw(carretLeft);
-            game.w.Draw(carretRight);
+            _game.w.Draw(_carretLeft);
+            _game.w.Draw(_carretRight);
 
-            if (scrollingText.GetGlobalBounds().Left + scrollingText.GetGlobalBounds().Width < 0)
+            if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
             {
-                scrollingText = new Text(RandomTextLine(), menuFont);
-                scrollingText.Position = new Vector2f(view.Size.X,
-                    view.Size.Y - (scrollingText.GetLocalBounds().Height*2));
+                _scrollingText = new Text(RandomTextLine(), _menuFont);
+                _scrollingText.Position = new Vector2f(_view.Size.X,
+                    _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
             }
             else
             {
-                scrollingText.Position = new Vector2f(scrollingText.Position.X - 5, scrollingText.Position.Y);
+                _scrollingText.Position = new Vector2f(_scrollingText.Position.X - 5, _scrollingText.Position.Y);
             }
-            game.w.Draw(scrollingText);
+            _game.w.Draw(_scrollingText);
         }
 
         public void Uninitialize()
         {
-            game.w.MouseButtonPressed -= MouseClickHandler;
-            game.w.MouseMoved -= MouseMoveHandler;
+            _game.w.MouseButtonPressed -= _mouseClickHandler;
+            _game.w.MouseMoved -= _mouseMoveHandler;
         }
 
         public void OnEvent(Settings.Action action)
         {
-            if (nextmillis > Environment.TickCount)
+            if (_nextmillis > Environment.TickCount)
             {
                 return;
             }
             switch (action)
             {
                 case Settings.Action.Up:
-                    selectedPos = selectedPos - 1;
+                    _selectedPos = _selectedPos - 1;
                     break;
                 case Settings.Action.Down:
-                    selectedPos = selectedPos + 1;
+                    _selectedPos = _selectedPos + 1;
                     break;
                 case Settings.Action.Use:
                     if (ItemSelected != null)
                     {
-                        ItemSelected(this, new ItemSelectedEventArgs(selectedPos, menuList));
+                        ItemSelected(this, new ItemSelectedEventArgs(_selectedPos, _menuList));
                     }
                     break;
             }
 
-            if (selectedPos < 0)
+            if (_selectedPos < 0)
             {
-                selectedPos = menuList.Count - 1;
+                _selectedPos = _menuList.Count - 1;
             }
-            if (selectedPos >= menuList.Count)
+            if (_selectedPos >= _menuList.Count)
             {
-                selectedPos = 0;
+                _selectedPos = 0;
             }
 
-            nextmillis = Environment.TickCount + 150;
+            _nextmillis = Environment.TickCount + 150;
         }
 
         private string RandomTextLine()
         {
-            return textLines[rng.Next(0, textLines.Length)];
+            return _textLines[_rng.Next(0, _textLines.Length)];
         }
 
-        public void onMousePressed(object sender, MouseButtonEventArgs args)
+        public void OnMousePressed(object sender, MouseButtonEventArgs args)
         {
             if (args.Button != Mouse.Button.Left)
             {
                 return;
             }
-            for (int i = 0; i < menuBtns.Count; i++)
+            for (int i = 0; i < MenuBtns.Count; i++)
             {
-                Vector2f mousePos = game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
-                FloatRect realRect = getRealRect(menuBtns[i].GetGlobalBounds());
+                Vector2f mousePos = _game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
+                FloatRect realRect = getRealRect(MenuBtns[i].GetGlobalBounds());
                 if (realRect.Contains(mousePos.X, mousePos.Y))
                 {
                     OnEvent(Settings.Action.Use);
@@ -188,37 +187,38 @@ namespace Platformer_The_Game
             }
         }
 
-        public void onMouseMoved(object sender, MouseMoveEventArgs args)
+        public void OnMouseMoved(object sender, MouseMoveEventArgs args)
         {
-            for (int i = 0; i < menuBtns.Count; i++)
+            for (int i = 0; i < MenuBtns.Count; i++)
             {
-                Vector2f mousePos = game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
-                FloatRect realRect = getRealRect(menuBtns[i].GetGlobalBounds());
+                Vector2f mousePos = _game.w.MapPixelToCoords(new Vector2i(args.X, args.Y));
+                FloatRect realRect = getRealRect(MenuBtns[i].GetGlobalBounds());
                 if (realRect.Contains(mousePos.X, mousePos.Y))
                 {
-                    selectedPos = i;
+                    _selectedPos = i;
                 }
             }
         }
 
         private FloatRect getRealRect(FloatRect fr)
         {
-            return new FloatRect(fr.Left - carretLeftPos, fr.Top,
-                fr.Width + carretLeftPos + carretRightPos, fr.Height);
+            return new FloatRect(fr.Left - CarretLeftPos, fr.Top,
+                fr.Width + CarretLeftPos + CarretRightPos, fr.Height);
         }
 
-        public event onItemSelected ItemSelected;
+        public event OnItemSelected ItemSelected;
 
         public class ItemSelectedEventArgs : EventArgs
         {
-            public List<string> menuList;
-            public int selectedPos;
+            public List<string> MenuList;
+            public int SelectedPos;
 
             public ItemSelectedEventArgs(int selectedPos, List<string> menuList)
             {
-                this.menuList = menuList;
-                this.selectedPos = selectedPos;
+                MenuList = menuList;
+                SelectedPos = selectedPos;
             }
         }
     }
 }
+// ReSharper restore PossibleLossOfFraction

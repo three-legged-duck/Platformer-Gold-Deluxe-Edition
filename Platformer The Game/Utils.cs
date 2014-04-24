@@ -116,11 +116,11 @@ namespace Platformer_The_Game
 
         public static MenuState CreateMainMenu(Game game)
         {
-            var menu = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", GetString("play", game),
+            var menu = new MenuState(game.menuFont, "menuBg.bmp", GetString("play", game),
                 GetString("settings", game), GetString("quit", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
-                switch (args.selectedPos)
+                switch (args.SelectedPos)
                 {
                     case 0:
                         game.State = new GameState();
@@ -147,20 +147,20 @@ namespace Platformer_The_Game
                 GetOptionText("fullscreen", game.settings.fullscreen, game),
                 GetString("back", game)
             };
-            var options = new MenuState(game.menuFont, "menuBg.bmp", "eddsworldCreditsTheme.ogg", menuItems);
+            var options = new MenuState(game.menuFont, "menuBg.bmp", menuItems);
 
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
-                switch (args.selectedPos)
+                switch (args.SelectedPos)
                 {
                     case 0:
                         game.settings.drawTextures = !game.settings.drawTextures;
-                        options.menuBtns[0].DisplayedString = GetOptionText("drawTextures", game.settings.drawTextures,
+                        options.MenuBtns[0].DisplayedString = GetOptionText("drawTextures", game.settings.drawTextures,
                             game);
                         break;
                     case 1:
                         game.settings.drawHitbox = !game.settings.drawHitbox;
-                        options.menuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.settings.drawHitbox,
+                        options.MenuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.settings.drawHitbox,
                             game);
                         break;
                     case 2:
@@ -172,7 +172,7 @@ namespace Platformer_The_Game
                         {
                             game.settings.language = Language.English;
                         }
-                        options.menuBtns[2].DisplayedString = GetString("language", game) + " : " +
+                        options.MenuBtns[2].DisplayedString = GetString("language", game) + " : " +
                                                               (game.settings.language == Language.English
                                                                   ? Language.English.ToString()
                                                                   : Language.French.ToString());
@@ -181,7 +181,7 @@ namespace Platformer_The_Game
 
                         game.settings.fullscreen = !game.settings.fullscreen;
                         game.RecreateWindow();
-                        options.menuBtns[3].DisplayedString = GetOptionText("fullscreen", game.settings.fullscreen, game);
+                        options.MenuBtns[3].DisplayedString = GetOptionText("fullscreen", game.settings.fullscreen, game);
                         break;
                     case 4:
                         game.State = returnState;

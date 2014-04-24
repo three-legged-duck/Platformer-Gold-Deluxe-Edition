@@ -141,7 +141,7 @@ namespace Platformer_The_Game
         {
             Sprite.Color = new Color(Sprite.Color.R,Sprite.Color.G,Sprite.Color.B,128);
             Life -= dmg;
-            if (Life < 0)
+            if (Life <= 0)
             {
                 MenuState gameoverMenuState = new MenuState(Game.MenuFont, "gameoverBg.bmp", false, Utils.GetString("backMain", Game), Utils.GetString("quit", Game));
                 gameoverMenuState.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)

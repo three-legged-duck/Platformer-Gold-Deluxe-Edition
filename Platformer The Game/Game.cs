@@ -83,8 +83,6 @@ namespace Platformer_The_Game
 
         public void RunMainLoop()
         {
-            Initialize();
-
             MenuState menu = Utils.CreateMainMenu(this);
 
             State = new SplashState("splash.bmp", true, menu);
@@ -103,10 +101,6 @@ namespace Platformer_The_Game
             }
         }
 
-        private void Initialize()
-        {
-        }
-
         private void Update()
         {
             foreach (Keyboard.Key key in keyPressed)
@@ -122,16 +116,18 @@ namespace Platformer_The_Game
                 _state.OnEvent(Settings.GetAction(_state.GetType(), key));
             }
             _state.Update();
-            if (_bgMusic != null && _bgMusicName != _state.BgMusicName)
+            if (State.BgMusicName != null && _bgMusic == null)
             {
-                _bgMusic.Stop();
-            }
-            else if (_bgMusicName != _state.BgMusicName && _bgMusicName != null)
-            {
-                _bgMusic = new Music(@"res\music\" + _state.BgMusicName) {Volume = 50f, Loop = true};
+                _bgMusic = new Music(State.BgMusicName) {Volume = 50f, Loop = true};
                 _bgMusic.Play();
             }
-            _bgMusicName = _state.BgMusicName;
+            if (_bgMusicName != State.BgMusicName)
+            {
+                _bgMusic.Stop();
+                _bgMusic = new Music(State.BgMusicName) {Volume = 50f, Loop = true};
+                _bgMusic.Play();
+            }
+            _bgMusicName = State.BgMusicName;
         }
 
         private void Draw()

@@ -81,6 +81,7 @@
     <Compile Include="Collision.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="OptionsMenu.cs" />
     <Compile Include="ResMan.cs" />
     <Compile Include="SplashState.cs" />
     <Compile Include="Game.cs" />

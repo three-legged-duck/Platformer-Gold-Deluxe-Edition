@@ -8,6 +8,9 @@
   <string name="quit">Quitter</string>
 
   <!-- Settings menu -->
+  <string name="binding">Configuration du clavier</string>
+  <string name="video">Vidéo</string>
+  <string name="misc">Divers</string>
   <string name="drawTextures">Afficher textures</string>
   <string name="drawHitboxes">Afficher masques de collision</string>
   <string name="language">Langue</string>

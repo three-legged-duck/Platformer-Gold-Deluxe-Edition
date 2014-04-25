@@ -97,7 +97,7 @@ namespace Platformer_The_Game
                                 _game.State = this;
                                 break;
                             case 1:
-                                _game.State = Utils.CreateOptionsMenu(_game, pause);
+                                _game.State = OptionsMenu.CreateOptionsMenu(_game, pause);
                                 break;
                             case 2:
                                 _game.State = Utils.CreateMainMenu(_game);

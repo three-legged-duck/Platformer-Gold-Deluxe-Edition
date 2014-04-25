@@ -126,7 +126,7 @@ namespace Platformer_The_Game
                         game.State = new GameState();
                         break;
                     case 1:
-                        game.State = CreateOptionsMenu(game, menu);
+                        game.State = OptionsMenu.CreateOptionsMenu(game, menu);
                         break;
                     case 2:
                         game.Close();
@@ -134,66 +134,6 @@ namespace Platformer_The_Game
                 }
             };
             return menu;
-        }
-
-        public static MenuState CreateOptionsMenu(Game game, IState returnState)
-        {
-            string[] menuItems =
-            {
-                GetOptionText("drawTextures", game.Settings.drawTextures, game),
-                GetOptionText("drawHitboxes", game.Settings.drawHitbox, game),
-                GetString("language", game) + " : " +
-                (game.Settings.language == Language.English ? Language.English.ToString() : Language.French.ToString()),
-                GetOptionText("fullscreen", game.Settings.fullscreen, game),
-                GetString("back", game)
-            };
-            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
-
-            options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
-            {
-                switch (args.SelectedPos)
-                {
-                    case 0:
-                        game.Settings.drawTextures = !game.Settings.drawTextures;
-                        options.MenuBtns[0].DisplayedString = GetOptionText("drawTextures", game.Settings.drawTextures,
-                            game);
-                        break;
-                    case 1:
-                        game.Settings.drawHitbox = !game.Settings.drawHitbox;
-                        options.MenuBtns[1].DisplayedString = GetOptionText("drawHitboxes", game.Settings.drawHitbox,
-                            game);
-                        break;
-                    case 2:
-                        if (game.Settings.language == Language.English)
-                        {
-                            game.Settings.language = Language.French;
-                        }
-                        else
-                        {
-                            game.Settings.language = Language.English;
-                        }
-                        options.MenuBtns[2].DisplayedString = GetString("language", game) + " : " +
-                                                              (game.Settings.language == Language.English
-                                                                  ? Language.English.ToString()
-                                                                  : Language.French.ToString());
-                        break;
-                    case 3:
-
-                        game.Settings.fullscreen = !game.Settings.fullscreen;
-                        game.RecreateWindow();
-                        options.MenuBtns[3].DisplayedString = GetOptionText("fullscreen", game.Settings.fullscreen, game);
-                        break;
-                    case 4:
-                        game.State = returnState;
-                        break;
-                }
-            };
-            return options;
-        }
-
-        private static string GetOptionText(string key, bool value, Game g)
-        {
-            return GetString(key, g) + " : " + (value ? GetString("yes", g) : GetString("no", g));
         }
     }
 }

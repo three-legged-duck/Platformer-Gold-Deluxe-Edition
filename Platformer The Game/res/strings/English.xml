@@ -8,6 +8,9 @@
   <string name="quit">Quit</string>
 
   <!-- Settings menu -->
+  <string name="binding">Keyboard binding</string>
+  <string name="video">Video</string>
+  <string name="misc">Misc</string>
   <string name="drawTextures">Draw textures</string>
   <string name="drawHitboxes">Draw hitboxes</string>
   <string name="language">Language</string>
@@ -16,7 +19,14 @@
   <string name="back">Back</string>
   <string name="yes">yes</string>
   <string name="no">no</string>
-
+  <string name="up">Up</string>
+  <string name="down">Down</string>
+  <string name="left">Left</string>
+  <string name="right">Right</string>
+  <string name="use">Use</string>
+  <string name="jump">Jump</string>
+  <string name="run">Run</string>
+  
   <!-- Pause menu -->
   <string name="resume">Resume</string>
   <string name="backMain">Main menu</string>

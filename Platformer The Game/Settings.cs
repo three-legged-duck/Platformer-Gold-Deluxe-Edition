@@ -24,23 +24,23 @@ namespace Platformer_The_Game
             None
         };
 
-        [NonSerialized] private const string fileName = "game.settings";
+        [NonSerialized] private const string FileName = "game.settings";
 
-        private readonly Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>> joystickAxis =
+        private readonly Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>> _joystickAxis =
             new Dictionary<Type, Dictionary<Joystick.Axis, Tuple<Action, Action>>>();
 
-        private readonly Dictionary<Type, Dictionary<uint, Action>> joystickKeys =
+        private readonly Dictionary<Type, Dictionary<uint, Action>> _joystickKeys =
             new Dictionary<Type, Dictionary<uint, Action>>();
 
-        private readonly Dictionary<Type, Dictionary<Keyboard.Key, Action>> keyboardKeys =
+        private readonly Dictionary<Type, Dictionary<Keyboard.Key, Action>> _keyboardKeys =
             new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
 
-        public bool drawHitbox = false;
-        public bool drawTextures = true;
-        public bool fullscreen = false;
-        public Utils.Language language = Utils.Language.English;
-        public uint windowWidth = 800;
-        public uint windowHeight = 600;
+        public bool DrawHitbox = false;
+        public bool DrawTextures = true;
+        public bool Fullscreen = false;
+        public Utils.Language Language = Utils.Language.English;
+        public uint WindowWidth = 800;
+        public uint WindowHeight = 600;
 
         private Settings()
         {
@@ -76,12 +76,12 @@ namespace Platformer_The_Game
         {
             Dictionary<Keyboard.Key, Action> tmp;
             Action a;
-            if (keyboardKeys.TryGetValue(state, out tmp)
+            if (_keyboardKeys.TryGetValue(state, out tmp)
                 && tmp.TryGetValue(k, out a))
             {
                 return a;
             }
-            if (keyboardKeys.TryGetValue(typeof (Default), out tmp)
+            if (_keyboardKeys.TryGetValue(typeof (Default), out tmp)
                 && tmp.TryGetValue(k, out a))
             {
                 return a;
@@ -93,12 +93,12 @@ namespace Platformer_The_Game
         {
             Dictionary<uint, Action> tmp;
             Action a;
-            if (joystickKeys.TryGetValue(state, out tmp)
+            if (_joystickKeys.TryGetValue(state, out tmp)
                 && tmp.TryGetValue(jK, out a))
             {
                 return a;
             }
-            if (joystickKeys.TryGetValue(typeof (Default), out tmp)
+            if (_joystickKeys.TryGetValue(typeof (Default), out tmp)
                 && tmp.TryGetValue(jK, out a))
             {
                 return a;
@@ -110,14 +110,14 @@ namespace Platformer_The_Game
         {
             Dictionary<Joystick.Axis, Tuple<Action, Action>> tmp;
             Tuple<Action, Action> a;
-            if (joystickAxis.TryGetValue(state, out tmp)
+            if (_joystickAxis.TryGetValue(state, out tmp)
                 && tmp.TryGetValue(axis, out a))
             {
                 if (position < -50)
                     return a.Item1;
                 return a.Item2;
             }
-            if (joystickAxis.TryGetValue(typeof (Default), out tmp)
+            if (_joystickAxis.TryGetValue(typeof (Default), out tmp)
                 && tmp.TryGetValue(axis, out a))
             {
                 if (position < -50)
@@ -130,10 +130,10 @@ namespace Platformer_The_Game
         public void SetButton(Type state, uint k, Action a)
         {
             Dictionary<uint, Action> tmp;
-            if (!joystickKeys.TryGetValue(state, out tmp))
+            if (!_joystickKeys.TryGetValue(state, out tmp))
             {
                 tmp = new Dictionary<uint, Action>();
-                joystickKeys.Add(state, tmp);
+                _joystickKeys.Add(state, tmp);
             }
             tmp.Add(k, a);
         }
@@ -141,10 +141,10 @@ namespace Platformer_The_Game
         public void SetButton(Type state, Keyboard.Key k, Action a)
         {
             Dictionary<Keyboard.Key, Action> tmp;
-            if (!keyboardKeys.TryGetValue(state, out tmp))
+            if (!_keyboardKeys.TryGetValue(state, out tmp))
             {
                 tmp = new Dictionary<Keyboard.Key, Action>();
-                keyboardKeys.Add(state, tmp);
+                _keyboardKeys.Add(state, tmp);
             }
             tmp.Add(k, a);
         }
@@ -152,10 +152,10 @@ namespace Platformer_The_Game
         public void SetButton(Type state, Joystick.Axis axis, Action low, Action high)
         {
             Dictionary<Joystick.Axis, Tuple<Action, Action>> tmp;
-            if (!joystickAxis.TryGetValue(state, out tmp))
+            if (!_joystickAxis.TryGetValue(state, out tmp))
             {
                 tmp = new Dictionary<Joystick.Axis, Tuple<Action, Action>>();
-                joystickAxis.Add(state, tmp);
+                _joystickAxis.Add(state, tmp);
             }
             tmp.Add(axis, new Tuple<Action, Action>(low, high));
         }
@@ -165,7 +165,7 @@ namespace Platformer_The_Game
             var formatter = new BinaryFormatter();
             try
             {
-                var writeFileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                var writeFileStream = new FileStream(FileName, FileMode.Create, FileAccess.Write);
                 formatter.Serialize(writeFileStream, this);
                 writeFileStream.Close();
             }
@@ -181,7 +181,7 @@ namespace Platformer_The_Game
 
             try
             {
-                var readerFileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
                 return formatter.Deserialize(readerFileStream) as Settings;
             }
             catch

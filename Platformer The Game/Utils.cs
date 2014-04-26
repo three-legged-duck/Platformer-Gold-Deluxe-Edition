@@ -81,7 +81,7 @@ namespace Platformer_The_Game
         {
             string nodeSearch = "//string[@name='" + key + "']";
             XmlNodeList translatedString;
-            switch (game.Settings.language)
+            switch (game.Settings.Language)
             {
                 case Language.French:
                     translatedString = frenchStrings.SelectNodes(nodeSearch);

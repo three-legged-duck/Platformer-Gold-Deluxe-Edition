@@ -43,9 +43,9 @@ namespace Platformer_The_Game
         {
             string[] menuItems =
             {
-                GetOptionText("fullscreen", game.Settings.fullscreen, game),
-                GetOptionText("drawTextures", game.Settings.drawTextures, game),
-                GetOptionText("drawHitboxes", game.Settings.drawHitbox, game),
+                GetOptionText("fullscreen", game.Settings.Fullscreen, game),
+                GetOptionText("drawTextures", game.Settings.DrawTextures, game),
+                GetOptionText("drawHitboxes", game.Settings.DrawHitbox, game),
                 Utils.GetString("back", game)
             };
             var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
@@ -56,18 +56,18 @@ namespace Platformer_The_Game
                 {
                     case 0:
 
-                        game.Settings.fullscreen = !game.Settings.fullscreen;
+                        game.Settings.Fullscreen = !game.Settings.Fullscreen;
                         game.RecreateWindow();
-                        options.MenuBtns[0].DisplayedString = GetOptionText("fullscreen", game.Settings.fullscreen, game);
+                        options.MenuBtns[0].DisplayedString = GetOptionText("fullscreen", game.Settings.Fullscreen, game);
                         break;
                     case 1:
-                        game.Settings.drawTextures = !game.Settings.drawTextures;
-                        options.MenuBtns[1].DisplayedString = GetOptionText("drawTextures", game.Settings.drawTextures,
+                        game.Settings.DrawTextures = !game.Settings.DrawTextures;
+                        options.MenuBtns[1].DisplayedString = GetOptionText("drawTextures", game.Settings.DrawTextures,
                             game);
                         break;
                     case 2:
-                        game.Settings.drawHitbox = !game.Settings.drawHitbox;
-                        options.MenuBtns[2].DisplayedString = GetOptionText("drawHitboxes", game.Settings.drawHitbox,
+                        game.Settings.DrawHitbox = !game.Settings.DrawHitbox;
+                        options.MenuBtns[2].DisplayedString = GetOptionText("drawHitboxes", game.Settings.DrawHitbox,
                             game);
                         break;
                     case 3:
@@ -83,7 +83,7 @@ namespace Platformer_The_Game
             string[] menuItems =
             {
                 Utils.GetString("language", game) + " : " +
-                (game.Settings.language == Utils.Language.English ? Utils.Language.English.ToString() : Utils.Language.French.ToString()),
+                (game.Settings.Language == Utils.Language.English ? Utils.Language.English.ToString() : Utils.Language.French.ToString()),
                 Utils.GetString("back", game)
             };
             var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
@@ -93,9 +93,9 @@ namespace Platformer_The_Game
                 switch (args.SelectedPos)
                 {
                     case 0:
-                        game.Settings.language = game.Settings.language == Utils.Language.English ? Utils.Language.French : Utils.Language.English;
+                        game.Settings.Language = game.Settings.Language == Utils.Language.English ? Utils.Language.French : Utils.Language.English;
                         options.MenuBtns[0].DisplayedString = Utils.GetString("language", game) + " : " +
-                                                              (game.Settings.language == Utils.Language.English
+                                                              (game.Settings.Language == Utils.Language.English
                                                                   ? Utils.Language.English.ToString()
                                                                   : Utils.Language.French.ToString());
                         break;

@@ -49,7 +49,7 @@ namespace Platformer_The_Game
             _game.W.SetView(_game.W.DefaultView);
             _game.W.Draw(_backgroundSprite);
             Text lifeText = new Text(Utils.GetString("life",_game) + " : " + _player.Life.ToString("D3") + "  " +
-                Utils.GetString("speed",_game) + " : " + Math.Abs(Convert.ToInt32(_player.Speed.X)).ToString("D3"), _game.MenuFont, 15) { Position = new Vector2f(0, 0) };
+                Utils.GetString("speed",_game) + " : " + Math.Abs(Convert.ToInt32(_player.Speed.X)).ToString("D3"), _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(0, 0) };
             _game.W.Draw(lifeText);
             _game.W.SetView(_view);
             foreach (Platform plateform in Platforms)

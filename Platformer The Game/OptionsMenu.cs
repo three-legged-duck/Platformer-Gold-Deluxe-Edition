@@ -46,6 +46,7 @@ namespace Platformer_The_Game
             string[] menuItems =
             {
                 GetVideoModeOptionText(game),
+                GetResolutionOptionText(game),
                 GetOptionText("drawTextures", game.Settings.DrawTextures, game),
                 GetOptionText("drawHitboxes", game.Settings.DrawHitbox, game),
                 Utils.GetString("back", game)
@@ -73,16 +74,35 @@ namespace Platformer_The_Game
                         options.MenuBtns[0].DisplayedString = GetVideoModeOptionText(game);
                         break;
                     case 1:
-                        game.Settings.DrawTextures = !game.Settings.DrawTextures;
-                        options.MenuBtns[1].DisplayedString = GetOptionText("drawTextures", game.Settings.DrawTextures,
-                            game);
+                        if (game.Settings.WindowWidth == 1920 && game.Settings.WindowHeight == 1080)
+                        {
+                            game.Settings.WindowWidth = 1366;
+                            game.Settings.WindowHeight = 768;
+                        }
+                        else if (game.Settings.WindowWidth == 1366 && game.Settings.WindowHeight == 768)
+                        {
+                            game.Settings.WindowWidth = 800;
+                            game.Settings.WindowHeight = 600;                            
+                        }
+                        else if (game.Settings.WindowWidth == 800 && game.Settings.WindowHeight == 600)
+                        {
+                            game.Settings.WindowWidth = 1920;
+                            game.Settings.WindowHeight = 1080;
+                        }
+                        game.RecreateWindow();
+                        options.MenuBtns[1].DisplayedString = GetResolutionOptionText(game);
                         break;
                     case 2:
-                        game.Settings.DrawHitbox = !game.Settings.DrawHitbox;
-                        options.MenuBtns[2].DisplayedString = GetOptionText("drawHitboxes", game.Settings.DrawHitbox,
+                        game.Settings.DrawTextures = !game.Settings.DrawTextures;
+                        options.MenuBtns[2].DisplayedString = GetOptionText("drawTextures", game.Settings.DrawTextures,
                             game);
                         break;
                     case 3:
+                        game.Settings.DrawHitbox = !game.Settings.DrawHitbox;
+                        options.MenuBtns[3].DisplayedString = GetOptionText("drawHitboxes", game.Settings.DrawHitbox,
+                            game);
+                        break;
+                    case 4:
                         game.State = returnState;
                         break;
                 }
@@ -160,6 +180,11 @@ namespace Platformer_The_Game
                     break;
             }
             return Utils.GetString("videoMode", g) + " : " + Utils.GetString(vMode,g);
+        }
+
+        private static string GetResolutionOptionText(Game g)
+        {
+            return Utils.GetString("resolution",g) +" : " + g.Settings.WindowWidth + "x" + g.Settings.WindowHeight;
         }
     }
 }

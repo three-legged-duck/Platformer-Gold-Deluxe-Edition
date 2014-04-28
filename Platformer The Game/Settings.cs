@@ -37,7 +37,7 @@ namespace Platformer_The_Game
 
         public bool DrawHitbox = false;
         public bool DrawTextures = true;
-        public Styles WindowType = Styles.Fullscreen;
+        public Styles WindowType = Styles.Close;
         public Utils.Language Language = Utils.Language.English;
         public uint WindowWidth = 800;
         public uint WindowHeight = 600;

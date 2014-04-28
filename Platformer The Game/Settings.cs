@@ -8,7 +8,7 @@ using SFML.Window;
 namespace Platformer_The_Game
 {
     [Serializable]
-    internal class Settings
+    class Settings
     {
         public enum Action
         {
@@ -182,7 +182,9 @@ namespace Platformer_The_Game
             try
             {
                 var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
-                return formatter.Deserialize(readerFileStream) as Settings;
+                Settings s = formatter.Deserialize(readerFileStream) as Settings;
+                readerFileStream.Close();
+                return s;
             }
             catch
             {

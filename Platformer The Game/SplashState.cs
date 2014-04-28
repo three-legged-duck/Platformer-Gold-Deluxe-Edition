@@ -12,8 +12,8 @@ namespace Platformer_The_Game
         private readonly bool scale;
         private bool IsFadeOut;
 
-        private EventHandler<KeyEventArgs> KeyReleasedHandler;
         private EventHandler<MouseButtonEventArgs> MouseBtnHandler;
+
         private byte alpha;
         private Game game;
 
@@ -35,7 +35,6 @@ namespace Platformer_The_Game
         {
             game = g;
             view = new View();
-            KeyReleasedHandler = delegate { EndSplash(); };
 
             MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
             {
@@ -44,10 +43,7 @@ namespace Platformer_The_Game
                     EndSplash();
                 }
             };
-
-            g.W.KeyReleased += KeyReleasedHandler;
             g.W.MouseButtonPressed += MouseBtnHandler;
-
 
             if (scale)
             {
@@ -86,18 +82,18 @@ namespace Platformer_The_Game
 
         public void Uninitialize()
         {
-            game.W.KeyReleased -= KeyReleasedHandler;
             game.W.MouseButtonPressed -= MouseBtnHandler;
         }
 
         public void OnEvent(Settings.Action a)
         {
-            //EndSplash();
+            EndSplash();
         }
 
         public void EndSplash()
         {
             game.State = nextState;
+            game.StopInput(600);
         }
     }
 }

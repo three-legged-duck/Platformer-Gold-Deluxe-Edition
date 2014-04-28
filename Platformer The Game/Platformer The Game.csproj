@@ -83,6 +83,7 @@
     <Compile Include="Level.cs" />
     <Compile Include="OptionsMenu.cs" />
     <Compile Include="ResMan.cs" />
+    <Compile Include="ScrollingTextState.cs" />
     <Compile Include="SplashState.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Plateform.cs" />
@@ -137,6 +138,7 @@
     <Content Include="res\images\menuBg.bmp" />
     <Content Include="res\images\plateformes.png" />
     <Content Include="res\images\splash.bmp" />
+    <Content Include="res\strings\FrenchIntro.txt" />
     <Content Include="res\strings\FrenchMenu.txt" />
     <Content Include="res\strings\English.xml">
       <SubType>Designer</SubType>
@@ -145,6 +147,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="res\strings\EnglishMenu.txt" />
+    <Content Include="res\strings\EnglishIntro.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets" Condition="Exists('..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets')" />

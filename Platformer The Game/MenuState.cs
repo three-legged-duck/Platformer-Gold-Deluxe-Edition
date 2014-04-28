@@ -82,7 +82,7 @@ namespace Platformer_The_Game
                 _textLines = File.ReadAllLines(@"res\strings\" + game.Settings.Language + "Menu.txt");
                 _scrollingText = new Text(RandomTextLine(), _menuFont,textSize);
                 _scrollingText.Position = new Vector2f(_view.Size.X,
-                    _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
+                    _view.Size.Y - (textSize*2));
             }
             _initialized = true;
         }
@@ -98,6 +98,21 @@ namespace Platformer_The_Game
 
             _carretRight.Position = new Vector2f(_view.Size.X/2 + itemWidth/2 + CarretRightPos,
                 _view.Size.Y/2 - _menuList.Count*itemHeight/2 + _selectedPos*itemHeight);
+
+            if (_scrollingTextActivated)
+            {
+                if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
+                {
+                    _scrollingText = new Text(RandomTextLine(), _menuFont, textSize);
+                    _scrollingText.Position = new Vector2f(_view.Size.X,
+                        _view.Size.Y - (textSize*2));
+                }
+                else
+                {
+                    _scrollingText.Position = new Vector2f(_scrollingText.Position.X - _game.W.Size.X/160,
+                        _scrollingText.Position.Y);
+                }
+            }
         }
 
         public void Draw()
@@ -119,21 +134,7 @@ namespace Platformer_The_Game
             }
             _game.W.Draw(_carretLeft);
             _game.W.Draw(_carretRight);
-
-            if (_scrollingTextActivated)
-            {
-                if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
-                {
-                    _scrollingText = new Text(RandomTextLine(), _menuFont,textSize);
-                    _scrollingText.Position = new Vector2f(_view.Size.X,
-                        _view.Size.Y - (_scrollingText.GetLocalBounds().Height*2));
-                }
-                else
-                {
-                    _scrollingText.Position = new Vector2f(_scrollingText.Position.X - _game.W.Size.X / 160, _scrollingText.Position.Y);
-                }
-                _game.W.Draw(_scrollingText);
-            }
+            if (_scrollingTextActivated) _game.W.Draw(_scrollingText);
         }
 
         public void Uninitialize()

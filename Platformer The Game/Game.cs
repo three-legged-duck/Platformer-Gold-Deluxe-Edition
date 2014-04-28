@@ -15,6 +15,7 @@ namespace Platformer_The_Game
         public ResMan ResMan = new ResMan();
         private Music _bgMusic;
         private string _bgMusicName;
+        private int _acceptInput;
         public Font MenuFont = new Font(@"res\fonts\Square.ttf");
         public Settings Settings = Settings.Load();
         private IState _state;
@@ -55,7 +56,8 @@ namespace Platformer_The_Game
             W.JoystickMoved -= OnJoyAxisMoved;
             W.Closed -= OnClosed;
             W.Close();
-            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer", (Settings.Fullscreen) ? Styles.Fullscreen : Styles.Close);
+            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer",
+                (Settings.Fullscreen) ? Styles.Fullscreen : Styles.Close);
             WindowInit();
         }
 
@@ -85,8 +87,9 @@ namespace Platformer_The_Game
         public void RunMainLoop()
         {
             MenuState menu = Utils.CreateMainMenu(this);
+            ScrollingTextState scrollingText = new ScrollingTextState("Intro", menu);
 
-            State = new SplashState("splash.bmp", true, menu);
+            State = new SplashState("splash.bmp", true, scrollingText);
 
             while (W.IsOpen())
             {
@@ -104,28 +107,31 @@ namespace Platformer_The_Game
 
         private void Update()
         {
-            foreach (Keyboard.Key key in keyPressed)
+            if (_acceptInput < Environment.TickCount)
             {
-                _state.OnEvent(Settings.GetAction(_state.GetType(), key));
-            }
-            foreach (var axis in axisPressed)
-            {
-                _state.OnEvent(Settings.GetAction(_state.GetType(), axis.Key, axis.Value));
-            }
-            foreach (uint key in joyPressed)
-            {
-                _state.OnEvent(Settings.GetAction(_state.GetType(), key));
+                foreach (Keyboard.Key key in keyPressed)
+                {
+                    _state.OnEvent(Settings.GetAction(_state.GetType(), key));
+                }
+                foreach (var axis in axisPressed)
+                {
+                    _state.OnEvent(Settings.GetAction(_state.GetType(), axis.Key, axis.Value));
+                }
+                foreach (uint key in joyPressed)
+                {
+                    _state.OnEvent(Settings.GetAction(_state.GetType(), key));
+                }
             }
             _state.Update();
             if (State.BgMusicName != null && _bgMusic == null)
             {
-                _bgMusic = new Music(State.BgMusicName) {Volume = 50f, Loop = true};
+                _bgMusic = new Music(@"res\music\" + State.BgMusicName) {Volume = 50f, Loop = true};
                 _bgMusic.Play();
             }
             if (_bgMusicName != State.BgMusicName)
             {
                 _bgMusic.Stop();
-                _bgMusic = new Music(State.BgMusicName) {Volume = 50f, Loop = true};
+                _bgMusic = new Music(@"res\music\" + State.BgMusicName) {Volume = 50f, Loop = true};
                 _bgMusic.Play();
             }
             _bgMusicName = State.BgMusicName;
@@ -143,6 +149,7 @@ namespace Platformer_The_Game
 
         private void OnKeyReleased(object sender, KeyEventArgs e)
         {
+
             if (e.Code == Keyboard.Key.F1)
             {
                 if (!Directory.Exists("screenshots"))
@@ -154,24 +161,30 @@ namespace Platformer_The_Game
             }
 
             keyPressed.Remove(e.Code);
+
         }
 
         private void OnJoyPressed(object sender, JoystickButtonEventArgs e)
         {
             joyPressed.Add(e.Button);
+
         }
 
         private void OnJoyReleased(object sender, JoystickButtonEventArgs e)
         {
+
             joyPressed.Remove(e.Button);
+
         }
 
         private void OnJoyAxisMoved(object sender, JoystickMoveEventArgs args)
         {
+
             if (args.Position < -50 || args.Position > 50)
                 axisPressed[args.Axis] = args.Position;
             else
                 axisPressed.Remove(args.Axis);
+
         }
 
         private void OnClosed(object sender, EventArgs e)
@@ -183,6 +196,11 @@ namespace Platformer_The_Game
         {
             W.Close();
             Environment.Exit(0);
+        }
+
+        public void StopInput(int ms)
+        {
+            _acceptInput = Environment.TickCount + ms;
         }
     }
 }

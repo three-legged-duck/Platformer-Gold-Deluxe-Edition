@@ -14,7 +14,10 @@
   <string name="drawTextures">Draw textures</string>
   <string name="drawHitboxes">Draw hitboxes</string>
   <string name="language">Language</string>
+  <string name="videoMode">Video mode</string>
   <string name="fullscreen">Fullscreen</string>
+  <string name="windowed">Windowed</string>
+  <string name="borderless">Borderless</string>
   <string name="resolution">Resolution</string>
   <string name="back">Back</string>
   <string name="yes">yes</string>

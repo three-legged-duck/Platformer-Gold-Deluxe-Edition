@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SFML.Graphics;
+using SFML.Window;
 
 namespace Platformer_The_Game
 {
@@ -43,7 +45,7 @@ namespace Platformer_The_Game
         {
             string[] menuItems =
             {
-                GetOptionText("fullscreen", game.Settings.Fullscreen, game),
+                GetVideoModeOptionText(game),
                 GetOptionText("drawTextures", game.Settings.DrawTextures, game),
                 GetOptionText("drawHitboxes", game.Settings.DrawHitbox, game),
                 Utils.GetString("back", game)
@@ -55,10 +57,20 @@ namespace Platformer_The_Game
                 switch (args.SelectedPos)
                 {
                     case 0:
-
-                        game.Settings.Fullscreen = !game.Settings.Fullscreen;
+                        switch (game.Settings.WindowType)
+                        {
+                            case Styles.Fullscreen:
+                                game.Settings.WindowType = Styles.None;
+                                break;
+                            case Styles.None:
+                                game.Settings.WindowType = Styles.Close;
+                                break;
+                            default:
+                                game.Settings.WindowType = Styles.Fullscreen;
+                                break;
+                        }
                         game.RecreateWindow();
-                        options.MenuBtns[0].DisplayedString = GetOptionText("fullscreen", game.Settings.Fullscreen, game);
+                        options.MenuBtns[0].DisplayedString = GetVideoModeOptionText(game);
                         break;
                     case 1:
                         game.Settings.DrawTextures = !game.Settings.DrawTextures;
@@ -130,6 +142,24 @@ namespace Platformer_The_Game
         private static string GetOptionText(string key, bool value, Game g)
         {
             return Utils.GetString(key, g) + " : " + (value ? Utils.GetString("yes", g) : Utils.GetString("no", g));
+        }
+
+        private static string GetVideoModeOptionText(Game g)
+        {
+            string vMode;
+            switch (g.Settings.WindowType)
+            {
+                case Styles.Fullscreen:
+                    vMode = "fullscreen";
+                    break;
+                case Styles.None:
+                    vMode = "borderless";
+                    break;
+                default:
+                    vMode = "windowed";
+                    break;
+            }
+            return Utils.GetString("videoMode", g) + " : " + Utils.GetString(vMode,g);
         }
     }
 }

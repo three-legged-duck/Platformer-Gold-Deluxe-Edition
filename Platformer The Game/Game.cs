@@ -21,17 +21,6 @@ namespace Platformer_The_Game
         private IState _state;
         public RenderWindow W;
 
-        public Game()
-        {
-            //Load ressources
-            Utils.LoadTranslations();
-
-            //Load main window
-            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer",
-                (Settings.Fullscreen) ? Styles.Fullscreen : Styles.Close);
-            WindowInit();
-        }
-
         public IState State
         {
             get { return _state; }
@@ -46,31 +35,18 @@ namespace Platformer_The_Game
             }
         }
 
-        public void RecreateWindow()
+        public Game()
         {
-            CleanInput();
-            W.KeyPressed -= OnKeyPressed;
-            W.KeyReleased -= OnKeyReleased;
-            W.JoystickButtonPressed -= OnJoyPressed;
-            W.JoystickButtonReleased -= OnJoyReleased;
-            W.JoystickMoved -= OnJoyAxisMoved;
-            W.Closed -= OnClosed;
-            W.Close();
-            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer",
-                (Settings.Fullscreen) ? Styles.Fullscreen : Styles.Close);
-            WindowInit();
-        }
+            //Load ressources
+            Utils.LoadTranslations();
 
-        private void CleanInput()
-        {
-            axisPressed.Clear();
-            joyPressed.Clear();
-            keyPressed.Clear();
+            //Load main window
+            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer", Settings.WindowType);
+            WindowInit();
         }
 
         private void WindowInit()
         {
-            W.SetVisible(true);
             W.SetFramerateLimit(60);
             W.SetVerticalSyncEnabled(true);
             W.SetKeyRepeatEnabled(false);
@@ -82,6 +58,27 @@ namespace Platformer_The_Game
             W.JoystickButtonReleased += OnJoyReleased;
             W.JoystickMoved += OnJoyAxisMoved;
             W.Closed += OnClosed;
+        }
+
+        public void RecreateWindow()
+        {
+            CleanInput();
+            W.KeyPressed -= OnKeyPressed;
+            W.KeyReleased -= OnKeyReleased;
+            W.JoystickButtonPressed -= OnJoyPressed;
+            W.JoystickButtonReleased -= OnJoyReleased;
+            W.JoystickMoved -= OnJoyAxisMoved;
+            W.Closed -= OnClosed;
+            W.Close();
+            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer", Settings.WindowType);
+            WindowInit();
+        }
+
+        private void CleanInput()
+        {
+            axisPressed.Clear();
+            joyPressed.Clear();
+            keyPressed.Clear();
         }
 
         public void RunMainLoop()
@@ -109,7 +106,8 @@ namespace Platformer_The_Game
         {
             if (_acceptInput < Environment.TickCount)
             {
-                foreach (Keyboard.Key key in keyPressed)
+                HashSet<Keyboard.Key> keyPressedCopy = new HashSet<Keyboard.Key>(keyPressed);
+                foreach (Keyboard.Key key in keyPressedCopy)
                 {
                     _state.OnEvent(Settings.GetAction(_state.GetType(), key));
                 }

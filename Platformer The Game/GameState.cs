@@ -35,12 +35,14 @@ namespace Platformer_The_Game
             _spriteSheet.CreateMaskFromColor(new Color(0, 255, 0));
             var blockTexture = new Texture(_spriteSheet, new IntRect(12*32, 0, 32, 32));
 
-            Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i((int) game.W.Size.X - 48, 32), blockTexture,
+            Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i(752, 32), blockTexture,
                 game));
-            Platforms.Add(new Platform(new Vector2f(0, game.W.Size.Y - 30), new Vector2i((int) game.W.Size.X, 32),
+            Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
                 blockTexture, game));
-            Platforms.Add(new Platform(new Vector2f(0, game.W.Size.Y - 180), new Vector2i((int) game.W.Size.X - 192, 32),
+            /*
+            Platforms.Add(new Platform(new Vector2f(0, 420), new Vector2i(608, 32),
                 blockTexture, game));
+            */
             _view.Center = _player.Pos;
         }
 
@@ -48,15 +50,16 @@ namespace Platformer_The_Game
         {
             _game.W.SetView(_game.W.DefaultView);
             _game.W.Draw(_backgroundSprite);
-            Text lifeText = new Text(Utils.GetString("life",_game) + " : " + _player.Life.ToString("D3") + "  " +
-                Utils.GetString("speed",_game) + " : " + Math.Abs(Convert.ToInt32(_player.Speed.X)).ToString("D3"), _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(0, 0) };
-            _game.W.Draw(lifeText);
             _game.W.SetView(_view);
             foreach (Platform plateform in Platforms)
             {
                 plateform.Draw();
             }
             _player.Draw();
+            _game.W.SetView(_game.W.DefaultView);
+            Text lifeText = new Text(Utils.GetString("life", _game) + " : " + _player.Life.ToString("D3") + "  " +
+                Utils.GetString("speed", _game) + " : " + Math.Abs(Convert.ToInt32(_player.Speed.X)).ToString("D3"), _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(0, 0) };
+            _game.W.Draw(lifeText);
         }
 
         public void Update()

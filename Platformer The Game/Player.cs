@@ -14,8 +14,10 @@ namespace Platformer_The_Game
         public bool OnGround;
 
         private Vector2f _pos;
+        private float _lastverticalpos;
         private Facing _direction;
         public int Life;
+        private bool _isjumping;
 
 
         private bool _moving;
@@ -72,14 +74,15 @@ namespace Platformer_The_Game
                     }
                     break;
                 case Settings.Action.Jump:
-                    if (OnGround)
+                    if (!_isjumping)
                     {
                         OnGround = false;
+                        _isjumping = true;
                         Speed.Y = -15;
                     }
-                    else if (!OnGround && Speed.Y < -10)
+                    else if(_isjumping && _pos.Y >= _lastverticalpos)
                     {
-                        Speed.Y--;
+                        Speed.Y -= (float)0.5;
                     }
                     break;
             }
@@ -100,11 +103,7 @@ namespace Platformer_The_Game
                 else if (Speed.X > 0) Speed.X--;
                 else Speed.X++;
             }
-            if (!OnGround && Math.Abs(_pos.Y) < 0.1)
-            {
-                Speed.Y++;
-            }
-            if (!OnGround && Speed.Y < 100)
+            if (!OnGround && Speed.Y < 15)
             {
                 Speed.Y++;
             }
@@ -117,6 +116,7 @@ namespace Platformer_The_Game
             _moving = false;
             OnGround = false;
             Sprite.Position = _pos;
+            _lastverticalpos = _pos.Y;
         }
 
         public void Draw()
@@ -166,8 +166,6 @@ namespace Platformer_The_Game
             {
                 _pos.Y = collision.Top - Sprite.TextureRect.Height;
                 Hitbox.MoveTo(_pos);
-                Sprite.Position = _pos;
-                Speed.Y = 0;
                 OnGround = true;
             }
             else
@@ -175,10 +173,12 @@ namespace Platformer_The_Game
                 _sound.SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
                 _sound.Play();
                 _pos.Y = collision.Top + collision.Height;
-                Hitbox.MoveTo(_pos);
-                Sprite.Position = _pos;
-                Speed.Y = 0;
             }
+            Hitbox.MoveTo(_pos);
+            Sprite.Position = _pos;
+            Speed.Y = 0;
+            _isjumping = false;
+            _lastverticalpos = _pos.Y + 1;
         }
 
         private enum Facing

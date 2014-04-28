@@ -55,8 +55,7 @@ namespace Platformer_The_Game
             W.JoystickMoved -= OnJoyAxisMoved;
             W.Closed -= OnClosed;
             W.Close();
-            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer",
-                (Settings.Fullscreen) ? Styles.Fullscreen : Styles.Close);
+            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer", (Settings.Fullscreen) ? Styles.Fullscreen : Styles.Close);
             WindowInit();
         }
 
@@ -69,7 +68,9 @@ namespace Platformer_The_Game
 
         private void WindowInit()
         {
+            W.SetVisible(true);
             W.SetFramerateLimit(60);
+            W.SetVerticalSyncEnabled(true);
             W.SetKeyRepeatEnabled(false);
             W.SetIcon(32, 32, (new Image(@"res\images\icon.png")).Pixels);
             // Setup the events

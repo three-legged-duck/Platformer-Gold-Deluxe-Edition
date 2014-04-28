@@ -192,6 +192,7 @@ namespace Platformer_The_Game
 
         public void Close()
         {
+            Settings.Save();
             W.Close();
             Environment.Exit(0);
         }

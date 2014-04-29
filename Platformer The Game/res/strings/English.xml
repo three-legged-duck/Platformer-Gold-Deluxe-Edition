@@ -7,28 +7,28 @@
   <string name="settings">Settings</string>
   <string name="quit">Quit</string>
 
-  <!-- Settings menu -->
+  <!-- General strings -->
+  <string name="back">Back</string>
+  <string name="yes">yes</string>
+  <string name="no">no</string>
+
+  <!-- Main settings menu -->
   <string name="binding">Keyboard binding</string>
   <string name="video">Video</string>
   <string name="misc">Misc</string>
-  <string name="drawTextures">Draw textures</string>
-  <string name="drawHitboxes">Draw hitboxes</string>
-  <string name="language">Language</string>
+
+  <!--Video settings menu -->
   <string name="videoMode">Video mode</string>
   <string name="fullscreen">Fullscreen</string>
   <string name="windowed">Windowed</string>
   <string name="borderless">Borderless</string>
   <string name="resolution">Resolution</string>
-  <string name="back">Back</string>
-  <string name="yes">yes</string>
-  <string name="no">no</string>
-  <string name="up">Up</string>
-  <string name="down">Down</string>
-  <string name="left">Left</string>
-  <string name="right">Right</string>
-  <string name="use">Use</string>
-  <string name="jump">Jump</string>
-  <string name="run">Run</string>
+  <string name="drawTextures">Draw textures</string>
+  <string name="drawHitboxes">Draw hitboxes</string>
+
+  <!-- Misc settings -->
+  <string name="language">Language</string>
+  <string name="settingsReset">Reset settings</string>
   
   <!-- Pause menu -->
   <string name="resume">Resume</string>

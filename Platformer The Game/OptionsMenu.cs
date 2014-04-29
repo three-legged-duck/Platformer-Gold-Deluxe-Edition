@@ -25,7 +25,7 @@ namespace Platformer_The_Game
                 switch (args.SelectedPos)
                 {
                     case 0:
-                        game.State = CreateBindOptionsMenu(game,options);
+                        game.State = new KeyBindingState(options);
                         break;
                     case 1:
                         game.State = CreateVideoOptionsMenu(game, options);
@@ -116,6 +116,7 @@ namespace Platformer_The_Game
             {
                 Utils.GetString("language", game) + " : " +
                 (game.Settings.Language == Utils.Language.English ? Utils.Language.English.ToString() : Utils.Language.French.ToString()),
+                Utils.GetString("settingsReset",game),
                 Utils.GetString("back", game)
             };
             var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
@@ -132,26 +133,9 @@ namespace Platformer_The_Game
                                                                   : Utils.Language.French.ToString());
                         break;
                     case 1:
-                        game.State = returnState;
+                        game.Settings = new Settings();
                         break;
-                }
-            };
-            return options;
-        }
-
-        private static MenuState CreateBindOptionsMenu(Game game, IState returnState)
-        {
-            string[] menuItems =
-            {
-                Utils.GetString("back", game)
-            };
-            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
-
-            options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
-            {
-                switch (args.SelectedPos)
-                {
-                    case 0:
+                    case 2:
                         game.State = returnState;
                         break;
                 }

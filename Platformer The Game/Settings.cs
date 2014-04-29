@@ -32,7 +32,7 @@ namespace Platformer_The_Game
         private readonly Dictionary<Type, Dictionary<uint, Action>> _joystickKeys =
             new Dictionary<Type, Dictionary<uint, Action>>();
 
-        private readonly Dictionary<Type, Dictionary<Keyboard.Key, Action>> _keyboardKeys =
+        private Dictionary<Type, Dictionary<Keyboard.Key, Action>> _keyboardKeys =
             new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
 
         public bool DrawHitbox = false;
@@ -42,17 +42,13 @@ namespace Platformer_The_Game
         public uint WindowWidth = 800;
         public uint WindowHeight = 600;
 
-        private Settings()
+        public Settings()
         {
             // Keyboard
             SetButton(typeof (Default), Keyboard.Key.W, Action.Up);
             SetButton(typeof (Default), Keyboard.Key.S, Action.Down);
             SetButton(typeof (Default), Keyboard.Key.A, Action.Left);
             SetButton(typeof (Default), Keyboard.Key.D, Action.Right);
-            SetButton(typeof (Default), Keyboard.Key.Up, Action.Up);
-            SetButton(typeof (Default), Keyboard.Key.Down, Action.Down);
-            SetButton(typeof (Default), Keyboard.Key.Left, Action.Left);
-            SetButton(typeof (Default), Keyboard.Key.Right, Action.Right);
 
             SetButton(typeof (GameState), Keyboard.Key.E, Action.Use);
             SetButton(typeof (GameState), Keyboard.Key.Space, Action.Jump);
@@ -70,6 +66,11 @@ namespace Platformer_The_Game
             SetButton(typeof (GameState), 2, Action.Use);
             SetButton(typeof (GameState), 7, Action.Pause);
             SetButton(typeof (MenuState), (uint) 0, Action.Use);
+        }
+
+        public void ResetKeys()
+        {
+            _keyboardKeys = new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
         }
 
         public Action GetAction(Type state, Keyboard.Key k)

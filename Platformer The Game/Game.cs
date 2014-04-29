@@ -125,7 +125,7 @@ namespace Platformer_The_Game
             {
                 _bgMusic.Stop();
             }
-            else if (_bgMusicName != _state.BgMusicName && _state.BgMusicName != null)
+            if (_bgMusicName != _state.BgMusicName && _state.BgMusicName != null)
             {
                 _bgMusic = new Music(@"res\music\" + _state.BgMusicName.ToString());
                 _bgMusic.Volume = 50f;
@@ -133,7 +133,7 @@ namespace Platformer_The_Game
                 _bgMusic.Play();
             }
 
-            _bgMusicName = State.BgMusicName;
+            _bgMusicName = _state.BgMusicName;
         }
 
         private void Draw()

@@ -4,6 +4,7 @@
 
   <!-- Main menu -->
   <string name="play">Jouer</string>
+  <string name="levelEditor">Editeur de niveaux</string>
   <string name="settings">Options</string>
   <string name="quit">Quitter</string>
 
@@ -17,14 +18,27 @@
   <string name="video">Vidéo</string>
   <string name="misc">Divers</string>
 
-  <!--Video settings menu -->
+  <!-- Binding settings menu -->
+  <string name="Use">Utiliser</string>
+  <string name="Up">Haut</string>
+  <string name="Down">Bas</string>
+  <string name="Left">Gauche</string>
+  <string name="Right">Droite</string>
+  <string name="Jump">Sauter</string>
+  <string name="Run">Courir</string>
+  <string name="Pause">Pause</string>
+  <string name="Default">partout</string>
+  <string name="MenuState">menu</string>
+  <string name="GameState">en jeu</string>
+
+  <!-- Video settings menu -->
   <string name="videoMode">Mode vidéo</string>
   <string name="fullscreen">Plein écran</string>
   <string name="windowed">Fenêtré</string>
   <string name="borderless">Sans bordures</string>
   <string name="resolution">Résolution</string>
-  <string name="drawTextures">Afficher textures</string>
-  <string name="drawHitboxes">Afficher masques de collision</string>
+  <string name="drawTextures">Textures</string>
+  <string name="drawHitboxes">Masques de collision</string>
 
   <!-- Misc settings -->
   <string name="language">Langue</string>

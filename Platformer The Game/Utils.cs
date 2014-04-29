@@ -16,8 +16,8 @@ namespace Platformer_The_Game
         };
 
         //Translation files
-        public static XmlDocument frenchStrings = new XmlDocument();
-        public static XmlDocument englishStrings = new XmlDocument();
+        public static XmlDocument FrenchStrings = new XmlDocument();
+        public static XmlDocument EnglishStrings = new XmlDocument();
 
         public static long ReadVarInt(this Stream stream)
         {
@@ -73,8 +73,8 @@ namespace Platformer_The_Game
 
         public static void LoadTranslations()
         {
-            frenchStrings.Load(@"res\strings\French.xml");
-            englishStrings.Load(@"res\strings\English.xml");
+            FrenchStrings.Load(@"res\strings\French.xml");
+            EnglishStrings.Load(@"res\strings\English.xml");
         }
 
         public static string GetString(string key, Game game)
@@ -84,28 +84,24 @@ namespace Platformer_The_Game
             switch (game.Settings.Language)
             {
                 case Language.French:
-                    translatedString = frenchStrings.SelectNodes(nodeSearch);
+                    translatedString = FrenchStrings.SelectNodes(nodeSearch);
                     break;
                 default:
-                    translatedString = englishStrings.SelectNodes(nodeSearch);
+                    translatedString = EnglishStrings.SelectNodes(nodeSearch);
                     break;
             }
             try
             {
-                return translatedString.Item(0).InnerText;
+                // ReSharper disable PossibleNullReferenceException
+                return translatedString != null ? translatedString.Item(0).InnerText : (EnglishStrings.SelectNodes(nodeSearch)).Item(0).InnerText;
+                // ReSharper restore PossibleNullReferenceException
             }
             catch
             {
-                try
-                {
-                    return (englishStrings.SelectNodes(nodeSearch)).Item(0).InnerText;
-                }
-                catch
-                {
-                    return key;
-                }
+                return key;
             }
         }
+
 
         public static RectangleShape NewRectangle(float coordX, float coordY, float sizeX, float sizeY)
         {
@@ -117,7 +113,8 @@ namespace Platformer_The_Game
         public static MenuState CreateMainMenu(Game game)
         {
             var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("play", game),
-                "Level Editor", GetString("settings", game), GetString("quit", game)); // TODO : i18n
+                GetString("levelEditor", game),
+                GetString("settings", game), GetString("quit", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.SelectedPos)

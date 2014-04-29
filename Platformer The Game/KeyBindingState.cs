@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using System.Diagnostics;
 using SFML.Graphics;
 using SFML.Window;
 using KeyEventArgs = SFML.Window.KeyEventArgs;
@@ -63,10 +60,10 @@ namespace Platformer_The_Game
                     Settings.Action.Up,
                     Settings.Action.Down,
                     Settings.Action.Left,
-                    Settings.Action.Right,
+                    Settings.Action.Right
                 },typeof(Settings.Default));
 
-            settingsArray = new SettingsToModify[3] {menuModify,gameModify,defaultModify};
+            settingsArray = new[] {menuModify,gameModify,defaultModify};
         }
 
         public void Initialize(Game game)
@@ -111,7 +108,8 @@ namespace Platformer_The_Game
         {
             var itemWidth = (uint)_currentText.GetLocalBounds().Width;
             var itemHeight = (uint)_currentText.GetLocalBounds().Height;
-            _currentText.Position = new Vector2f((_view.Size.X / 2) - (itemWidth / 2), (_view.Size.Y / 2) - itemHeight);
+            // ReSharper disable once PossibleLossOfFraction
+            _currentText.Position = new Vector2f((_view.Size.X / 2) - itemWidth / 2, (_view.Size.Y / 2) - itemHeight);
         }
 
         void OnKeyReleased(object sender, KeyEventArgs e)
@@ -138,6 +136,7 @@ namespace Platformer_The_Game
             }
             catch
             {
+                Debug.WriteLine("Error while setting button in binding menu");
             }
 
         }

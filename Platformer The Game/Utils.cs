@@ -117,7 +117,7 @@ namespace Platformer_The_Game
         public static MenuState CreateMainMenu(Game game)
         {
             var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("play", game),
-                GetString("settings", game), GetString("quit", game));
+                "Level Editor", GetString("settings", game), GetString("quit", game)); // TODO : i18n
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
                 switch (args.SelectedPos)
@@ -126,9 +126,12 @@ namespace Platformer_The_Game
                         game.State = new GameState();
                         break;
                     case 1:
-                        game.State = OptionsMenu.CreateOptionsMenu(game, menu);
+                        game.State = new LevelEditor(game);
                         break;
                     case 2:
+                        game.State = OptionsMenu.CreateOptionsMenu(game, menu);
+                        break;
+                    case 3:
                         game.Close();
                         break;
                 }

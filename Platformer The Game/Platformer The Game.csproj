@@ -57,8 +57,14 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Gwen, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GWEN.net.1.0.0\lib\net40\Gwen.dll</HintPath>
+    </Reference>
+    <Reference Include="Gwen.Renderer.SFML, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GWEN.net-SFML.1.0.0\lib\net40\Gwen.Renderer.SFML.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\SFML.Net.2.1.5\lib\sfmlnet-audio-2.dll</HintPath>
@@ -71,11 +77,16 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.OpenGl">
+      <HintPath>..\packages\Tao.OpenGl.2.1.0\lib\net40\Tao.OpenGl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collision.cs" />
@@ -123,15 +134,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="res\fonts\arial.ttf" />
     <None Include="res\levels\TestLevel.json" />
     <None Include="res\music\gameLoop.ogg" />
     <None Include="res\music\eddsworldCreditsTheme.ogg" />
+    <None Include="res\shaders\mainmenu.frag" />
     <None Include="res\sprites\character.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\images\backgroundStars.bmp" />
+    <Content Include="res\images\DefaultSkin.png" />
     <Content Include="res\sprites\character.png" />
     <Content Include="res\images\floor.bmp" />
     <Content Include="icon.ico" />

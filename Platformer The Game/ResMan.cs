@@ -100,6 +100,11 @@ namespace Platformer_The_Game
                 TextureRect = new IntRect(anim.Width*Frame, anim.Top, anim.Width, anim.Height);
             }
 
+            public static implicit operator Sprite(AnimatedSprite s)
+            {
+                return s.sprite;
+            }
+
             private AnimationDescription anim
             {
                 get { return desc[currentAnimation]; }

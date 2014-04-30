@@ -1,16 +1,10 @@
 ﻿using SFML.Graphics;
 using Gwen.Control;
 using SFML.Window;
+using Platformer_The_Game.GwenExtensions;
 
 namespace Platformer_The_Game
 {
-    internal class SideBar
-    {
-        private int[] elements;
-        private int x;
-        private int y;
-    }
-
     internal class LevelEditor : IState
     {
         private Game _game;
@@ -18,7 +12,7 @@ namespace Platformer_The_Game
         public string BgMusicName { get { return null; } }
         private readonly Canvas _gwenCanvas;
         private Gwen.Input.SFML _gwenInput;
-
+        private object ItemSelected;
         public LevelEditor(Game g)
         {
             this._game = g;
@@ -51,17 +45,47 @@ namespace Platformer_The_Game
 
             _gwenCanvas = new Canvas(skin);
             _gwenCanvas.SetSize((int)_game.W.Size.X, (int)_game.W.Size.Y);
-            _gwenCanvas.ShouldDrawBackground = true;
-            _gwenCanvas.BackgroundColor = System.Drawing.Color.FromArgb(255, 150, 170, 170);
+            _gwenCanvas.ShouldDrawBackground = false;
             _gwenCanvas.KeyboardInputEnabled = true;
 
             _gwenInput = new Gwen.Input.SFML();
             _gwenInput.Initialize(_gwenCanvas, _game.W);
             
-            WindowControl window = new WindowControl(_gwenCanvas);
-            window.Title = "Test";
-            window.SetSize(400, 200);
-            window.SetPosition(400, 400);
+            TabControl entities = new TabControl(_gwenCanvas);
+            var platforms = entities.AddPage("platforms");
+
+            entities.SetSize(_gwenCanvas.Width, 200);
+            entities.SetPosition(0, _gwenCanvas.Height - 200);
+            Gwen.Texture tex = new Gwen.Texture(skin.Renderer);
+            tex.Load(@"res\images\plateformes.png");
+
+            var page = new ScrollControl(platforms.Page);
+            page.Dock = Gwen.Pos.Fill;
+            for (int y = 0; y < tex.Height; y += 30)
+            {
+                for (int x = 0; x < tex.Width; x += 30)
+                {
+                    ClippedImage img = new ClippedImage(page, tex);
+                    img.SetTextureRect(x, y, 30, 30);
+                    img.SetSize(30, 30);
+                    img.SetPosition(x, y);
+                    img.Clicked += new Base.GwenEventHandler<ClickedEventArgs>(img_Clicked);
+                }
+            }
+            //Button btn = new Button(_gwenCanvas);
+            //btn.Text = "Exit";
+            //btn.Clicked += btn_Clicked;
+        }
+
+        void img_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            ClippedImage img = sender as ClippedImage;
+            
+        }
+
+        void btn_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            _game.State = Utils.CreateMainMenu(_game);
         }
 
         public void Initialize(Game game)
@@ -133,7 +157,13 @@ namespace Platformer_The_Game
 
         public void Uninitialize()
         {
-
+            _game.W.KeyPressed -= window_KeyPressed;
+            _game.W.KeyReleased -= window_KeyReleased;
+            _game.W.MouseButtonPressed -= window_MouseButtonPressed;
+            _game.W.MouseButtonReleased -= window_MouseButtonReleased;
+            _game.W.MouseWheelMoved -= window_MouseWheelMoved;
+            _game.W.MouseMoved -= window_MouseMoved;
+            _game.W.TextEntered -= window_TextEntered;
         }
     }
 }

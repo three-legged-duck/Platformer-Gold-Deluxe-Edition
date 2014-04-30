@@ -6,47 +6,18 @@ using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    internal class Player
+    internal class Player : Unit
     {
-        Game Game;
         private readonly Sound _sound;
-        public Hitbox Hitbox;
-        public bool OnGround;
-
-        private Vector2f _pos;
         private float _lastverticalpos;
-        private Facing _direction;
-        public int Life;
         private bool _isjumping;
 
-
         private bool _moving;
-        public Vector2f Speed; // TODO : Why no int ?
-        protected ResMan.AnimatedSprite Sprite;
 
-        public Player(Game game, Vector2f pos)
+        public Player(Game game, GameState gameState, Vector2f pos) : base (game, gameState, pos, "character", "idle")
         {
-            Game = game;
-
-            Life = 100;
             _direction = Facing.Right;
-            OnGround = true;
-
-            // Visual Appearance
-            Sprite = game.ResMan.NewSprite("character", "idle");
-
-            // Hitbox
-            Hitbox = new Hitbox(new List<FloatRect> {Sprite.GetLocalBounds()});
-            _direction = Facing.Right;
-            Pos = pos;
-
             _sound = new Sound();
-        }
-
-        public Vector2f Pos
-        {
-            get { return _pos; }
-            set { _pos = value; }
         }
 
         public void Initialize()
@@ -119,18 +90,6 @@ namespace Platformer_The_Game
             _lastverticalpos = _pos.Y;
         }
 
-        public void Draw()
-        {
-            if (Game.Settings.DrawTextures)
-                Game.W.Draw(Sprite);
-            if (Game.Settings.DrawHitbox)
-                Game.W.Draw(Hitbox);
-            if (Sprite.Color.A != 255)
-            {
-                Sprite.Color = new Color(Sprite.Color.R, Sprite.Color.G, Sprite.Color.B, 255);
-            }
-        }
-
         public void Uninitialize()
         {
         }
@@ -160,31 +119,7 @@ namespace Platformer_The_Game
             }
         }
 
-        public void Collided(Platform platform, FloatRect collision)
-        {
-            if (platform.Pos.Y + platform.hitbox.effectiveShapes[0].Height > Pos.Y + Sprite.GetLocalBounds().Height)
-            {
-                _pos.Y = collision.Top - Sprite.TextureRect.Height;
-                Hitbox.MoveTo(_pos);
-                OnGround = true;
-            }
-            else
-            {
-                _sound.SoundBuffer = new SoundBuffer(@"res\music\bump.aiff");
-                _sound.Play();
-                _pos.Y = collision.Top + collision.Height;
-            }
-            Hitbox.MoveTo(_pos);
-            Sprite.Position = _pos;
-            Speed.Y = 0;
-            _isjumping = false;
-            _lastverticalpos = _pos.Y + 1;
-        }
+        
 
-        private enum Facing
-        {
-            Left,
-            Right
-        };
     }
 }

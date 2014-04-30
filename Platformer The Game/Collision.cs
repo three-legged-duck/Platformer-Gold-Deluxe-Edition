@@ -6,19 +6,19 @@ namespace Platformer_The_Game
 {
     internal class BitmaskManager
     {
-        private readonly Dictionary<Texture, byte[]> Bitmasks = new Dictionary<Texture, byte[]>();
+        private Dictionary<Texture, bool[,]> Bitmasks = new Dictionary<Texture, bool[,]>();
 
-        public byte GetPixel(byte[] mask, Texture tex, uint x, uint y)
+        public bool GetPixel(bool[,] mask, Texture tex, uint x, uint y)
         {
             if (x > tex.Size.X || y > tex.Size.Y)
-                return 0;
+                return false;
 
-            return mask[x + y*tex.Size.X];
+            return mask[x,y];
         }
 
-        public byte[] GetMask(Texture tex)
+        public bool[,] GetMask(Texture tex)
         {
-            byte[] mask;
+            bool[,] mask;
             if (!Bitmasks.TryGetValue(tex, out mask))
             {
                 Image img = tex.CopyToImage();
@@ -28,14 +28,14 @@ namespace Platformer_The_Game
             return mask;
         }
 
-        public byte[] CreateMask(Texture tex, Image img)
+        public bool[,] CreateMask(Texture tex, Image img)
         {
-            var mask = new byte[tex.Size.Y*tex.Size.X];
+            var mask = new bool[tex.Size.X,tex.Size.Y];
 
             for (uint y = 0; y < tex.Size.Y; y++)
             {
                 for (uint x = 0; x < tex.Size.X; x++)
-                    mask[x + y*tex.Size.X] = img.GetPixel(x, y).A;
+                    mask[x,y] = img.GetPixel(x, y).A > 0;
             }
 
             Bitmasks[tex] = mask;
@@ -46,9 +46,9 @@ namespace Platformer_The_Game
 
     internal class Collision
     {
-        private static readonly BitmaskManager Bitmasks = new BitmaskManager();
+        public BitmaskManager Bitmasks = new BitmaskManager();
 
-        private bool PixelPerfectTest(Sprite Object1, Sprite Object2, byte AlphaLimit)
+        public bool PixelPerfectTest(ResMan.AnimatedSprite Object1, ResMan.AnimatedSprite Object2)
         {
             FloatRect Intersection;
             if (Object1.GetGlobalBounds().Intersects(Object2.GetGlobalBounds(), out Intersection))
@@ -56,8 +56,8 @@ namespace Platformer_The_Game
                 IntRect O1SubRect = Object1.TextureRect;
                 IntRect O2SubRect = Object2.TextureRect;
 
-                byte[] mask1 = Bitmasks.GetMask(Object1.Texture);
-                byte[] mask2 = Bitmasks.GetMask(Object2.Texture);
+                bool[,] mask1 = Bitmasks.GetMask(Object1.Texture);
+                bool[,] mask2 = Bitmasks.GetMask(Object2.Texture);
 
                 // Loop through our pixels
                 for (var i = (int) Intersection.Left; i < Intersection.Left + Intersection.Width; i++)
@@ -74,9 +74,9 @@ namespace Platformer_The_Game
                         {
                             if (
                                 Bitmasks.GetPixel(mask1, Object1.Texture, (uint) ((o1v.X) + O1SubRect.Left),
-                                    (uint) ((o1v.Y) + O1SubRect.Top)) > AlphaLimit &&
+                                    (uint) ((o1v.Y) + O1SubRect.Top)) &&
                                 Bitmasks.GetPixel(mask2, Object2.Texture, (uint) ((o2v.X) + O2SubRect.Left),
-                                    (uint) ((o2v.Y) + O2SubRect.Top)) > AlphaLimit)
+                                    (uint) ((o2v.Y) + O2SubRect.Top)))
                                 return true;
                         }
                     }
@@ -85,7 +85,7 @@ namespace Platformer_The_Game
             return false;
         }
 
-        private Texture CreateTextureAndBitmask(string Filename)
+        public Texture CreateTextureAndBitmask(string Filename)
         {
             var img = new Image(Filename);
             var tex = new Texture(img);

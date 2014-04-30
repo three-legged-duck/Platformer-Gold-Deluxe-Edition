@@ -9,7 +9,7 @@ namespace Platformer_The_Game
     {
         private readonly Game game;
         public readonly Hitbox hitbox;
-        private readonly Sprite sprite;
+        public readonly ResMan.AnimatedSprite sprite;
         private Texture texture;
 
         public Platform(Vector2f pos, Vector2i size, Texture texture, Game game)
@@ -17,7 +17,7 @@ namespace Platformer_The_Game
             Pos = pos;
             this.game = game;
             texture.Repeated = true;
-            sprite = new Sprite(texture);
+            sprite = new ResMan.AnimatedSprite(texture);
             sprite.TextureRect = new IntRect(0, 0, size.X, size.Y);
             sprite.Position = Pos;
             Debug.WriteLine(sprite.GetLocalBounds());

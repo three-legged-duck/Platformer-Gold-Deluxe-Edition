@@ -12,6 +12,7 @@ namespace Platformer_The_Game
         public List<Platform> Platforms;
         private Player _player;
         private Image _spriteSheet;
+        public Collision Collision;
 
         private View _view;
 
@@ -29,7 +30,9 @@ namespace Platformer_The_Game
                 game.W.DefaultView.Size.Y/_backgroundSprite.GetGlobalBounds().Height);
             Platforms = new List<Platform>();
 
-            _player = new Player(game, new Vector2f(50, 180));
+            Collision = new Collision();
+
+            _player = new Player(game, this, new Vector2f(50, 180));
 
             _spriteSheet = new Image(@"res\images\plateformes.png");
             _spriteSheet.CreateMaskFromColor(new Color(0, 255, 0));
@@ -68,15 +71,6 @@ namespace Platformer_The_Game
                 plateform.Update();
             //Vector2f oldPos = _player.Pos;
             _player.Update();
-
-            foreach (Platform platform in Platforms)
-            {
-                FloatRect rect;
-                if (_player.Hitbox.Collides(platform.hitbox, out rect))
-                {
-                    _player.Collided(platform, rect);
-                }
-            }
             _view.Center = _player.Pos;
         }
 

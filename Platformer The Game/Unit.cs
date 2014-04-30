@@ -15,6 +15,7 @@ namespace Platformer_The_Game
 
         public Hitbox Hitbox;
         public bool OnGround;
+        protected FloatRect underUnit; // 1 x width rectangle under the feetof the unit
 
         protected Vector2f _pos;
         protected Facing _direction;
@@ -26,7 +27,7 @@ namespace Platformer_The_Game
         public Vector2f Pos
         {
             get { return _pos; }
-            set { _pos = value; }
+            set { _pos = value; Hitbox.MoveTo(value); }
         }
 
         public Unit(Game game, GameState gameState, Vector2f pos, string spriteSheet, string animation)
@@ -40,31 +41,41 @@ namespace Platformer_The_Game
             // Visual appearance
             Sprite = game.ResMan.NewSprite(spriteSheet, animation);
 
-            Hitbox = new Hitbox(new List<FloatRect> { Sprite.GetLocalBounds() });
+            Hitbox = new Hitbox(Sprite.GetLocalBounds());
 
             Pos = pos;
         }
 
-        public void Update()
+        public virtual void Update()
         {
             bool colliding = false;
             Vector2f destination = new Vector2f(Pos.X + Speed.X, Pos.Y + Speed.Y);
             FloatRect overlap;
-            foreach(Platform entity in GameState.Platforms) // TODO: IEntity instead of Platform
-                if(this.Hitbox.Collides(entity.hitbox, out overlap))
+            foreach (Platform entity in GameState.Platforms) // TODO: IEntity instead of Platform
+                if (this.Hitbox.Collides(entity.hitbox, out overlap))
+                {
                     if (GameState.Collision.PixelPerfectTest(this.Sprite, entity.sprite))
                     {
                         colliding = true;
                         break;
                     }
-                    if (!colliding)
-                    {
-                        Pos = new Vector2f();
-                    }
+                }
+            if (colliding)
+            {
+                Speed = new Vector2f(0, 0);
+            }
+            else
+            {
+                Pos = new Vector2f();
+                Hitbox.MoveTo(Pos);
+            }
         }
         public void Draw()
         {
-
+            if (Game.Settings.DrawTextures)
+                Game.W.Draw(Sprite);
+            if (Game.Settings.DrawHitbox)
+                Game.W.Draw(Hitbox);
         }
     }
 }

@@ -6,38 +6,26 @@ namespace Platformer_The_Game
 {
     internal class Hitbox : Drawable
     {
-        public List<FloatRect> effectiveShapes;
-        public List<FloatRect> shapes;
+        public FloatRect box;
 
-        public Hitbox(List<FloatRect> shape)
+        public Hitbox(FloatRect box)
         {
-            shapes = shape;
-            effectiveShapes = new List<FloatRect>(shapes.Count);
+            this.box = box;
         }
 
         public void Draw(RenderTarget target, RenderStates states)
         {
-            foreach (FloatRect rect in effectiveShapes)
-            {
-                var boundingBox = new RectangleShape(new Vector2f(rect.Width, rect.Height));
-                boundingBox.Position = new Vector2f(rect.Left, rect.Top);
+                var boundingBox = new RectangleShape(new Vector2f(box.Width, box.Height));
+                boundingBox.Position = new Vector2f(box.Left, box.Top);
                 boundingBox.OutlineColor = Color.Red;
                 boundingBox.FillColor = Color.Transparent;
                 boundingBox.OutlineThickness = 3;
                 boundingBox.Draw(target, states); // Pass-through to SFML's real function.
-            }
         }
 
         public void MoveTo(Vector2f newPos) // Called in Unit.Update()
         {
-            effectiveShapes.Clear();
-            foreach (FloatRect currShape in shapes)
-            {
-                FloatRect copy = currShape;
-                copy.Left += newPos.X;
-                copy.Top += newPos.Y;
-                effectiveShapes.Add(copy);
-            }
+            box = new FloatRect(box.Left, box.Top, box.Width, box.Height);
         }
 
         public bool Collides(Hitbox other)
@@ -48,20 +36,9 @@ namespace Platformer_The_Game
 
         public bool Collides(Hitbox other, out FloatRect overlap)
         {
-            overlap = new FloatRect();
-            foreach (FloatRect shapeOther in other.effectiveShapes)
-            {
-                foreach (FloatRect shapeHere in effectiveShapes)
-                {
-                    if (shapeOther.Intersects(shapeHere, out overlap))
-                    {
-                        return true;
-                    }
-                }
-            }
+            if (other.box.Intersects(box, out overlap))
+                return true;
             return false;
         }
-
-        // Utility method
     }
 }

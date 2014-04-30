@@ -22,6 +22,7 @@ namespace Platformer_The_Game
 
         public void Initialize()
         {
+
         }
 
         public void Event(Settings.Action action)
@@ -59,8 +60,11 @@ namespace Platformer_The_Game
             }
         }
 
-        public void Update()
+        public override void Update()
         {
+            base.Update();
+
+
             // TODO : Movement handling is pretty ugly. We could prettify it a lot.
             if (_moving)
             {
@@ -118,8 +122,5 @@ namespace Platformer_The_Game
                 Game.State = gameoverMenuState;
             }
         }
-
-        
-
     }
 }

@@ -70,10 +70,10 @@ namespace Platformer_The_Game
         {
             _game = game;
             _game.W.KeyReleased += OnKeyReleased;
+            _game.Settings.IsCorrupted = true;
             _view = game.W.DefaultView;
             _backgroundSprite.Scale = new Vector2f(_view.Size.X / _backgroundSprite.GetLocalBounds().Width,_view.Size.Y / _backgroundSprite.GetLocalBounds().Height);
             _game.Settings.ResetKeys();
-
             _textSize = _game.W.Size.Y / 18;
         }
 
@@ -131,8 +131,8 @@ namespace Platformer_The_Game
                 else
                 {
                     _game.State = nextState;
+                    _game.Settings.IsCorrupted = false;
                 }
-                _game.StopInput(10);
             }
             catch
             {

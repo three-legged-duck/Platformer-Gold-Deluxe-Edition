@@ -41,6 +41,7 @@ namespace Platformer_The_Game
         public Utils.Language Language = Utils.Language.English;
         public uint WindowWidth = 800;
         public uint WindowHeight = 600;
+        public bool IsCorrupted = false;
 
         public Settings()
         {
@@ -185,7 +186,14 @@ namespace Platformer_The_Game
                 var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
                 Settings s = formatter.Deserialize(readerFileStream) as Settings;
                 readerFileStream.Close();
-                return s;
+                if (s.IsCorrupted = true)
+                {
+                    return new Settings();
+                }
+                else
+                {
+                    return s;
+                }
             }
             catch
             {

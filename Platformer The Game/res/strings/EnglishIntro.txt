@@ -1,3 +1,9 @@
-﻿Introduction
-text which
-explains everything
+﻿The date is 2123 AD.
+
+To alter the course of past disasters,
+you have been chosen to be one of
+the first time travelers.
+
+Your mission is to travel to different
+eras, to kill the threats before they
+become a problem for mankind.

@@ -134,9 +134,7 @@ namespace Platformer_The_Game
             }
             if (_bgMusicName != _state.BgMusicName && _state.BgMusicName != null)
             {
-                _bgMusic = new Music(@"res\music\" + _state.BgMusicName.ToString());
-                _bgMusic.Volume = 50f;
-                _bgMusic.Loop = true;
+                _bgMusic = new Music(@"res\music\" + _state.BgMusicName) {Volume = 50f, Loop = true};
                 _bgMusic.Play();
             }
 

@@ -48,7 +48,7 @@ namespace Platformer_The_Game
     {
         public BitmaskManager Bitmasks = new BitmaskManager();
 
-        public bool PixelPerfectTest(ResMan.AnimatedSprite Object1, ResMan.AnimatedSprite Object2)
+        public bool PixelPerfectTest(Sprite Object1, Sprite Object2)
         {
             FloatRect Intersection;
             if (Object1.GetGlobalBounds().Intersects(Object2.GetGlobalBounds(), out Intersection))

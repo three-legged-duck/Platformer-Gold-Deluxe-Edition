@@ -32,7 +32,7 @@ namespace Platformer_The_Game
 
         public void Initialize(Game game)
         {
-            textSize = game.W.Size.Y/12;
+            textSize = game.W.Size.Y/18;
             this.game = game;
 
             MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)

@@ -58,6 +58,13 @@ namespace Platformer_The_Game
             W.JoystickButtonReleased += OnJoyReleased;
             W.JoystickMoved += OnJoyAxisMoved;
             W.Closed += OnClosed;
+            if (State is MenuState)
+            {
+                MenuState menuState = (MenuState) State;
+                W.MouseButtonPressed += menuState._mouseClickHandler;
+                W.MouseMoved += menuState._mouseMoveHandler;
+                State = menuState;
+            }
         }
 
         public void RecreateWindow()

@@ -15,8 +15,8 @@ namespace Platformer_The_Game
         private static Font _menuFont;
         private uint _textSize;
 
-        private readonly EventHandler<MouseButtonEventArgs> _mouseClickHandler;
-        private readonly EventHandler<MouseMoveEventArgs> _mouseMoveHandler;
+        public EventHandler<MouseButtonEventArgs> _mouseClickHandler;
+        public EventHandler<MouseMoveEventArgs> _mouseMoveHandler;
 
         //Media ressources
         private readonly Sprite _backgroundSprite;

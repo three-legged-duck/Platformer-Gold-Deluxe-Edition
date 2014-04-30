@@ -2,6 +2,7 @@
 using Gwen.Control;
 using SFML.Window;
 using Platformer_The_Game.GwenExtensions;
+using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
@@ -10,9 +11,18 @@ namespace Platformer_The_Game
         private Game _game;
 
         public string BgMusicName { get { return null; } }
+        
+        // Gwen
         private readonly Canvas _gwenCanvas;
         private Gwen.Input.SFML _gwenInput;
-        private object ItemSelected;
+
+        // Item management
+        private bool ItemSelected;
+        private Sprite currentItem;
+        
+
+        // Level management
+
         public LevelEditor(Game g)
         {
             this._game = g;
@@ -61,26 +71,26 @@ namespace Platformer_The_Game
 
             var page = new ScrollControl(platforms.Page);
             page.Dock = Gwen.Pos.Fill;
-            for (int y = 0; y < tex.Height; y += 30)
+            for (int y = 0; y < tex.Height; y += 32)
             {
-                for (int x = 0; x < tex.Width; x += 30)
+                for (int x = 0; x < tex.Width; x += 32)
                 {
                     ClippedImage img = new ClippedImage(page, tex);
-                    img.SetTextureRect(x, y, 30, 30);
-                    img.SetSize(30, 30);
+                    img.SetTextureRect(x, y, 31, 31);
+                    img.SetSize(31, 31);
                     img.SetPosition(x, y);
-                    img.Clicked += new Base.GwenEventHandler<ClickedEventArgs>(img_Clicked);
+                    img.Clicked += delegate(Base sender, ClickedEventArgs args)
+                    {
+                        Debug.WriteLine("{0},{1}", sender.Width, sender.Height);
+                        ItemSelected = true;
+                        currentItem.TextureRect = new IntRect(sender.X, sender.Y, 31, 31);
+                        currentItem.Color = new Color(255, 255, 255, 127);
+                    };
                 }
             }
             //Button btn = new Button(_gwenCanvas);
             //btn.Text = "Exit";
             //btn.Clicked += btn_Clicked;
-        }
-
-        void img_Clicked(Base sender, ClickedEventArgs arguments)
-        {
-            ClippedImage img = sender as ClippedImage;
-            
         }
 
         void btn_Clicked(Base sender, ClickedEventArgs arguments)
@@ -91,6 +101,7 @@ namespace Platformer_The_Game
         public void Initialize(Game game)
         {
             RenderWindow m_Window = game.W;
+            currentItem = new Sprite(new Texture(@"res\images\plateformes.png"));
             m_Window.KeyPressed += window_KeyPressed;
             m_Window.KeyReleased += window_KeyReleased;
             m_Window.MouseButtonPressed += window_MouseButtonPressed;
@@ -107,6 +118,10 @@ namespace Platformer_The_Game
         public void Draw()
         {
             _gwenCanvas.RenderCanvas();
+            if (ItemSelected)
+            {
+                _game.W.Draw(currentItem);
+            }
         }
         // Useless... kinda.
         public void OnEvent(Settings.Action ev)
@@ -121,6 +136,7 @@ namespace Platformer_The_Game
 
         void window_MouseMoved(object sender, MouseMoveEventArgs e)
         {
+            currentItem.Position = new Vector2f(e.X - 15, e.Y - 15);
             _gwenInput.ProcessMessage(e);
         }
 
@@ -131,7 +147,17 @@ namespace Platformer_The_Game
 
         void window_MouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
-            _gwenInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+            if (e.Button == Mouse.Button.Right)
+            {
+                ItemSelected = false;
+            }
+            if (e.Y < _game.W.Size.Y - 200)
+            {
+            }
+            else
+            {
+                _gwenInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+            }
         }
 
         void window_MouseButtonReleased(object sender, MouseButtonEventArgs e)

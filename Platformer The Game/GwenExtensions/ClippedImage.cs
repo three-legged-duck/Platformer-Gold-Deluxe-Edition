@@ -5,12 +5,13 @@ using System.Text;
 using Gwen.Control;
 using Gwen;
 using System.Drawing;
+using System.Diagnostics;
 namespace Platformer_The_Game.GwenExtensions
 {
     class ClippedImage : Base
     {
         private readonly Texture m_Texture;
-        private readonly float[] m_uv;
+        private readonly float[] m_uv = new float[] { 0, 0, 1, 1 };
         public Color Color {
             get;
             set;
@@ -25,7 +26,6 @@ namespace Platformer_The_Game.GwenExtensions
         {
             m_uv = new float[4];
             m_Texture = tex;
-            SetTextureRect(0, 0, m_Texture.Width, m_Texture.Height);
             MouseInputEnabled = true;
             Color = Color.White;
         }
@@ -46,8 +46,9 @@ namespace Platformer_The_Game.GwenExtensions
         {
             m_uv[0] = left / m_Texture.Width;
             m_uv[1] = top / m_Texture.Height;
-            m_uv[2] = (left + width) / m_Texture.Width;
-            m_uv[3] = (top + height) / m_Texture.Height;
+            m_uv[2] = (left + width + 1) / (m_Texture.Width); // TODO : not to sure about the + 1 there
+            m_uv[3] = (top + height + 1) / (m_Texture.Height);
+            Debug.WriteLine("[{0}, {1}, {2}, {3}]", m_uv[0] * m_Texture.Width, m_uv[1] * m_Texture.Height, m_uv[2] * m_Texture.Width, m_uv[3] * m_Texture.Height);
         }
 
         /// <summary>

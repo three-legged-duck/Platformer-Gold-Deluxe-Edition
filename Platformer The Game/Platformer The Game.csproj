@@ -90,7 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collision.cs" />
-    <Compile Include="GameLevel.cs" />
     <Compile Include="GwenExtensions\ClippedImage.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="KeyBindingState.cs" />

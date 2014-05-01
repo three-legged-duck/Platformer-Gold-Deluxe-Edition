@@ -186,7 +186,7 @@ namespace Platformer_The_Game
                 var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
                 Settings s = formatter.Deserialize(readerFileStream) as Settings;
                 readerFileStream.Close();
-                if (s.IsCorrupted = true)
+                if (s.IsCorrupted)
                 {
                     return new Settings();
                 }

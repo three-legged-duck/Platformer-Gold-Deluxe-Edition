@@ -20,8 +20,8 @@ namespace Platformer_The_Game
             sprite = new Sprite(texture);
             sprite.TextureRect = new IntRect(0, 0, size.X, size.Y);
             sprite.Position = Pos;
-            Debug.WriteLine(sprite.GetLocalBounds());
-            hitbox = new Hitbox(sprite.GetLocalBounds());
+            Debug.WriteLine(sprite.GetGlobalBounds());
+            hitbox = new Hitbox(sprite.GetGlobalBounds());
             hitbox.MoveTo(Pos);
         }
 

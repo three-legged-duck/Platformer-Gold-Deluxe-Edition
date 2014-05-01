@@ -23,9 +23,9 @@ namespace Platformer_The_Game
                 boundingBox.Draw(target, states); // Pass-through to SFML's real function.
         }
 
-        public void MoveTo(Vector2f newPos) // Called in Unit.Update()
+        public void MoveTo(Vector2f newPos) // set when unit.Pos is mset
         {
-            box = new FloatRect(box.Left, box.Top, box.Width, box.Height);
+            this.box = new FloatRect(box.Left, box.Top, box.Width, box.Height);
         }
 
         public bool Collides(Hitbox other)

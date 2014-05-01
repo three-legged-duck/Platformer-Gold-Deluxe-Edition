@@ -83,9 +83,9 @@ namespace Platformer_The_Game
                 Speed.Y++;
             }
             else if (OnGround && Math.Abs(Speed.Y) > 0.1) Speed.Y = 0;
-            _pos.X = Math.Min(Math.Max(_pos.X + Speed.X, 0), Game.Settings.WindowWidth - Sprite.GetLocalBounds().Width);
-            _pos.Y = Math.Min(Math.Max(_pos.Y + Speed.Y, 0), Game.Settings.WindowHeight - Sprite.GetLocalBounds().Height);
-            if (_pos.X >= Game.Settings.WindowWidth - Sprite.GetLocalBounds().Width || _pos.X <= 1) Speed.X = 0;
+            _pos.X = Math.Min(Math.Max(_pos.X + Speed.X, 0), Game.Settings.WindowWidth - Sprite.GetGlobalBounds().Width);
+            _pos.Y = Math.Min(Math.Max(_pos.Y + Speed.Y, 0), Game.Settings.WindowHeight - Sprite.GetGlobalBounds().Height);
+            if (_pos.X >= Game.Settings.WindowWidth - Sprite.GetGlobalBounds().Width || _pos.X <= 1) Speed.X = 0;
             Hitbox.MoveTo(_pos);
 
             _moving = false;

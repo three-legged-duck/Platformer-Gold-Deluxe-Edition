@@ -54,8 +54,8 @@ namespace Platformer_The_Game
             if (State is MenuState)
             {
                 MenuState menuState = (MenuState) State;
-                W.MouseButtonPressed += menuState._mouseClickHandler;
-                W.MouseMoved += menuState._mouseMoveHandler;
+                W.MouseButtonPressed += menuState.MouseClickHandler;
+                W.MouseMoved += menuState.MouseMoveHandler;
                 State = menuState;
             }
         }

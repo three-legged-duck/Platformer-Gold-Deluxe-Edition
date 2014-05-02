@@ -15,8 +15,8 @@ namespace Platformer_The_Game
         private static Font _menuFont;
         private uint _textSize;
 
-        public EventHandler<MouseButtonEventArgs> _mouseClickHandler;
-        public EventHandler<MouseMoveEventArgs> _mouseMoveHandler;
+        public EventHandler<MouseButtonEventArgs> MouseClickHandler;
+        public EventHandler<MouseMoveEventArgs> MouseMoveHandler;
 
         //Media ressources
         private readonly Sprite _backgroundSprite;
@@ -39,8 +39,8 @@ namespace Platformer_The_Game
         public MenuState(Font font, string img, bool hasScrollingText, params string[] menuItems)
         {
             _scrollingTextActivated = hasScrollingText;
-            _mouseClickHandler = OnMousePressed;
-            _mouseMoveHandler = OnMouseMoved;
+            MouseClickHandler = OnMousePressed;
+            MouseMoveHandler = OnMouseMoved;
             _menuList = new List<string>(menuItems);
             _menuFont = font;
             Image backgroundImage = new Image(@"res\images\" + img);
@@ -57,38 +57,42 @@ namespace Platformer_The_Game
         {
             _view = game.W.DefaultView;
             _nextmillis = Environment.TickCount + 150;
-            game.W.MouseButtonPressed += _mouseClickHandler;
-            game.W.MouseMoved += _mouseMoveHandler;
+            game.W.MouseButtonPressed += MouseClickHandler;
+            game.W.MouseMoved += MouseMoveHandler;
             if (_initialized) return;
             _game = game;
-            _textSize = _game.W.Size.Y / 12;
-            _backgroundSprite.Scale = new Vector2f(_view.Size.X/_backgroundSprite.GetLocalBounds().Width,
-                _view.Size.Y/_backgroundSprite.GetLocalBounds().Height);
-            _carretLeft = new Text("- ", _menuFont,_textSize);
+            _textSize = Convert.ToUInt32(_view.Size.Y/12);
+            _carretLeft = new Text("- ", _menuFont, _textSize);
             _carretRight = new Text(" -", _menuFont, _textSize);
             for (int i = 0; i < _menuList.Count; i++)
             {
                 var menuItem = new Text(_menuList[i], _menuFont, _textSize);
-                var itemWidth = (uint) menuItem.GetLocalBounds().Width;
-                uint itemHeight = menuItem.CharacterSize;
-
-                menuItem.Position = new Vector2f(_view.Size.X/2 - itemWidth/2,
-                    _view.Size.Y/2 - _menuList.Count*itemHeight/2 + i*itemHeight);
-
                 MenuBtns.Add(menuItem);
             }
             if (_scrollingTextActivated)
             {
                 _textLines = File.ReadAllLines(@"res\strings\" + game.Settings.Language + "Menu.txt");
-                _scrollingText = new Text(RandomTextLine(), _menuFont,_textSize);
-                _scrollingText.Position = new Vector2f(_view.Size.X,
-                    _view.Size.Y - (_textSize*2));
+                _scrollingText = new Text(RandomTextLine(), _menuFont, _textSize)
+                {
+                    Position = new Vector2f(_view.Size.X, _view.Size.Y - (_textSize*2))
+                };
             }
             _initialized = true;
         }
 
         public void Update()
         {
+            _backgroundSprite.Scale = new Vector2f(_view.Size.X/_backgroundSprite.GetLocalBounds().Width,
+                _view.Size.Y/_backgroundSprite.GetLocalBounds().Height);
+            for (int i = 0; i < MenuBtns.Count; i++)
+            {
+                Text t = MenuBtns[i];
+                uint iWidth = (uint) t.GetLocalBounds().Width;
+                uint iHeight = t.CharacterSize;
+                t.Position = new Vector2f(_view.Size.X/2 - iWidth/2,
+                    _view.Size.Y/2 - _menuList.Count*iHeight/2 + i*iHeight);
+            }
+
             Text item = MenuBtns[_selectedPos];
             var itemWidth = (uint) item.GetLocalBounds().Width;
             uint itemHeight = item.CharacterSize;
@@ -103,13 +107,15 @@ namespace Platformer_The_Game
             {
                 if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
                 {
-                    _scrollingText = new Text(RandomTextLine(), _menuFont, _textSize);
-                    _scrollingText.Position = new Vector2f(_view.Size.X,
-                        _view.Size.Y - (_textSize*2));
+                    _scrollingText = new Text(RandomTextLine(), _menuFont, _textSize)
+                    {
+                        Position = new Vector2f(_view.Size.X,
+                            _view.Size.Y - (_textSize*2))
+                    };
                 }
                 else
                 {
-                    _scrollingText.Position = new Vector2f(_scrollingText.Position.X - _game.W.Size.X/200,
+                    _scrollingText.Position = new Vector2f(_scrollingText.Position.X - _view.Size.X/200,
                         _scrollingText.Position.Y);
                 }
             }
@@ -139,8 +145,8 @@ namespace Platformer_The_Game
 
         public void Uninitialize()
         {
-            _game.W.MouseButtonPressed -= _mouseClickHandler;
-            _game.W.MouseMoved -= _mouseMoveHandler;
+            _game.W.MouseButtonPressed -= MouseClickHandler;
+            _game.W.MouseMoved -= MouseMoveHandler;
         }
 
         public void OnEvent(Settings.Action action)

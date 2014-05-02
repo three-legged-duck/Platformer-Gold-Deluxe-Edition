@@ -102,7 +102,6 @@ namespace Platformer_The_Game
             }
         }
 
-
         public static RectangleShape NewRectangle(float coordX, float coordY, float sizeX, float sizeY)
         {
             var shape = new RectangleShape(new Vector2f(coordX, coordY));

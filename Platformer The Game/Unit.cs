@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.Window;
+using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
@@ -13,11 +14,16 @@ namespace Platformer_The_Game
         protected Game Game;
         protected GameState GameState;
 
-        public Hitbox Hitbox;
         public bool OnGround;
-        protected FloatRect underUnit; // 1 x width rectangle under the feet of the unit
+        protected FloatRect UnderUnit {
+            get {
+                FloatRect bounds = Sprite.GetGlobalBounds();
+                bounds.Top += bounds.Height;
+                bounds.Height = 1;
+                return bounds;
+            }
+        }
 
-        protected Vector2f _pos;
         protected Facing _direction;
         public int Life;
 
@@ -26,9 +32,8 @@ namespace Platformer_The_Game
 
         public Vector2f Pos
         {
-            get { return _pos; }
-            set { _pos = value;
-                Hitbox.MoveTo(value); }
+            get { return Sprite.Position; }
+            set { Sprite.Position = value; }
         }
 
         public Unit(Game game, GameState gameState, Vector2f pos, string spriteSheet, string animation)
@@ -41,42 +46,58 @@ namespace Platformer_The_Game
 
             // Visual appearance
             Sprite = game.ResMan.NewSprite(spriteSheet, animation);
+        }
 
-            Hitbox = new Hitbox(Sprite.GetGlobalBounds());
+        protected virtual void UpdatePreCollision()
+        {
 
-            Pos = pos;
+        }
+
+        protected virtual void UpdatePostCollision()
+        {
+
         }
 
         public virtual void Update()
         {
+            FloatRect under = UnderUnit;
+
+            Vector2f oldPos = Sprite.Position;
+            UpdatePreCollision();
+            Debug.WriteLine("===");
+            Debug.WriteLine(Speed);
+            Debug.WriteLine(OnGround);
+            Pos = new Vector2f(Pos.X + Speed.X, Pos.Y + Speed.Y);
             OnGround = false;
-            foreach(Platform p in GameState.Platforms)
-                OnGround = underUnit.Intersects(p.hitbox.box) && OnGround;
-            bool colliding = false;
-            Vector2f destination = new Vector2f(Pos.X + Speed.X, Pos.Y + Speed.Y);
-            FloatRect overlap;
+            var colliding = false;
             foreach (Platform entity in GameState.Platforms) // TODO: IEntity instead of Platform
-                if (this.Hitbox.Collides(entity.hitbox, out overlap))
+            {
+                if (GameState.Collision.PixelPerfectTest(this.Sprite, entity.sprite))
                 {
-                    if (GameState.Collision.PixelPerfectTest(this.Sprite, entity.sprite))
-                    {
-                        colliding = true;
-                        break;
-                    }
+                    colliding = true;
                 }
+            }
+            foreach (Platform entity in GameState.Platforms)
+            {
+                // Btw, is it colliding with bottom ?
+                if (UnderUnit.Intersects(entity.sprite.GetGlobalBounds()))
+                {
+                    OnGround = true;
+                    break;
+                }
+            }
             if (colliding)
             {
                 Speed = new Vector2f(0, 0);
+                Pos = oldPos;
             }
-            Pos = new Vector2f(Pos.X+Speed.X, Pos.Y+Speed.Y);
-            Hitbox.MoveTo(Pos);
+            UpdatePostCollision();
         }
+
         public void Draw()
         {
             if (Game.Settings.DrawTextures)
                 Game.W.Draw(Sprite);
-            if (Game.Settings.DrawHitbox)
-                Game.W.Draw(Hitbox);
         }
     }
 }

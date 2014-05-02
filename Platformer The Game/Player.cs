@@ -48,11 +48,10 @@ namespace Platformer_The_Game
                 case Settings.Action.Jump:
                     if (!_isjumping)
                     {
-                        OnGround = false;
                         _isjumping = true;
                         Speed.Y = -15;
                     }
-                    else if(_isjumping && _pos.Y >= _lastverticalpos)
+                    else if(_isjumping && Pos.Y >= _lastverticalpos)
                     {
                         Speed.Y -= (float)0.5;
                     }
@@ -60,11 +59,8 @@ namespace Platformer_The_Game
             }
         }
 
-        public override void Update()
+        protected override void UpdatePreCollision()
         {
-            base.Update();
-
-
             // TODO : Movement handling is pretty ugly. We could prettify it a lot.
             if (_moving)
             {
@@ -78,20 +74,18 @@ namespace Platformer_The_Game
                 else if (Speed.X > 0) Speed.X--;
                 else Speed.X++;
             }
-            if (!OnGround && Speed.Y < 15)
+            if (!OnGround && Speed.Y < 15) // If we're not on ground, accelerate
             {
                 Speed.Y++;
             }
-            else if (OnGround && Math.Abs(Speed.Y) > 0.1) Speed.Y = 0;
-            _pos.X = Math.Min(Math.Max(_pos.X + Speed.X, 0), Game.Settings.WindowWidth - Sprite.GetGlobalBounds().Width);
-            _pos.Y = Math.Min(Math.Max(_pos.Y + Speed.Y, 0), Game.Settings.WindowHeight - Sprite.GetGlobalBounds().Height);
-            if (_pos.X >= Game.Settings.WindowWidth - Sprite.GetGlobalBounds().Width || _pos.X <= 1) Speed.X = 0;
-            Hitbox.MoveTo(_pos);
+            else if (OnGround && Speed.Y > 0)
+            {
+                Speed.Y = 0;
+                _isjumping = false;
+            }
 
             _moving = false;
-            OnGround = false;
-            Sprite.Position = _pos;
-            _lastverticalpos = _pos.Y;
+            _lastverticalpos = Pos.Y;
         }
 
         public void Uninitialize()

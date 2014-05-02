@@ -1,2 +1,2 @@
-﻿C'est un jeu magnifique !
-Un super jeu de plateforme SFML
+﻿Voyage temporel inclus
+Pixel art magnifique

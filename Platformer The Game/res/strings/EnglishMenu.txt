@@ -1,2 +1,2 @@
-﻿It's an awesome game !
-Awesome SFML platformer
+﻿It includes time travel
+Awesome pixel art

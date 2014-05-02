@@ -35,7 +35,6 @@ namespace Platformer_The_Game
         private Dictionary<Type, Dictionary<Keyboard.Key, Action>> _keyboardKeys =
             new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
 
-        public bool DrawHitbox = false;
         public bool DrawTextures = true;
         public Styles WindowType = Styles.Close;
         public Utils.Language Language = Utils.Language.English;

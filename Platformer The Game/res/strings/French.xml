@@ -13,6 +13,9 @@
   <string name="yes">oui</string>
   <string name="no">non</string>
   
+  <!-- Level editor -->
+  <string name="platforms">Plateformes</string>
+  
   <!-- Main settings menu -->
   <string name="binding">Configuration du clavier</string>
   <string name="video">Vidéo</string>
@@ -38,7 +41,6 @@
   <string name="borderless">Sans bordures</string>
   <string name="resolution">Résolution</string>
   <string name="drawTextures">Textures</string>
-  <string name="drawHitboxes">Masques de collision</string>
 
   <!-- Misc settings -->
   <string name="language">Langue</string>

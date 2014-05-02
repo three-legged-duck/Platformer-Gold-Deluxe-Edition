@@ -48,7 +48,6 @@ namespace Platformer_The_Game
                 GetVideoModeOptionText(game),
                 GetResolutionOptionText(game),
                 GetOptionText("drawTextures", game.Settings.DrawTextures, game),
-                GetOptionText("drawHitboxes", game.Settings.DrawHitbox, game),
                 Utils.GetString("back", game)
             };
             var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
@@ -98,11 +97,6 @@ namespace Platformer_The_Game
                             game);
                         break;
                     case 3:
-                        game.Settings.DrawHitbox = !game.Settings.DrawHitbox;
-                        options.MenuBtns[3].DisplayedString = GetOptionText("drawHitboxes", game.Settings.DrawHitbox,
-                            game);
-                        break;
-                    case 4:
                         game.State = returnState;
                         break;
                 }

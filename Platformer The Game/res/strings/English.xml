@@ -13,6 +13,9 @@
   <string name="yes">yes</string>
   <string name="no">no</string>
 
+  <!-- Level editor -->
+  <string name="platforms">Plateforms</string>
+
   <!-- Main settings menu -->
   <string name="binding">Keyboard binding</string>
   <string name="video">Video</string>
@@ -30,7 +33,6 @@
   <string name="borderless">Borderless</string>
   <string name="resolution">Resolution</string>
   <string name="drawTextures">Draw textures</string>
-  <string name="drawHitboxes">Draw hitboxes</string>
 
   <!-- Misc settings -->
   <string name="language">Language</string>

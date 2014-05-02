@@ -62,7 +62,7 @@ namespace Platformer_The_Game
             _gwenInput.Initialize(_gwenCanvas, _game.W);
             
             TabControl entities = new TabControl(_gwenCanvas);
-            var platforms = entities.AddPage("platforms");
+            var platforms = entities.AddPage(Utils.GetString("platforms",_game));
 
             entities.SetSize(_gwenCanvas.Width, 200);
             entities.SetPosition(0, _gwenCanvas.Height - 200);

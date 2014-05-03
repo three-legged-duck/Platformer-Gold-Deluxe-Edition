@@ -14,7 +14,16 @@ namespace Platformer_The_Game
         private Image _spriteSheet;
         public Collision Collision;
 
+        private int levelNumber;
+        private int worldNumber;
+
         private View _view;
+
+        public GameState(int selectedWorld, int selectedLevel)
+        {
+            levelNumber = selectedLevel;
+            worldNumber = selectedWorld;
+        }
 
         public string BgMusicName
         {
@@ -38,14 +47,29 @@ namespace Platformer_The_Game
             _spriteSheet.CreateMaskFromColor(new Color(0, 255, 0));
             var blockTexture = new Texture(_spriteSheet, new IntRect(12*32, 0, 32, 32));
 
-            Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i(752, 32), blockTexture,
-                game));
-            Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
-                blockTexture, game));
-            /*
-            Platforms.Add(new Platform(new Vector2f(0, 420), new Vector2i(608, 32),
-                blockTexture, game));
-            */
+            //TODO : true level loading
+            switch (levelNumber)
+            {
+                case 1:
+                    Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i(752, 32), blockTexture,
+                        game));
+                    Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
+                        blockTexture, game));
+                    break;
+                case 2:
+                    Platforms.Add(new Platform(new Vector2f(0, 180), new Vector2i(752, 32), blockTexture,
+                        game));
+                    Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
+                        blockTexture, game));
+                    break;
+                default:
+                    Platforms.Add(new Platform(new Vector2f(250, 256), new Vector2i(752, 32), blockTexture,
+                        game));
+                    Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
+                        blockTexture, game));
+                    break;
+            }
+
             _view.Center = _player.Pos;
         }
 

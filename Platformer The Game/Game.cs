@@ -18,7 +18,7 @@ namespace Platformer_The_Game
         public Font MenuFont = new Font(@"res\fonts\Square.ttf");
         public Settings Settings = Settings.Load();
         private IState _state;
-        private IState _nextState = null;
+        private IState _nextState;
         public RenderWindow W;
 
         public IState State
@@ -128,7 +128,7 @@ namespace Platformer_The_Game
                 foreach (var action in InputState)
                 {
                     if (action.Value == 0) continue;
-                    else _state.OnEvent(action.Key);
+                    _state.OnEvent(action.Key);
                 }
             }
             _state.Update();

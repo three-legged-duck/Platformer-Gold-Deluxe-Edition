@@ -109,6 +109,41 @@ namespace Platformer_The_Game
             return shape;
         }
 
+        public static MenuState CreateSelectionMenu(Game game)
+        {
+            int selectedWorld = 1;
+            int selectedLevel = 1;
+            var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("level", game) + " : " + selectedLevel,
+                GetString("play", game), GetString("back", game));
+            menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+            {
+                switch (args.SelectedPos)
+                {
+                    case 0:
+                        if (selectedLevel == 3)
+                        {
+                            selectedLevel = 1;
+                        }
+                        else
+                        {
+                            selectedLevel++;
+                        }
+                        menu.MenuBtns[0].DisplayedString = GetString("level", game) + " : " + selectedLevel;
+                        break;
+                    case 1:
+                        game.State = new GameState(selectedWorld,selectedLevel);
+                        break;
+                    case 2:
+                        game.State = OptionsMenu.CreateOptionsMenu(game, menu);
+                        break;
+                    case 3:
+                        game.Close();
+                        break;
+                }
+            };
+            return menu;
+        }
+
         public static MenuState CreateMainMenu(Game game)
         {
             var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("play", game),
@@ -119,7 +154,7 @@ namespace Platformer_The_Game
                 switch (args.SelectedPos)
                 {
                     case 0:
-                        game.State = new GameState();
+                        game.State = CreateSelectionMenu(game) ;
                         break;
                     case 1:
                         game.State = new LevelEditor(game);

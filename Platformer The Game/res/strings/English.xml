@@ -19,6 +19,7 @@
   <!-- Main settings menu -->
   <string name="binding">Keyboard binding</string>
   <string name="video">Video</string>
+  <string name="sound">Sound</string>
   <string name="misc">Misc</string>
 
   <!-- Binding settings menu -->
@@ -33,6 +34,10 @@
   <string name="borderless">Borderless</string>
   <string name="resolution">Resolution</string>
   <string name="drawTextures">Draw textures</string>
+
+  <!-- Sound settings -->
+  <string name="musicVolume">Music volume</string>
+  <string name="fxVolume">Sound volume</string>
 
   <!-- Misc settings -->
   <string name="language">Language</string>

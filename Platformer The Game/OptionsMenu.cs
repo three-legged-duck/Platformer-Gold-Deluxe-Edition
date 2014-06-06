@@ -15,6 +15,7 @@ namespace Platformer_The_Game
             {
                 Utils.GetString("binding", game),
                 Utils.GetString("video", game),
+                Utils.GetString("sound", game),
                 Utils.GetString("misc", game),
                 Utils.GetString("back", game)
             };
@@ -31,9 +32,43 @@ namespace Platformer_The_Game
                         game.State = CreateVideoOptionsMenu(game, options);
                         break;
                     case 2:
-                        game.State = CreateMiscOptionsMenu(game, options);
+                        game.State = CreateSoundOptionsMenu(game, options);
                         break;
                     case 3:
+                        game.State = CreateMiscOptionsMenu(game, options);
+                        break;
+                    case 4:
+                        game.State = returnState;
+                        break;
+                }
+            };
+            return options;
+        }
+
+        public static MenuState CreateSoundOptionsMenu(Game game, IState returnState)
+        {
+            string[] menuItems =
+            {
+                GetOptionText("musicVolume", game.Settings.MusicVolume, game),
+                GetOptionText("fxVolume", game.Settings.FxVolume, game),
+                                Utils.GetString("back", game)
+            };
+            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
+
+            options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+            {
+                switch (args.SelectedPos)
+                {
+                    case 0:
+                        game.Settings.MusicVolume = ChangeVolumeValue(game.Settings.MusicVolume);
+                        options.MenuBtns[0].DisplayedString = GetOptionText("musicVolume", game.Settings.MusicVolume, game);
+                        game.ReloadMusicVolume();
+                        break;
+                    case 1:
+                        game.Settings.FxVolume = ChangeVolumeValue(game.Settings.FxVolume);
+                        options.MenuBtns[1].DisplayedString = GetOptionText("fxVolume", game.Settings.FxVolume, game);
+                        break;
+                    case 2:
                         game.State = returnState;
                         break;
                 }
@@ -142,6 +177,10 @@ namespace Platformer_The_Game
             return Utils.GetString(key, g) + " : " + (value ? Utils.GetString("yes", g) : Utils.GetString("no", g));
         }
 
+        private static string GetOptionText(string key, float value, Game g)
+        {
+            return Utils.GetString(key, g) + " : " + value.ToString("0");
+        }
         private static string GetVideoModeOptionText(Game g)
         {
             string vMode;
@@ -163,6 +202,16 @@ namespace Platformer_The_Game
         private static string GetResolutionOptionText(Game g)
         {
             return Utils.GetString("resolution",g) +" : " + g.Settings.WindowWidth + "x" + g.Settings.WindowHeight;
+        }
+
+        private static float ChangeVolumeValue(float f)
+        {
+            f += 25;
+            if (f > 100)
+            {
+                f = 0;
+            }
+            return f;
         }
     }
 }

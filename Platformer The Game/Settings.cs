@@ -42,6 +42,9 @@ namespace Platformer_The_Game
         public uint WindowHeight = 600;
         public bool IsCorrupted = false;
 
+        public float MusicVolume = 50f;
+        public float FxVolume = 50f;
+
         public Settings()
         {
             // Keyboard

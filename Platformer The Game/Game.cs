@@ -138,7 +138,7 @@ namespace Platformer_The_Game
             }
             if (_bgMusicName != _state.BgMusicName && _state.BgMusicName != null)
             {
-                _bgMusic = new Music(@"res\music\" + _state.BgMusicName) {Volume = 50f, Loop = true};
+                _bgMusic = new Music(@"res\music\" + _state.BgMusicName) {Volume = Settings.MusicVolume, Loop = true};
                 _bgMusic.Play();
             }
 
@@ -237,6 +237,11 @@ namespace Platformer_The_Game
         public void StopInput(int ms)
         {
             _acceptInput = Environment.TickCount + ms;
+        }
+
+        public void ReloadMusicVolume()
+        {
+            _bgMusic.Volume = Settings.MusicVolume;
         }
     }
 }

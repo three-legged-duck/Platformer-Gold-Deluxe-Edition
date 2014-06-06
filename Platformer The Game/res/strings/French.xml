@@ -19,6 +19,7 @@
   <!-- Main settings menu -->
   <string name="binding">Configuration du clavier</string>
   <string name="video">Vidéo</string>
+  <string name="sound">Audio</string>
   <string name="misc">Divers</string>
 
   <!-- Binding settings menu -->
@@ -42,6 +43,10 @@
   <string name="resolution">Résolution</string>
   <string name="drawTextures">Textures</string>
 
+  <!-- Sound settings -->
+  <string name="musicVolume">Volume musique</string>
+  <string name="fxVolume">Volume sons</string>
+  
   <!-- Misc settings -->
   <string name="language">Langue</string>
   <string name="settingsReset">Remise à zéro des paramètres</string>

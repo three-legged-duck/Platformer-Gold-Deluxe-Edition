@@ -116,7 +116,7 @@ namespace Platformer_The_Game
                 else
                 {
                     _scrollingText.Position = new Vector2f(_scrollingText.Position.X - _view.Size.X/200,
-                        _scrollingText.Position.Y);
+                        _view.Size.Y - (_textSize * 2));
                 }
             }
         }

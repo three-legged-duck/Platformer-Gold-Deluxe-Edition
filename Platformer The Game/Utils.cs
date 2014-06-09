@@ -134,7 +134,7 @@ namespace Platformer_The_Game
                         game.State = new GameState(selectedWorld,selectedLevel);
                         break;
                     case 2:
-                        game.State = OptionsMenu.CreateOptionsMenu(game, menu);
+                        game.State = CreateMainMenu(game);
                         break;
                     case 3:
                         game.Close();

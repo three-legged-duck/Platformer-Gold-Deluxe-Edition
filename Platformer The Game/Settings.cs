@@ -39,7 +39,7 @@ namespace Platformer_The_Game
         public Styles WindowType = Styles.Fullscreen;
         public Utils.Language Language = Utils.Language.English;
         public uint VideoModeWidth = VideoMode.FullscreenModes[0].Width;
-        public uint VideoModeHeight = VideoMode.FullscreenModes[0].Width;
+        public uint VideoModeHeight = VideoMode.FullscreenModes[0].Height;
         public bool IsCorrupted = false;
         public float MusicVolume = 50f;
         public float FxVolume = 50f;

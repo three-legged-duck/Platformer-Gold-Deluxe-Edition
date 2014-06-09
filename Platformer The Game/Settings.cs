@@ -36,12 +36,11 @@ namespace Platformer_The_Game
             new Dictionary<Type, Dictionary<Keyboard.Key, Action>>();
 
         public bool DrawTextures = true;
-        public Styles WindowType = Styles.Close;
+        public Styles WindowType = Styles.Fullscreen;
         public Utils.Language Language = Utils.Language.English;
-        public uint WindowWidth = 800;
-        public uint WindowHeight = 600;
+        public uint VideoModeWidth = VideoMode.FullscreenModes[0].Width;
+        public uint VideoModeHeight = VideoMode.FullscreenModes[0].Width;
         public bool IsCorrupted = false;
-
         public float MusicVolume = 50f;
         public float FxVolume = 50f;
 
@@ -182,26 +181,24 @@ namespace Platformer_The_Game
         public static Settings Load()
         {
             var formatter = new BinaryFormatter();
-
+            var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
+            Settings s;
             try
             {
-                var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
-                Settings s = formatter.Deserialize(readerFileStream) as Settings;
-                readerFileStream.Close();
+                s = formatter.Deserialize(readerFileStream) as Settings;
+                
                 if (s.IsCorrupted)
                 {
-                    return new Settings();
-                }
-                else
-                {
-                    return s;
+                    s = new Settings();
                 }
             }
             catch
             {
                 Debug.WriteLine("Error while loading");
-                return new Settings();
+                s = new Settings();
             }
+            readerFileStream.Close();
+            return s;
         }
 
         public class Default

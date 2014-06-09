@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SFML.Graphics;
-using SFML.Window;
+﻿using SFML.Window;
 
 namespace Platformer_The_Game
 {
@@ -78,6 +73,7 @@ namespace Platformer_The_Game
 
         public static MenuState CreateVideoOptionsMenu(Game game, IState returnState)
         {
+            VideoModeManager vmm = new VideoModeManager(game);
             string[] menuItems =
             {
                 GetVideoModeOptionText(game),
@@ -108,21 +104,9 @@ namespace Platformer_The_Game
                         options.MenuBtns[0].DisplayedString = GetVideoModeOptionText(game);
                         break;
                     case 1:
-                        if (game.Settings.WindowWidth == 1920 && game.Settings.WindowHeight == 1080)
-                        {
-                            game.Settings.WindowWidth = 1366;
-                            game.Settings.WindowHeight = 768;
-                        }
-                        else if (game.Settings.WindowWidth == 1366 && game.Settings.WindowHeight == 768)
-                        {
-                            game.Settings.WindowWidth = 800;
-                            game.Settings.WindowHeight = 600;                            
-                        }
-                        else if (game.Settings.WindowWidth == 800 && game.Settings.WindowHeight == 600)
-                        {
-                            game.Settings.WindowWidth = 1920;
-                            game.Settings.WindowHeight = 1080;
-                        }
+                        VideoMode newVideoMode = vmm.GetNextVideoMode();
+                        game.Settings.VideoModeWidth = newVideoMode.Width;
+                        game.Settings.VideoModeHeight = newVideoMode.Height;
                         game.RecreateWindow();
                         options.MenuBtns[1].DisplayedString = GetResolutionOptionText(game);
                         break;
@@ -201,7 +185,7 @@ namespace Platformer_The_Game
 
         private static string GetResolutionOptionText(Game g)
         {
-            return Utils.GetString("resolution",g) +" : " + g.Settings.WindowWidth + "x" + g.Settings.WindowHeight;
+            return Utils.GetString("resolution",g) +" : " + g.Settings.VideoModeWidth + "x" + g.Settings.VideoModeHeight;
         }
 
         private static float ChangeVolumeValue(float f)

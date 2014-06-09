@@ -33,7 +33,7 @@ namespace Platformer_The_Game
             Utils.LoadTranslations();
 
             //Load main window
-            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer", Settings.WindowType);
+            W = new RenderWindow(new VideoMode(Settings.VideoModeWidth, Settings.VideoModeHeight), "Platformer", Settings.WindowType);
             WindowInit();
         }
 
@@ -75,7 +75,7 @@ namespace Platformer_The_Game
             W.JoystickMoved -= OnJoyAxisMoved;
             W.Closed -= OnClosed;
             W.Close();
-            W = new RenderWindow(new VideoMode(Settings.WindowWidth, Settings.WindowHeight), "Platformer", Settings.WindowType);
+            W = new RenderWindow(new VideoMode(Settings.VideoModeWidth, Settings.VideoModeHeight), "Platformer", Settings.WindowType);
             WindowInit();
         }
 

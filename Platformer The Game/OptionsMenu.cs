@@ -56,12 +56,12 @@ namespace Platformer_The_Game
                 {
                     case 0:
                         game.Settings.MusicVolume = ChangeVolumeValue(game.Settings.MusicVolume);
-                        options.MenuBtns[0].DisplayedString = GetOptionText("musicVolume", game.Settings.MusicVolume, game);
+                       options.ModifyElement(0,GetOptionText("musicVolume", game.Settings.MusicVolume, game));
                         game.ReloadMusicVolume();
                         break;
                     case 1:
                         game.Settings.FxVolume = ChangeVolumeValue(game.Settings.FxVolume);
-                        options.MenuBtns[1].DisplayedString = GetOptionText("fxVolume", game.Settings.FxVolume, game);
+                        options.ModifyElement(1,GetOptionText("fxVolume", game.Settings.FxVolume, game));
                         break;
                     case 2:
                         game.State = returnState;
@@ -101,19 +101,18 @@ namespace Platformer_The_Game
                                 break;
                         }
                         game.RecreateWindow();
-                        options.MenuBtns[0].DisplayedString = GetVideoModeOptionText(game);
+                        options.ModifyElement(0,GetVideoModeOptionText(game));
                         break;
                     case 1:
                         VideoMode newVideoMode = vmm.GetNextVideoMode();
                         game.Settings.VideoModeWidth = newVideoMode.Width;
                         game.Settings.VideoModeHeight = newVideoMode.Height;
                         game.RecreateWindow();
-                        options.MenuBtns[1].DisplayedString = GetResolutionOptionText(game);
+                        options.ModifyElement(1,GetResolutionOptionText(game));
                         break;
                     case 2:
                         game.Settings.DrawTextures = !game.Settings.DrawTextures;
-                        options.MenuBtns[2].DisplayedString = GetOptionText("drawTextures", game.Settings.DrawTextures,
-                            game);
+                        options.ModifyElement(2,GetOptionText("drawTextures", game.Settings.DrawTextures,game));
                         break;
                     case 3:
                         game.State = returnState;
@@ -140,10 +139,10 @@ namespace Platformer_The_Game
                 {
                     case 0:
                         game.Settings.Language = game.Settings.Language == Utils.Language.English ? Utils.Language.French : Utils.Language.English;
-                        options.MenuBtns[0].DisplayedString = Utils.GetString("language", game) + " : " +
+                        options.ModifyElement(0,Utils.GetString("language", game) + " : " +
                                                               (game.Settings.Language == Utils.Language.English
                                                                   ? Utils.Language.English.ToString()
-                                                                  : Utils.Language.French.ToString());
+                                                                  : Utils.Language.French.ToString()));
                         break;
                     case 1:
                         game.Settings = new Settings();

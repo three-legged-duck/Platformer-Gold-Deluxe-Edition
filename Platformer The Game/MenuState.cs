@@ -24,7 +24,7 @@ namespace Platformer_The_Game
         private bool _initialized;
         private Text _carretLeft, _carretRight;
         private Game _game;
-        public List<Text> MenuBtns = new List<Text>();
+        private List<Text> MenuBtns = new List<Text>();
         private int _nextmillis;
         private View _view;
 
@@ -151,6 +151,11 @@ namespace Platformer_The_Game
             _game.W.Draw(_carretLeft);
             _game.W.Draw(_carretRight);
             if (_scrollingTextActivated) _game.W.Draw(_scrollingText);
+        }
+
+        public void ModifyElement(int pos,string text)
+        {
+            MenuBtns[pos].DisplayedString = text;
         }
 
         public void Uninitialize()

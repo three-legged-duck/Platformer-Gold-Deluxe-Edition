@@ -128,7 +128,7 @@ namespace Platformer_The_Game
                         {
                             selectedLevel++;
                         }
-                        menu.MenuBtns[0].DisplayedString = GetString("level", game) + " : " + selectedLevel;
+                        menu.ModifyElement(0,GetString("level", game) + " : " + selectedLevel);
                         break;
                     case 1:
                         game.State = new GameState(selectedWorld,selectedLevel);

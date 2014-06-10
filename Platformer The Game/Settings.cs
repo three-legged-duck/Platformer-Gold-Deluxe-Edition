@@ -181,12 +181,21 @@ namespace Platformer_The_Game
         public static Settings Load()
         {
             var formatter = new BinaryFormatter();
-            var readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
+            FileStream readerFileStream;
+            if (File.Exists(FileName))
+            {
+                readerFileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
+            }
+            else
+            {
+                 return new Settings();
+            }
+
             Settings s;
             try
             {
                 s = formatter.Deserialize(readerFileStream) as Settings;
-                
+
                 if (s.IsCorrupted)
                 {
                     s = new Settings();

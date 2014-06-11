@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.NetworkInformation;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.Window;
@@ -20,6 +21,12 @@ namespace Platformer_The_Game
         private IState _state;
         private IState _nextState;
         public RenderWindow W;
+        public uint MenuTextSize;
+
+        //Scrolling text for Menu states
+        private Text _scrollingText;
+        private string[] _textLines;
+        private Random _rng = new Random();
 
         public IState State
         {
@@ -35,6 +42,11 @@ namespace Platformer_The_Game
             //Load main window
             W = new RenderWindow(new VideoMode(Settings.VideoModeWidth, Settings.VideoModeHeight), "Platformer", Settings.WindowType);
             WindowInit();
+
+            MenuTextSize = Convert.ToUInt32(W.DefaultView.Size.Y / 12);
+            //Load text for scrolling text
+            _textLines = File.ReadAllLines(@"res\strings\" + Settings.Language + "Menu.txt");
+            ReloadScrollingText();
         }
 
         private void WindowInit()
@@ -143,11 +155,31 @@ namespace Platformer_The_Game
             }
 
             _bgMusicName = _state.BgMusicName;
+
+            MenuTextSize = Convert.ToUInt32(W.DefaultView.Size.Y/12);
+            if (_state is MenuState && ((MenuState) _state).ScrollingTextActivated)
+            {
+                if (_scrollingText.GetGlobalBounds().Left + _scrollingText.GetGlobalBounds().Width < 0)
+                {
+                    ReloadScrollingText();
+                }
+                else
+                {
+                    _scrollingText.Position = new Vector2f(_scrollingText.Position.X - W.DefaultView.Size.X/200,
+                        W.DefaultView.Size.Y - (MenuTextSize*2));
+                    _scrollingText.CharacterSize = MenuTextSize;
+                }
+            }
+            else
+            {
+                ReloadScrollingText();
+            }
         }
 
         private void Draw()
         {
             _state.Draw();
+            W.Draw(_scrollingText);
         }
 
         private void OnKeyPressed(object sender, KeyEventArgs e)
@@ -242,6 +274,20 @@ namespace Platformer_The_Game
         public void ReloadMusicVolume()
         {
             _bgMusic.Volume = Settings.MusicVolume;
+        }
+
+        private void ReloadScrollingText()
+        {
+            _scrollingText = new Text(RandomTextLine(), MenuFont, MenuTextSize)
+            {
+                Position = new Vector2f(W.DefaultView.Size.X,
+                    W.DefaultView.Size.Y - (MenuTextSize * 2))
+            };
+        }
+
+        private string RandomTextLine()
+        {
+            return _textLines[_rng.Next(0, _textLines.Length)];
         }
     }
 }

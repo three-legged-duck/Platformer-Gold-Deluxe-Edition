@@ -6,24 +6,24 @@ namespace Platformer_The_Game
 {
     internal class SplashState : IState
     {
-        private const byte max = 255; //max for rgb drawing
-        private readonly Sprite SplashSprite;
-        private readonly IState nextState;
-        private readonly bool scale;
-        private bool IsFadeOut;
+        private const byte Max = 255; //max for rgb drawing
+        private readonly Sprite _splashSprite;
+        private readonly IState _nextState;
+        private readonly bool _scale;
+        private bool _isFadeOut;
 
-        private EventHandler<MouseButtonEventArgs> MouseBtnHandler;
+        private EventHandler<MouseButtonEventArgs> _mouseBtnHandler;
 
-        private byte alpha;
-        private Game game;
+        private byte _alpha;
+        private Game _game;
 
-        private View view;
+        private View _view;
 
         public SplashState(string img, bool doScale, IState nextState)
         {
-            SplashSprite = new Sprite(new Texture(@"res\images\" + img));
-            scale = doScale;
-            this.nextState = nextState;
+            _splashSprite = new Sprite(new Texture(@"res\images\" + img));
+            _scale = doScale;
+            _nextState = nextState;
         }
 
         public string BgMusicName
@@ -33,41 +33,41 @@ namespace Platformer_The_Game
 
         public void Initialize(Game g)
         {
-            game = g;
-            view = new View();
+            _game = g;
+            _view = new View();
 
-            MouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
+            _mouseBtnHandler = delegate(object sender, MouseButtonEventArgs btn)
             {
                 if (btn.Button == Mouse.Button.Left || btn.Button == Mouse.Button.Right)
                 {
                     EndSplash();
                 }
             };
-            g.W.MouseButtonPressed += MouseBtnHandler;
+            g.W.MouseButtonPressed += _mouseBtnHandler;
 
-            if (scale)
+            if (_scale)
             {
-                SplashSprite.Scale = new Vector2f(view.Size.X/SplashSprite.GetGlobalBounds().Width,
-                    view.Size.Y/SplashSprite.GetGlobalBounds().Height);
+                _splashSprite.Scale = new Vector2f(_view.Size.X/_splashSprite.GetGlobalBounds().Width,
+                    _view.Size.Y/_splashSprite.GetGlobalBounds().Height);
             }
         }
 
         public void Update()
         {
-            if (!IsFadeOut)
+            if (!_isFadeOut)
             {
-                SplashSprite.Color = new Color(max, max, max, alpha);
-                alpha = (byte) Math.Min(alpha + 4, 255);
-                if (alpha >= 255)
+                _splashSprite.Color = new Color(Max, Max, Max, _alpha);
+                _alpha = (byte) Math.Min(_alpha + 4, 255);
+                if (_alpha >= 255)
                 {
-                    IsFadeOut = true;
+                    _isFadeOut = true;
                 }
             }
             else
             {
-                SplashSprite.Color = new Color(max, max, max, alpha);
-                alpha = (byte) Math.Max(alpha - 4, 0);
-                if (alpha <= 0)
+                _splashSprite.Color = new Color(Max, Max, Max, _alpha);
+                _alpha = (byte) Math.Max(_alpha - 4, 0);
+                if (_alpha <= 0)
                 {
                     EndSplash();
                 }
@@ -76,13 +76,13 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
-            game.W.SetView(view);
-            game.W.Draw(SplashSprite);
+            _game.W.SetView(_view);
+            _game.W.Draw(_splashSprite);
         }
 
         public void Uninitialize()
         {
-            game.W.MouseButtonPressed -= MouseBtnHandler;
+            _game.W.MouseButtonPressed -= _mouseBtnHandler;
         }
 
         public void OnEvent(Settings.Action a)
@@ -92,8 +92,8 @@ namespace Platformer_The_Game
 
         public void EndSplash()
         {
-            game.State = nextState;
-            game.StopInput(600);
+            _game.State = _nextState;
+            _game.StopInput(600);
         }
     }
 }

@@ -26,7 +26,6 @@ namespace Platformer_The_Game
             this.textName = textName;
         }
 
-
         public void Initialize(Game game)
         {
             _textSize = game.W.Size.Y/18;
@@ -45,8 +44,10 @@ namespace Platformer_The_Game
             _textLines = new Text[textFile.Length];
             for (int i = 0; i < _textLines.Length; i++)
             {
-                _textLines[i] = new Text(textFile[i],game.MenuFont,_textSize);
-                _textLines[i].Position = new Vector2f(0, game.W.Size.Y + ( _textSize *i));
+                _textLines[i] = new Text(textFile[i],game.MenuFont,_textSize)
+                {
+                    Position = new Vector2f(0, game.W.Size.Y + (_textSize*i))
+                };
             }
         }
 

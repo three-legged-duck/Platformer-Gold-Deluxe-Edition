@@ -17,15 +17,15 @@ namespace Platformer_The_Game
         private Gwen.Input.SFML _gwenInput;
 
         // Item management
-        private bool ItemSelected;
-        private Sprite currentItem;
+        private bool _itemSelected;
+        private Sprite _currentItem;
         
 
         // Level management
 
         public LevelEditor(Game g)
         {
-            this._game = g;
+            _game = g;
             var gwen = new Gwen.Renderer.SFML(_game.W);
             var skin = new Gwen.Skin.TexturedBase(gwen, @"res\images\DefaultSkin.png");
 
@@ -82,9 +82,9 @@ namespace Platformer_The_Game
                     img.Clicked += delegate(Base sender, ClickedEventArgs args)
                     {
                         Debug.WriteLine("{0},{1}", sender.Width, sender.Height);
-                        ItemSelected = true;
-                        currentItem.TextureRect = new IntRect(sender.X, sender.Y, 31, 31);
-                        currentItem.Color = new Color(255, 255, 255, 127);
+                        _itemSelected = true;
+                        _currentItem.TextureRect = new IntRect(sender.X, sender.Y, 31, 31);
+                        _currentItem.Color = new Color(255, 255, 255, 127);
                     };
                 }
             }
@@ -100,15 +100,15 @@ namespace Platformer_The_Game
 
         public void Initialize(Game game)
         {
-            RenderWindow m_Window = game.W;
-            currentItem = new Sprite(new Texture(@"res\images\plateformes.png"));
-            m_Window.KeyPressed += window_KeyPressed;
-            m_Window.KeyReleased += window_KeyReleased;
-            m_Window.MouseButtonPressed += window_MouseButtonPressed;
-            m_Window.MouseButtonReleased += window_MouseButtonReleased;
-            m_Window.MouseWheelMoved += window_MouseWheelMoved;
-            m_Window.MouseMoved += window_MouseMoved;
-            m_Window.TextEntered += window_TextEntered;
+            RenderWindow mWindow = game.W;
+            _currentItem = new Sprite(new Texture(@"res\images\plateformes.png"));
+            mWindow.KeyPressed += window_KeyPressed;
+            mWindow.KeyReleased += window_KeyReleased;
+            mWindow.MouseButtonPressed += window_MouseButtonPressed;
+            mWindow.MouseButtonReleased += window_MouseButtonReleased;
+            mWindow.MouseWheelMoved += window_MouseWheelMoved;
+            mWindow.MouseMoved += window_MouseMoved;
+            mWindow.TextEntered += window_TextEntered;
         }
 
         public void Update()
@@ -118,9 +118,9 @@ namespace Platformer_The_Game
         public void Draw()
         {
             _gwenCanvas.RenderCanvas();
-            if (ItemSelected)
+            if (_itemSelected)
             {
-                _game.W.Draw(currentItem);
+                _game.W.Draw(_currentItem);
             }
         }
         // Useless... kinda.
@@ -136,7 +136,7 @@ namespace Platformer_The_Game
 
         void window_MouseMoved(object sender, MouseMoveEventArgs e)
         {
-            currentItem.Position = new Vector2f(e.X - 15, e.Y - 15);
+            _currentItem.Position = new Vector2f(e.X - 15, e.Y - 15);
             _gwenInput.ProcessMessage(e);
         }
 
@@ -149,7 +149,7 @@ namespace Platformer_The_Game
         {
             if (e.Button == Mouse.Button.Right)
             {
-                ItemSelected = false;
+                _itemSelected = false;
             }
             if (e.Y < _game.W.Size.Y - 200)
             {

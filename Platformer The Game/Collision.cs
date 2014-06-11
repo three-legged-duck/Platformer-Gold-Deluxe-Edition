@@ -48,35 +48,35 @@ namespace Platformer_The_Game
     {
         public BitmaskManager Bitmasks = new BitmaskManager();
 
-        public bool PixelPerfectTest(Sprite Object1, Sprite Object2)
+        public bool PixelPerfectTest(Sprite object1, Sprite object2)
         {
-            FloatRect Intersection;
-            if (Object1.GetGlobalBounds().Intersects(Object2.GetGlobalBounds(), out Intersection))
+            FloatRect intersection;
+            if (object1.GetGlobalBounds().Intersects(object2.GetGlobalBounds(), out intersection))
             {
-                IntRect O1SubRect = Object1.TextureRect;
-                IntRect O2SubRect = Object2.TextureRect;
+                IntRect o1SubRect = object1.TextureRect;
+                IntRect o2SubRect = object2.TextureRect;
 
-                bool[,] mask1 = Bitmasks.GetMask(Object1.Texture);
-                bool[,] mask2 = Bitmasks.GetMask(Object2.Texture);
+                bool[,] mask1 = Bitmasks.GetMask(object1.Texture);
+                bool[,] mask2 = Bitmasks.GetMask(object2.Texture);
 
                 // Loop through our pixels
-                for (var i = (int) Intersection.Left; i < Intersection.Left + Intersection.Width; i++)
+                for (var i = (int) intersection.Left; i < intersection.Left + intersection.Width; i++)
                 {
-                    for (var j = (int) Intersection.Top; j < Intersection.Top + Intersection.Height; j++)
+                    for (var j = (int) intersection.Top; j < intersection.Top + intersection.Height; j++)
                     {
-                        Vector2f o1v = Object1.InverseTransform.TransformPoint(i, j);
-                        Vector2f o2v = Object2.InverseTransform.TransformPoint(i, j);
+                        Vector2f o1V = object1.InverseTransform.TransformPoint(i, j);
+                        Vector2f o2V = object2.InverseTransform.TransformPoint(i, j);
 
                         // Make sure pixels fall within the sprite's subrect
-                        if (o1v.X > 0 && o1v.Y > 0 && o2v.X > 0 && o2v.Y > 0 &&
-                            o1v.X < O1SubRect.Width && o1v.Y < O1SubRect.Height &&
-                            o2v.X < O2SubRect.Width && o2v.Y < O2SubRect.Height)
+                        if (o1V.X > 0 && o1V.Y > 0 && o2V.X > 0 && o2V.Y > 0 &&
+                            o1V.X < o1SubRect.Width && o1V.Y < o1SubRect.Height &&
+                            o2V.X < o2SubRect.Width && o2V.Y < o2SubRect.Height)
                         {
                             if (
-                                Bitmasks.GetPixel(mask1, Object1.Texture, (uint) ((o1v.X) + O1SubRect.Left),
-                                    (uint) ((o1v.Y) + O1SubRect.Top)) &&
-                                Bitmasks.GetPixel(mask2, Object2.Texture, (uint) ((o2v.X) + O2SubRect.Left),
-                                    (uint) ((o2v.Y) + O2SubRect.Top)))
+                                Bitmasks.GetPixel(mask1, object1.Texture, (uint) ((o1V.X) + o1SubRect.Left),
+                                    (uint) ((o1V.Y) + o1SubRect.Top)) &&
+                                Bitmasks.GetPixel(mask2, object2.Texture, (uint) ((o2V.X) + o2SubRect.Left),
+                                    (uint) ((o2V.Y) + o2SubRect.Top)))
                                 return true;
                         }
                     }
@@ -85,9 +85,9 @@ namespace Platformer_The_Game
             return false;
         }
 
-        public Texture CreateTextureAndBitmask(string Filename)
+        public Texture CreateTextureAndBitmask(string filename)
         {
-            var img = new Image(Filename);
+            var img = new Image(filename);
             var tex = new Texture(img);
             Bitmasks.CreateMask(tex, img);
             return tex;

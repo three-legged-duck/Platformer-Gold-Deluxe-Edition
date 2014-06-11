@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Gwen.Control;
+﻿using Gwen.Control;
 using Gwen;
 using System.Drawing;
 using System.Diagnostics;
@@ -10,8 +6,8 @@ namespace Platformer_The_Game.GwenExtensions
 {
     class ClippedImage : Base
     {
-        private readonly Texture m_Texture;
-        private readonly float[] m_uv = new float[] { 0, 0, 1, 1 };
+        private readonly Texture _mTexture;
+        private readonly float[] _mUv = { 0, 0, 1, 1 };
         public Color Color {
             get;
             set;
@@ -21,11 +17,12 @@ namespace Platformer_The_Game.GwenExtensions
         /// Initializes a new instance of the <see cref="ImagePanel"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
+        /// <param name="tex">Texture.</param>
         public ClippedImage(Base parent, Texture tex)
             : base(parent)
         {
-            m_uv = new float[4];
-            m_Texture = tex;
+            _mUv = new float[4];
+            _mTexture = tex;
             MouseInputEnabled = true;
             Color = Color.White;
         }
@@ -35,7 +32,7 @@ namespace Platformer_The_Game.GwenExtensions
         /// </summary>
         public override void Dispose()
         {
-            m_Texture.Dispose();
+            _mTexture.Dispose();
             base.Dispose();
         }
 
@@ -44,11 +41,11 @@ namespace Platformer_The_Game.GwenExtensions
         /// </summary>
         public virtual void SetTextureRect(float left, float top, float width, float height)
         {
-            m_uv[0] = left / m_Texture.Width;
-            m_uv[1] = top / m_Texture.Height;
-            m_uv[2] = (left + width + 1) / (m_Texture.Width); // TODO : not to sure about the + 1 there
-            m_uv[3] = (top + height + 1) / (m_Texture.Height);
-            Debug.WriteLine("[{0}, {1}, {2}, {3}]", m_uv[0] * m_Texture.Width, m_uv[1] * m_Texture.Height, m_uv[2] * m_Texture.Width, m_uv[3] * m_Texture.Height);
+            _mUv[0] = left / _mTexture.Width;
+            _mUv[1] = top / _mTexture.Height;
+            _mUv[2] = (left + width + 1) / (_mTexture.Width); // TODO : not to sure about the + 1 there
+            _mUv[3] = (top + height + 1) / (_mTexture.Height);
+            Debug.WriteLine("[{0}, {1}, {2}, {3}]", _mUv[0] * _mTexture.Width, _mUv[1] * _mTexture.Height, _mUv[2] * _mTexture.Width, _mUv[3] * _mTexture.Height);
         }
 
         /// <summary>
@@ -56,8 +53,8 @@ namespace Platformer_The_Game.GwenExtensions
         /// </summary>
         public string ImageName
         {
-            get { return m_Texture.Name; }
-            set { m_Texture.Load(value); }
+            get { return _mTexture.Name; }
+            set { _mTexture.Load(value); }
         }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace Platformer_The_Game.GwenExtensions
         {
             base.Render(skin);
             skin.Renderer.DrawColor = Color;
-            skin.Renderer.DrawTexturedRect(m_Texture, RenderBounds, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
+            skin.Renderer.DrawTexturedRect(_mTexture, RenderBounds, _mUv[0], _mUv[1], _mUv[2], _mUv[3]);
         }
 
         /// <summary>
@@ -76,15 +73,7 @@ namespace Platformer_The_Game.GwenExtensions
         /// </summary>
         public virtual void SizeToContents()
         {
-            SetSize(m_Texture.Width, m_Texture.Height);
-        }
-
-        /// <summary>
-        /// Control has been clicked - invoked by input system. Windows use it to propagate activation.
-        /// </summary>
-        public override void Touch()
-        {
-            base.Touch();
+            SetSize(_mTexture.Width, _mTexture.Height);
         }
 
         /// <summary>

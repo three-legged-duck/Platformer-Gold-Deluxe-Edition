@@ -88,14 +88,11 @@ namespace Platformer_The_Game
                     };
                 }
             }
-            //Button btn = new Button(_gwenCanvas);
-            //btn.Text = "Exit";
-            //btn.Clicked += btn_Clicked;
-        }
-
-        void btn_Clicked(Base sender, ClickedEventArgs arguments)
-        {
-            _game.State = Utils.CreateMainMenu(_game);
+            Button btn = new Button(_gwenCanvas);
+            btn.Text = "Exit";
+            btn.Released += (sender, arguments) => {
+                _game.State = Utils.CreateMainMenu(_game);
+            };
         }
 
         public void Initialize(Game game)
@@ -153,11 +150,11 @@ namespace Platformer_The_Game
             }
             if (e.Y < _game.W.Size.Y - 200)
             {
+                // Add to level
+                // Draw on level.
             }
-            else
-            {
-                _gwenInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
-            }
+            _gwenInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+            
         }
 
         void window_MouseButtonReleased(object sender, MouseButtonEventArgs e)

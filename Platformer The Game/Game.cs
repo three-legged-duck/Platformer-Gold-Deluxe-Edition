@@ -10,8 +10,11 @@ namespace Platformer_The_Game
 {
     internal class Game
     {
-        public Dictionary<Settings.Action, int> InputState = new Dictionary<Settings.Action, int>();
-
+        private Dictionary<Settings.Action, int> _inputState = new Dictionary<Settings.Action, int>();
+        public IDictionary<Settings.Action, int> InputState
+        {
+            get { return new ReadOnlyDictionary<Settings.Action, int>(_inputState); }
+        }
         public ResMan ResMan = new ResMan();
         private Music _bgMusic;
         private string _bgMusicName;
@@ -93,7 +96,8 @@ namespace Platformer_The_Game
 
         private void CleanInput()
         {
-            InputState.Clear();
+            breakOutOfInputStateLoopHack = true;
+            _inputState.Clear();
         }
 
         public void RunMainLoop()
@@ -127,7 +131,7 @@ namespace Platformer_The_Game
             _state = state;
             _state.Initialize(this);
         }
-
+        bool breakOutOfInputStateLoopHack;
         private void Update()
         {
             if (_nextState != null)
@@ -137,10 +141,12 @@ namespace Platformer_The_Game
             }
             if (_acceptInput < Environment.TickCount)
             {
-                foreach (var action in InputState)
+                breakOutOfInputStateLoopHack = false;
+                foreach (var action in _inputState)
                 {
                     if (action.Value == 0) continue;
                     _state.OnEvent(action.Key);
+                    if (breakOutOfInputStateLoopHack) break;
                 }
             }
             _state.Update();
@@ -186,11 +192,11 @@ namespace Platformer_The_Game
         {
             var action = Settings.GetAction(_state.GetType(), e.Code);
             int currentValue;
-            if (!InputState.TryGetValue(action, out currentValue))
+            if (!_inputState.TryGetValue(action, out currentValue))
             {
                 currentValue = 0;
             }
-            InputState[action] = currentValue + 1;
+            _inputState[action] = currentValue + 1;
         }
 
         private void OnKeyReleased(object sender, KeyEventArgs e)
@@ -207,50 +213,50 @@ namespace Platformer_The_Game
 
             var action = Settings.GetAction(_state.GetType(), e.Code);
             int currentValue;
-            if (!InputState.TryGetValue(action, out currentValue))
+            if (!_inputState.TryGetValue(action, out currentValue))
             {
                 currentValue = 0;
             }
-            InputState[action] = Math.Max(currentValue - 1, 0);
+            _inputState[action] = Math.Max(currentValue - 1, 0);
         }
 
         private void OnJoyPressed(object sender, JoystickButtonEventArgs e)
         {
             var action = Settings.GetAction(_state.GetType(), e.Button);
             int currentValue;
-            if (!InputState.TryGetValue(action, out currentValue))
+            if (!_inputState.TryGetValue(action, out currentValue))
             {
                 currentValue = 0;
             }
-            InputState[action] = currentValue + 1;
+            _inputState[action] = currentValue + 1;
         }
 
         private void OnJoyReleased(object sender, JoystickButtonEventArgs e)
         {
             var action = Settings.GetAction(_state.GetType(), e.Button);
             int currentValue;
-            if (!InputState.TryGetValue(action, out currentValue))
+            if (!_inputState.TryGetValue(action, out currentValue))
             {
                 currentValue = 0;
             }
-            InputState[action] = Math.Max(currentValue - 1, 0);
+            _inputState[action] = Math.Max(currentValue - 1, 0);
         }
 
         private void OnJoyAxisMoved(object sender, JoystickMoveEventArgs args)
         {
             var action = Settings.GetAction(_state.GetType(), args.Axis, args.Position);
             int currentValue;
-            if (!InputState.TryGetValue(action, out currentValue))
+            if (!_inputState.TryGetValue(action, out currentValue))
             {
                 currentValue = 0;
             }
             if (args.Position < -50 || args.Position > 50)
             {
-                InputState[action] = currentValue + 1;
+                _inputState[action] = currentValue + 1;
             }
             else
             {
-                InputState[action] = Math.Max(currentValue - 1, 0);
+                _inputState[action] = Math.Max(currentValue - 1, 0);
             }
         }
 

@@ -18,7 +18,7 @@ namespace Platformer_The_Game
         private uint _textSize;
 
         private SettingsToModify[] settingsArray;
-        private int _currentModified;
+        private int _currentModifiedState;
         private int _currentModifiedAction;
 
         private class SettingsToModify
@@ -79,9 +79,10 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            Type currentType = settingsArray[_currentModified].State;
+            Type currentType = settingsArray[_currentModifiedState].State;
             string currentModifiedText =
-                Utils.GetString(settingsArray[_currentModified].Actions[_currentModifiedAction].ToString(), _game) +
+                Utils.GetString("pressKeyFor", _game) +
+                Utils.GetString(settingsArray[_currentModifiedState].Actions[_currentModifiedAction].ToString(), _game) +
                 " (" + Utils.GetString(currentType.Name, _game) + ")";
             _currentText = new Text(currentModifiedText, _game.MenuFont, _textSize);
 
@@ -116,16 +117,16 @@ namespace Platformer_The_Game
         {
             try
             {
-                _game.Settings.SetButton(settingsArray[_currentModified].State, e.Code,
-                    settingsArray[_currentModified].Actions[_currentModifiedAction]);
-                if (_currentModifiedAction < settingsArray[_currentModified].Actions.Length -1)
+                _game.Settings.SetButton(settingsArray[_currentModifiedState].State, e.Code,
+                    settingsArray[_currentModifiedState].Actions[_currentModifiedAction]);
+                if (_currentModifiedAction < settingsArray[_currentModifiedState].Actions.Length -1)
                 {
                     _currentModifiedAction++;
                 }
-                else if (_currentModified < settingsArray.Length -1)
+                else if (_currentModifiedState < settingsArray.Length -1)
                 {
                     //Go to the next set of modifications
-                    _currentModified++;
+                    _currentModifiedState++;
                     _currentModifiedAction = 0;
                 }
                 else

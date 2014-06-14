@@ -23,6 +23,7 @@
   <string name="misc">Misc</string>
 
   <!-- Binding settings menu -->
+  <string name="pressKeyFor">Press key for : </string>
   <string name="Default">everywhere</string>
   <string name="MenuState">menu</string>
   <string name="GameState">in-game</string>

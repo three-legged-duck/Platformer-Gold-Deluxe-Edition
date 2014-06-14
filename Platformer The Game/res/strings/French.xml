@@ -23,6 +23,7 @@
   <string name="misc">Divers</string>
 
   <!-- Binding settings menu -->
+  <string name="pressKeyFor">Appuyez sur la touche pour : </string>
   <string name="Use">Utiliser</string>
   <string name="Up">Haut</string>
   <string name="Down">Bas</string>

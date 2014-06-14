@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collision.cs" />
+    <Compile Include="EndOfLevelState.cs" />
     <Compile Include="GwenExtensions\ClippedImage.cs" />
     <Compile Include="KeyBindingState.cs" />
     <Compile Include="Level.cs" />

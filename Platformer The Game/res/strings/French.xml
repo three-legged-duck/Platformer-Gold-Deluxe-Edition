@@ -53,7 +53,10 @@
   <string name="language">Langue</string>
   <string name="localLeaderboards">Serveur de scores local</string>
   <string name="settingsReset">Remise à zéro des paramètres</string>
-  
+
+  <!-- Username settings -->
+  <string name="usernameHelp">Entrez votre pseudonyme puis appuyez sur ENTREE pour quitter :</string>
+
   <!-- Pause menu -->
   <string name="resume">Reprendre</string>
   <string name="backMain">Retour au menu principal</string>

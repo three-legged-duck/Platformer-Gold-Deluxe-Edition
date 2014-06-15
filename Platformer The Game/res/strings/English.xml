@@ -45,6 +45,9 @@
   <string name="language">Language</string>
   <string name="localLeaderboards">Local scores server</string>
   <string name="settingsReset">Reset settings</string>
+
+  <!-- Username settings -->
+  <string name="usernameHelp">Please type your username then press ENTER to exit :</string>
   
   <!-- Pause menu -->
   <string name="resume">Resume</string>

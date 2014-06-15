@@ -20,8 +20,8 @@ namespace Platformer_The_Game
         private bool _initialized;
         private Game _game;
         private List<Text> _menuBtns = new List<Text>();
-        private Text[] _leaderboardNames = new Text[10];
-        private Text[] _leaderboardScores = new Text[10];
+        private Text[] _leaderboardNames = new Text[11];
+        private Text[] _leaderboardScores = new Text[11];
         private View _view;
         private IState _nextState;
         private int _nextmillis, _selectedPos, _currentWorld, _currentLevel, _playerScore;
@@ -45,6 +45,7 @@ namespace Platformer_The_Game
         {
             public List<Highscore> highscores { get; set; }
         }
+
         // ReSharper restore InconsistentNaming
 
         // ReSharper disable PossibleLossOfFraction
@@ -77,7 +78,7 @@ namespace Platformer_The_Game
             {
                 btn.CharacterSize = game.MenuTextSize;
             }
-            _leaderboardNames[0] = new Text("Player", _font,_scoreCharacterSize);
+            _leaderboardNames[0] = new Text("Player", _font, _scoreCharacterSize);
             _leaderboardScores[0] = new Text("Score", _font, _scoreCharacterSize);
             for (int i = 1; i < _leaderboardNames.Length; i++)
             {
@@ -101,9 +102,9 @@ namespace Platformer_The_Game
             for (int i = 0; i < _leaderboardNames.Length; i++)
             {
                 Text text = _leaderboardNames[i];
-                text.Position = new Vector2f(_view.Size.X - (_view.Size.X / 3),
-                    _view.Size.Y - (_view.Size.Y / 2) - _leaderboardNames.Length * _scoreCharacterSize / 2 +
-                    i * _scoreCharacterSize);
+                text.Position = new Vector2f(_view.Size.X - (_view.Size.X/3),
+                    _view.Size.Y - (_view.Size.Y/2) - _leaderboardNames.Length*_scoreCharacterSize/2 +
+                    i*_scoreCharacterSize);
             }
             for (int i = 0; i < _leaderboardScores.Length; i++)
             {
@@ -243,22 +244,19 @@ namespace Platformer_The_Game
         {
             try
             {
-
-
                 WebClient client = new WebClient();
                 string jsonResult =
                     client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
                 _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
                 _leaderboard.highscores = _leaderboard.highscores.OrderByDescending(o => o.score).ToList();
-                for (int i = 1; i < _leaderboard.highscores.Count; i++)
+                for (int i = 0; i < _leaderboard.highscores.Count; i++)
                 {
-                    _leaderboardNames[i].DisplayedString = _leaderboard.highscores[i].name;
-                    _leaderboardScores[i].DisplayedString = _leaderboard.highscores[i].score.ToString();
+                    _leaderboardNames[i + 1].DisplayedString = _leaderboard.highscores[i].name;
+                    _leaderboardScores[i + 1].DisplayedString = _leaderboard.highscores[i].score.ToString();
                 }
             }
             catch (Exception e)
             {
-
                 Debug.WriteLine("Error while getting highscores : " + e.Message);
             }
         }

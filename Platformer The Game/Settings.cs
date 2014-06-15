@@ -44,6 +44,7 @@ namespace Platformer_The_Game
         public float MusicVolume = 50f;
         public float FxVolume = 50f;
         public bool LocalLeaderboards = false;
+        public string Username = "player";
 
         public Settings()
         {

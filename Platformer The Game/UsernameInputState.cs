@@ -13,9 +13,8 @@ namespace Platformer_The_Game
     {
         private Sprite _backgroundSprite;
         private Game _game;
-        private string username;
-        private Text helpText;
-        private Text usernameText;
+        private string username = "";
+        private Text[] textlines = new Text[2];
 
         public string BgMusicName
         {
@@ -26,12 +25,10 @@ namespace Platformer_The_Game
         {
             _game = game;
             _game.W.TextEntered += OnTextEntered;
-            helpText = new Text("Please type your username : ", _game.MenuFont, _game.MenuTextSize/2);
-            uint tWidth = (uint) helpText.GetLocalBounds().Width;
-            uint tHeight = (uint) helpText.GetLocalBounds().Height;
-            helpText.Position = new Vector2f((_game.W.Size.X/2) - (tWidth/2),
-                (_game.W.Size.Y/2) - (tHeight/2));
-            usernameText = new Text("", _game.MenuFont, _game.MenuTextSize/2);
+            _game.W.KeyReleased += OnKeyReleased;
+            username = _game.Settings.Username;
+            textlines[0] = new Text(Utils.GetString("usernameHelp",_game), _game.MenuFont, _game.MenuTextSize / 2);
+            textlines[1] = new Text("", _game.MenuFont, _game.MenuTextSize / 2);
             Image backgroundImage = new Image(@"res\images\menuBg.bmp");
             Texture backgroundTexture = new Texture(backgroundImage);
             _backgroundSprite = new Sprite(backgroundTexture);
@@ -41,28 +38,41 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            uint tWidth = (uint) helpText.GetLocalBounds().Width;
-            usernameText.DisplayedString = username;
-            uint tHeight = (uint) helpText.GetLocalBounds().Height;
-            usernameText.Position = new Vector2f(_game.W.Size.X/2 - (tWidth/2), (_game.W.Size.Y/3) - (tHeight/2));
+            textlines[1].DisplayedString = username;
+            for (int i = 0; i < textlines.Length; i++)
+            {
+                Text text = textlines[i];
+                uint iWidth = (uint)text.GetLocalBounds().Width;
+                uint iHeight = text.CharacterSize;
+                text.Position = new Vector2f(_game.W.Size.X / 2 - iWidth / 2,
+                    _game.W.Size.Y / 2 - textlines.Length * iHeight / 2 + i * iHeight);
+            }
         }
 
         public void Draw()
         {
             _game.W.Draw(_backgroundSprite);
-            _game.W.Draw(helpText);
-            _game.W.Draw(usernameText);
+            foreach (Text textline in textlines)
+            {
+                _game.W.Draw(textline);
+            }
         }
 
         public void Uninitialize()
         {
             _game.W.TextEntered -= OnTextEntered;
+            _game.W.KeyReleased -= OnKeyReleased;
         }
 
         public void OnEvent(Settings.Action a)
         {
-            if (a == Settings.Action.Use)
+        }
+
+        public void OnKeyReleased(object sender, KeyEventArgs e)
+        {
+            if (e.Code == Keyboard.Key.Return && !String.IsNullOrWhiteSpace(username))
             {
+                _game.Settings.Username = username.ToUpper();
                 _game.State = OptionsMenu.CreateOptionsMenu(_game, Utils.CreateMainMenu(_game));
             }
         }
@@ -73,7 +83,7 @@ namespace Platformer_The_Game
             {
                 username = username.Remove(username.Length - 1);
             }
-            else if (Char.IsLetterOrDigit((e.Unicode[0])))
+            else if (Char.IsLetterOrDigit((e.Unicode[0])) && username.Length <= 17)
             {
                 username += e.Unicode.ToUpper();
             }

@@ -230,6 +230,7 @@ namespace Platformer_The_Game
                 client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
             _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
             _leaderboard.highscores = _leaderboard.highscores.OrderByDescending(o => o.score).ToList();
+
         }
     }
 }

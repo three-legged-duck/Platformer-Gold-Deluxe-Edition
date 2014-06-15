@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Net;
@@ -14,13 +15,12 @@ namespace Platformer_The_Game
         public EventHandler<MouseButtonEventArgs> MouseClickHandler;
         public EventHandler<MouseMoveEventArgs> MouseMoveHandler;
 
-        private const string Spacer = "                     ";
-
         private readonly Sprite _backgroundSprite;
         private Font _font;
         private bool _initialized;
         private Game _game;
         private List<Text> _menuBtns = new List<Text>();
+        private Text[] _leaderboardNames = new Text[10];
         private Text[] _leaderboardScores = new Text[10];
         private View _view;
         private IState _nextState;
@@ -77,10 +77,15 @@ namespace Platformer_The_Game
             {
                 btn.CharacterSize = game.MenuTextSize;
             }
-            _leaderboardScores[0] = new Text("Player" + Spacer + "Score", _font, _scoreCharacterSize);
+            _leaderboardNames[0] = new Text("Player", _font,_scoreCharacterSize);
+            _leaderboardScores[0] = new Text("Score", _font, _scoreCharacterSize);
+            for (int i = 1; i < _leaderboardNames.Length; i++)
+            {
+                _leaderboardNames[i] = new Text("None", _font, _scoreCharacterSize);
+            }
             for (int i = 1; i < _leaderboardScores.Length; i++)
             {
-                _leaderboardScores[i] = new Text("None" + Spacer + "0", _font, _scoreCharacterSize);
+                _leaderboardScores[i] = new Text("-", _font, _scoreCharacterSize);
             }
             _initialized = true;
 
@@ -93,10 +98,17 @@ namespace Platformer_The_Game
                 text.Position = new Vector2f((_view.Size.X/40),
                     _view.Size.Y - (_view.Size.Y/10) - _menuBtns.Count*iHeight/2 + i*iHeight);
             }
+            for (int i = 0; i < _leaderboardNames.Length; i++)
+            {
+                Text text = _leaderboardNames[i];
+                text.Position = new Vector2f(_view.Size.X - (_view.Size.X / 3),
+                    _view.Size.Y - (_view.Size.Y / 2) - _leaderboardNames.Length * _scoreCharacterSize / 2 +
+                    i * _scoreCharacterSize);
+            }
             for (int i = 0; i < _leaderboardScores.Length; i++)
             {
                 Text text = _leaderboardScores[i];
-                text.Position = new Vector2f(_view.Size.X - (_view.Size.X/3),
+                text.Position = new Vector2f(_view.Size.X - (_view.Size.X/3) + 300,
                     _view.Size.Y - (_view.Size.Y/2) - _leaderboardScores.Length*_scoreCharacterSize/2 +
                     i*_scoreCharacterSize);
             }
@@ -136,6 +148,10 @@ namespace Platformer_The_Game
                     t.Color = new Color(t.Color.R, t.Color.G, t.Color.B, 150);
                 }
                 _game.W.Draw(t);
+            }
+            foreach (Text name in _leaderboardNames)
+            {
+                _game.W.Draw(name);
             }
             foreach (Text score in _leaderboardScores)
             {
@@ -225,12 +241,26 @@ namespace Platformer_The_Game
 
         private void GetHighScores()
         {
-            WebClient client = new WebClient();
-            string jsonResult =
-                client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
-            _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
-            _leaderboard.highscores = _leaderboard.highscores.OrderByDescending(o => o.score).ToList();
+            try
+            {
 
+
+                WebClient client = new WebClient();
+                string jsonResult =
+                    client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
+                _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
+                _leaderboard.highscores = _leaderboard.highscores.OrderByDescending(o => o.score).ToList();
+                for (int i = 1; i < _leaderboard.highscores.Count; i++)
+                {
+                    _leaderboardNames[i].DisplayedString = _leaderboard.highscores[i].name;
+                    _leaderboardScores[i].DisplayedString = _leaderboard.highscores[i].score.ToString();
+                }
+            }
+            catch (Exception e)
+            {
+
+                Debug.WriteLine("Error while getting highscores : " + e.Message);
+            }
         }
     }
 }

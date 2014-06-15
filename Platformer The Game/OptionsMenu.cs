@@ -146,7 +146,7 @@ namespace Platformer_The_Game
                                                                   : Utils.Language.French.ToString()));
                         break;
                     case 1:
-                        game.Settings.LocalLeaderboards = !game.Settings.DrawTextures;
+                        game.Settings.LocalLeaderboards = !game.Settings.LocalLeaderboards;
                         options.ModifyElement(1, GetOptionText("localLeaderboards", game.Settings.LocalLeaderboards, game));
                         break;
                     case 2:

@@ -12,7 +12,11 @@
   <string name="back">Retour</string>
   <string name="yes">oui</string>
   <string name="no">non</string>
-  
+
+  <!-- End of a level strings -->
+  <string name="scoreTooLow">Votre score, {0}, n'a pas été ajouté au classement.</string>
+  <string name="scoreAdded">Votre score, {0}, a été ajouté au classement !</string>
+
   <!-- Level editor -->
   <string name="platforms">Plateformes</string>
   

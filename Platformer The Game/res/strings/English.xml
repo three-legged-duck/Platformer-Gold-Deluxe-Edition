@@ -13,6 +13,10 @@
   <string name="yes">yes</string>
   <string name="no">no</string>
 
+  <!-- End of a level strings -->
+  <string name="scoreTooLow">Your score, {0}, was not added to the leaderboard.</string>
+  <string name="scoreAdded">Your score, {0}, was added to the leaderboard !</string>  
+  
   <!-- Level editor -->
   <string name="platforms">Plateforms</string>
 

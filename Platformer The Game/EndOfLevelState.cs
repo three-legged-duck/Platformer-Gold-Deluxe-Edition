@@ -22,6 +22,7 @@ namespace Platformer_The_Game
         private List<Text> _menuBtns = new List<Text>();
         private Text[] _leaderboardNames = new Text[11];
         private Text[] _leaderboardScores = new Text[11];
+        private Text _insertResult;
         private View _view;
         private IState _nextState;
         private int _nextmillis, _selectedPos, _currentWorld, _currentLevel, _playerScore;
@@ -78,17 +79,16 @@ namespace Platformer_The_Game
             {
                 btn.CharacterSize = game.MenuTextSize;
             }
-            _leaderboardNames[0] = new Text("Player", _font, _scoreCharacterSize);
+            _leaderboardNames[0] = new Text(Utils.GetString("username", _game), _font, _scoreCharacterSize);
             _leaderboardScores[0] = new Text("Score", _font, _scoreCharacterSize);
             for (int i = 1; i < _leaderboardNames.Length; i++)
             {
-                _leaderboardNames[i] = new Text("None", _font, _scoreCharacterSize);
+                _leaderboardNames[i] = new Text("-", _font, _scoreCharacterSize);
             }
             for (int i = 1; i < _leaderboardScores.Length; i++)
             {
                 _leaderboardScores[i] = new Text("-", _font, _scoreCharacterSize);
             }
-            _initialized = true;
 
             //Doesn't need to be updated each frame because the user cannot change the resolution during this state
             for (int i = 0; i < _menuBtns.Count; i++)
@@ -113,6 +113,11 @@ namespace Platformer_The_Game
                     _view.Size.Y - (_view.Size.Y/2) - _leaderboardScores.Length*_scoreCharacterSize/2 +
                     i*_scoreCharacterSize);
             }
+            _insertResult = new Text("", _font, _scoreCharacterSize)
+            {
+                Position = new Vector2f((_view.Size.X/40),
+                    _view.Size.Y - (_view.Size.Y/2) - _leaderboardNames.Length*_scoreCharacterSize/2)
+            };
 
             if (_game.Settings.LocalLeaderboards)
             {
@@ -125,8 +130,10 @@ namespace Platformer_The_Game
 
             _backgroundSprite.Scale = new Vector2f(_view.Size.X/_backgroundSprite.GetLocalBounds().Width,
                 _view.Size.Y/_backgroundSprite.GetLocalBounds().Height);
-            Thread scoresThread = new Thread(GetHighScores);
+            Thread scoresThread = new Thread(SetAndGetHighScores);
             scoresThread.Start();
+
+            _initialized = true;
         }
 
         public void Update()
@@ -158,6 +165,7 @@ namespace Platformer_The_Game
             {
                 _game.W.Draw(score);
             }
+            _game.W.Draw(_insertResult);
         }
 
         public void Uninitialize()
@@ -240,11 +248,24 @@ namespace Platformer_The_Game
                 fr.Width, fr.Height);
         }
 
-        private void GetHighScores()
+        private void SetAndGetHighScores()
         {
             try
             {
                 WebClient client = new WebClient();
+                
+                string sendResult =
+                    client.DownloadString(_apiUrl + "insert/" + _currentWorld + "/" + _currentLevel + "/" +
+                                          _game.Settings.Username + "/" + _playerScore);
+                if (sendResult.Contains("-1"))
+                {
+                    _insertResult.DisplayedString = string.Format(Utils.GetString("scoreTooLow",_game), _playerScore);
+                }
+                else
+                {
+                    _insertResult.DisplayedString = string.Format(Utils.GetString("scoreAdded", _game), _playerScore);
+                }
+
                 string jsonResult =
                     client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
                 _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
@@ -252,7 +273,7 @@ namespace Platformer_The_Game
                 for (int i = 0; i < _leaderboard.highscores.Count; i++)
                 {
                     _leaderboardNames[i + 1].DisplayedString = _leaderboard.highscores[i].name;
-                    _leaderboardScores[i + 1].DisplayedString = _leaderboard.highscores[i].score.ToString();
+                    _leaderboardScores[i + 1].DisplayedString = _leaderboard.highscores[i].score.ToString("####");
                 }
             }
             catch (Exception e)

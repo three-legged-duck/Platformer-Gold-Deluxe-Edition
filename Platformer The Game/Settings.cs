@@ -43,6 +43,7 @@ namespace Platformer_The_Game
         public bool IsCorrupted = false;
         public float MusicVolume = 50f;
         public float FxVolume = 50f;
+        public bool LocalLeaderboards = false;
 
         public Settings()
         {

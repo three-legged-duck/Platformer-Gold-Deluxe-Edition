@@ -128,6 +128,7 @@ namespace Platformer_The_Game
             {
                 Utils.GetString("language", game) + " : " +
                 (game.Settings.Language == Utils.Language.English ? Utils.Language.English.ToString() : Utils.Language.French.ToString()),
+                GetOptionText("localLeaderboards", game.Settings.LocalLeaderboards, game),
                 Utils.GetString("settingsReset",game),
                 Utils.GetString("back", game)
             };
@@ -145,9 +146,13 @@ namespace Platformer_The_Game
                                                                   : Utils.Language.French.ToString()));
                         break;
                     case 1:
-                        game.Settings = new Settings();
+                        game.Settings.LocalLeaderboards = !game.Settings.DrawTextures;
+                        options.ModifyElement(1, GetOptionText("localLeaderboards", game.Settings.LocalLeaderboards, game));
                         break;
                     case 2:
+                        game.Settings = new Settings();
+                        break;
+                    case 3:
                         game.State = returnState;
                         break;
                 }

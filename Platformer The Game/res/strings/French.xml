@@ -50,6 +50,7 @@
   
   <!-- Misc settings -->
   <string name="language">Langue</string>
+  <string name="localLeaderboards">Serveur de scores local</string>
   <string name="settingsReset">Remise à zéro des paramètres</string>
   
   <!-- Pause menu -->

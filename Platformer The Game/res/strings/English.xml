@@ -42,6 +42,7 @@
 
   <!-- Misc settings -->
   <string name="language">Language</string>
+  <string name="localLeaderboards">Local scores server</string>
   <string name="settingsReset">Reset settings</string>
   
   <!-- Pause menu -->

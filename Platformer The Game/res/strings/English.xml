@@ -20,6 +20,7 @@
   <string name="binding">Keyboard binding</string>
   <string name="video">Video</string>
   <string name="sound">Sound</string>
+  <string name="username">Username</string>
   <string name="misc">Misc</string>
 
   <!-- Binding settings menu -->

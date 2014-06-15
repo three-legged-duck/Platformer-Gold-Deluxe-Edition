@@ -12,6 +12,7 @@ namespace Platformer_The_Game
                 Utils.GetString("video", game),
                 Utils.GetString("sound", game),
                 Utils.GetString("misc", game),
+                Utils.GetString("username", game),
                 Utils.GetString("back", game)
             };
             var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
@@ -33,6 +34,9 @@ namespace Platformer_The_Game
                         game.State = CreateMiscOptionsMenu(game, options);
                         break;
                     case 4:
+                        game.State = new UsernameInputState();
+                        break;
+                    case 5:
                         game.State = returnState;
                         break;
                 }

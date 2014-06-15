@@ -95,6 +95,7 @@
     <Compile Include="KeyBindingState.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="OptionsMenu.cs" />
+    <Compile Include="UsernameInputState.cs" />
     <Compile Include="ResMan.cs" />
     <Compile Include="ScrollingTextState.cs" />
     <Compile Include="SplashState.cs" />

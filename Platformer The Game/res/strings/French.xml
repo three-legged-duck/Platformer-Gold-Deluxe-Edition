@@ -20,6 +20,7 @@
   <string name="binding">Configuration du clavier</string>
   <string name="video">Vidéo</string>
   <string name="sound">Audio</string>
+  <string name="username">Pseudonyme</string>
   <string name="misc">Divers</string>
 
   <!-- Binding settings menu -->

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading;
-using Newtonsoft.Json.Linq;
 using SFML.Graphics;
 using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    class EndOfLevelState : IState
+    internal class EndOfLevelState : IState
     {
         public EventHandler<MouseButtonEventArgs> MouseClickHandler;
         public EventHandler<MouseMoveEventArgs> MouseMoveHandler;
@@ -24,24 +24,28 @@ namespace Platformer_The_Game
         private Text[] _leaderboardScores = new Text[10];
         private View _view;
         private IState _nextState;
-        private int _nextmillis,_selectedPos, _currentWorld, _currentLevel, _playerScore;
+        private int _nextmillis, _selectedPos, _currentWorld, _currentLevel, _playerScore;
         private uint _scoreCharacterSize;
         private string _apiUrl;
+        private HighscoresList _leaderboard;
 
         public string BgMusicName
         {
             get { return "eddsworldCreditsTheme.ogg"; }
         }
 
-        class Highscore
+        // ReSharper disable InconsistentNaming
+        public class Highscore
         {
-
-            [JsonProperty("name")]
-            public string Name { get; set; }
-
-            [JsonProperty("score")]
-            public int Score { get; set; }
+            public string name { get; set; }
+            public int score { get; set; }
         }
+
+        public class HighscoresList
+        {
+            public List<Highscore> highscores { get; set; }
+        }
+        // ReSharper restore InconsistentNaming
 
         // ReSharper disable PossibleLossOfFraction
         public EndOfLevelState(Font font, IState nextState, int currentWorld, int currentLevel, int playerScore)
@@ -76,7 +80,7 @@ namespace Platformer_The_Game
             _leaderboardScores[0] = new Text("Player" + Spacer + "Score", _font, _scoreCharacterSize);
             for (int i = 1; i < _leaderboardScores.Length; i++)
             {
-                _leaderboardScores[i] = new Text("None" + Spacer + "0",_font,_scoreCharacterSize);
+                _leaderboardScores[i] = new Text("None" + Spacer + "0", _font, _scoreCharacterSize);
             }
             _initialized = true;
 
@@ -86,14 +90,15 @@ namespace Platformer_The_Game
                 Text text = _menuBtns[i];
                 text.CharacterSize = _game.MenuTextSize;
                 uint iHeight = text.CharacterSize;
-                text.Position = new Vector2f((_view.Size.X / 40),
-                    _view.Size.Y - (_view.Size.Y / 10) - _menuBtns.Count * iHeight / 2 + i * iHeight);
+                text.Position = new Vector2f((_view.Size.X/40),
+                    _view.Size.Y - (_view.Size.Y/10) - _menuBtns.Count*iHeight/2 + i*iHeight);
             }
             for (int i = 0; i < _leaderboardScores.Length; i++)
             {
                 Text text = _leaderboardScores[i];
-                text.Position = new Vector2f(_view.Size.X - (_view.Size.X / 3),
-                    _view.Size.Y - (_view.Size.Y / 2) - _leaderboardScores.Length * _scoreCharacterSize / 2 + i * _scoreCharacterSize);
+                text.Position = new Vector2f(_view.Size.X - (_view.Size.X/3),
+                    _view.Size.Y - (_view.Size.Y/2) - _leaderboardScores.Length*_scoreCharacterSize/2 +
+                    i*_scoreCharacterSize);
             }
 
             if (_game.Settings.LocalLeaderboards)
@@ -102,11 +107,11 @@ namespace Platformer_The_Game
             }
             else
             {
-                _apiUrl = "http://platformer.fr/api/";                
+                _apiUrl = "http://platformer.fr/api/";
             }
 
-            _backgroundSprite.Scale = new Vector2f(_view.Size.X / _backgroundSprite.GetLocalBounds().Width,
-                _view.Size.Y / _backgroundSprite.GetLocalBounds().Height);
+            _backgroundSprite.Scale = new Vector2f(_view.Size.X/_backgroundSprite.GetLocalBounds().Width,
+                _view.Size.Y/_backgroundSprite.GetLocalBounds().Height);
             Thread scoresThread = new Thread(GetHighScores);
             scoresThread.Start();
         }
@@ -215,15 +220,18 @@ namespace Platformer_The_Game
         private FloatRect getRealRect(FloatRect fr)
         {
             return new FloatRect(fr.Left, fr.Top,
-                fr.Width , fr.Height);
+                fr.Width, fr.Height);
         }
 
         private void GetHighScores()
         {
             WebClient client = new WebClient();
-            string jsonResult = client.DownloadString("http://localhost:5000/leaderboard/" + _currentWorld + "/" + _currentLevel);
-
+            string jsonResult =
+                client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
+            _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
+            _leaderboard.highscores = _leaderboard.highscores.OrderByDescending(o => o.score).ToList();
         }
     }
 }
+
 // ReSharper restore PossibleLossOfFraction

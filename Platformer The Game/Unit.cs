@@ -48,6 +48,12 @@ namespace Platformer_The_Game
             Sprite = game.ResMan.NewSprite(spriteSheet, animation);
         }
 
+        // WILL NEED TO FILL IT UP
+        public virtual void Initialize(params string[] args)
+        {
+
+        }
+
         protected virtual void UpdatePreCollision()
         {
 

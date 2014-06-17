@@ -51,22 +51,16 @@ namespace Platformer_The_Game
             switch (levelNumber)
             {
                 case 1:
-                    Platforms.Add(new Platform(new Vector2f(180, 256), new Vector2i(752, 32), blockTexture,
-                        game));
-                    Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
-                        blockTexture, game));
+                    Platforms.Add(new Platform(game, new Vector2f(180, 256), "752", "32", "space_3"));
+                    Platforms.Add(new Platform(game, new Vector2f(0, 570), "752", "32", "space_3"));
                     break;
                 case 2:
-                    Platforms.Add(new Platform(new Vector2f(0, 180), new Vector2i(752, 32), blockTexture,
-                        game));
-                    Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
-                        blockTexture, game));
+                    Platforms.Add(new Platform(game, new Vector2f(0, 180), "752", "32", "space_3"));
+                    Platforms.Add(new Platform(game, new Vector2f(0, 570), "800", "32", "space_3"));
                     break;
                 default:
-                    Platforms.Add(new Platform(new Vector2f(250, 256), new Vector2i(752, 32), blockTexture,
-                        game));
-                    Platforms.Add(new Platform(new Vector2f(0, 570), new Vector2i(800, 32),
-                        blockTexture, game));
+                    Platforms.Add(new Platform(game, new Vector2f(250, 256), "752", "32", "space_3"));
+                    Platforms.Add(new Platform(game, new Vector2f(0, 570), "800", "32", "space_3"));
                     break;
             }
 

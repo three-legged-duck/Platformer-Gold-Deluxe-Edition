@@ -21,6 +21,18 @@ namespace Platformer_The_Game
         public static XmlDocument FrenchStrings = new XmlDocument();
         public static XmlDocument EnglishStrings = new XmlDocument();
 
+        public static T GetOrDefault<T>(this T[] arr, int i, T def)
+        {
+            if (arr.Length <= i)
+            {
+                return def;
+            }
+            else
+            {
+                return arr[i];
+            }
+        }
+
         public static long ReadVarInt(this Stream stream)
         {
             long result = 0;

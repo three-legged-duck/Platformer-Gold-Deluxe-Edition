@@ -1,0 +1,172 @@
+﻿{
+  "animations": {
+    "water_light_moon": {
+      "top": 0,
+      "width": 32, 
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "water_dark": {
+      "top": 32,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "water_light": {
+      "top": 64,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "metal_box_light": { 
+      "top": 96,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "brick_dark": {
+      "top": 128,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "stone": {
+      "top": 160,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "copper_1": {
+      "top": 192,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "copper_2": {
+      "top": 224,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "copper_3": {
+      "top": 256,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "metal_vault": {
+      "top": 288,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "space_1": {
+      "top": 320,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "space_2": {
+      "top": 352,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "space_3": {
+      "top": 384,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "space_4": {
+      "top": 416,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "metal_box_dark": {
+      "top": 448,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "stone_dark": {
+      "top": 480,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "wood": {
+      "top": 512,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "wall": {
+      "top": 544,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "ore": {
+      "top": 576,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "gravel": {
+      "top": 608,
+      "width": 32,
+      "height": 32,
+      "interval": 1,
+      "frames": 1
+    },
+    "lift_off": {
+      "top": 640,
+      "width": 64,
+      "height": 64,
+      "interval": 1,
+      "frames": 1
+    },
+    "lift_on": {
+      "top": 704,
+      "width": 64,
+      "height": 64,
+      "interval": 1,
+      "frames": 1
+    },
+    "cave": {
+      "top": 768,
+      "width": 96,
+      "height": 96,
+      "interval": 1,
+      "frames": 1
+    }
+  },
+  "alphaColor": {
+    "a": 255,
+    "r": 0,
+    "g": 255,
+    "b": 0
+  },
+  "texturePerAnim": true
+}

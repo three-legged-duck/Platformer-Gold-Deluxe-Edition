@@ -3,6 +3,7 @@ using Gwen.Control;
 using SFML.Window;
 using Platformer_The_Game.GwenExtensions;
 using System.Diagnostics;
+using System;
 
 namespace Platformer_The_Game
 {
@@ -20,8 +21,15 @@ namespace Platformer_The_Game
         private bool _itemSelected;
         private Sprite _currentItem;
         
+        // Placed item management
+        private IEntity _placedSelected;
+
 
         // Level management
+        private Level level = Level.CreateLevel(new Vector2f(1200, 800));
+
+        // Entity Management
+        int _currentArg;
 
         public LevelEditor(Game g)
         {
@@ -62,13 +70,12 @@ namespace Platformer_The_Game
             _gwenInput.Initialize(_gwenCanvas, _game.W);
             
             TabControl entities = new TabControl(_gwenCanvas);
-            var platforms = entities.AddPage(Utils.GetString("platforms",_game));
-
             entities.SetSize(_gwenCanvas.Width, 200);
             entities.SetPosition(0, _gwenCanvas.Height - 200);
             Gwen.Texture tex = new Gwen.Texture(skin.Renderer);
             tex.Load(@"res\images\plateformes.png");
 
+            var platforms = entities.AddPage(Utils.GetString("platforms",_game));
             var page = new ScrollControl(platforms.Page);
             page.Dock = Gwen.Pos.Fill;
             for (int y = 0; y < tex.Height; y += 32)
@@ -88,6 +95,28 @@ namespace Platformer_The_Game
                     };
                 }
             }
+
+            var ents = entities.AddPage(Utils.GetString("entities", _game));
+            page = new ScrollControl(ents.Page);
+            page.Dock = Gwen.Pos.Fill;
+
+            var argsPage = entities.AddPage(Utils.GetString("entitySettings", _game));
+            page = new ScrollControl(argsPage.Page);
+            page.Dock = Gwen.Pos.Fill;
+            NumericUpDown updown = new NumericUpDown(page);
+            updown.SetPosition(0, 0);
+            updown.Value = updown.Min = 0;
+            updown.ValueChanged += delegate(Base sender, EventArgs eventargs)
+            {
+                _currentArg = (int)((NumericUpDown)sender).Value;
+            };
+            TextBox argBox = new TextBox(page);
+            argBox.SetPosition(200, 0);
+            argBox.SubmitPressed += delegate(Base sender, EventArgs eventargs)
+            {
+
+            };
+
             Button btn = new Button(_gwenCanvas);
             btn.Text = "Exit";
             btn.Released += (sender, arguments) => {
@@ -119,6 +148,20 @@ namespace Platformer_The_Game
             {
                 _game.W.Draw(_currentItem);
             }
+            foreach (var ent in level.entities)
+            {
+                ent.Draw();
+            }
+            if (_placedSelected != null)
+            {
+                var shape = new RectangleShape();
+                shape.OutlineColor = Color.Red;
+                shape.OutlineThickness = 3;
+                shape.Size = new Vector2f(30, 30);
+                shape.Position = _placedSelected.Pos;
+                shape.FillColor = Color.Transparent;
+                _game.W.Draw(shape);
+            }
         }
         // Useless... kinda.
         public void OnEvent(Settings.Action ev)
@@ -148,13 +191,30 @@ namespace Platformer_The_Game
             {
                 _itemSelected = false;
             }
-            if (e.Y < _game.W.Size.Y - 200)
+            else if (e.Y < _game.W.Size.Y - 200)
             {
+                if (_itemSelected != false)
+                {
+                    _placedSelected = new Platform(_game, new Vector2f(e.X - 15, e.Y - 15));
+                    level.entities.Add(_placedSelected);
+                }
+                else
+                {
+                    foreach (IEntity ent in level.entities)
+                    {
+                        if (ent.Pos.X - 15 < e.X && e.X < ent.Pos.X + 15
+                         && ent.Pos.Y - 15 < e.Y && e.Y < ent.Pos.Y + 15)
+                        {
+                            _placedSelected = ent;
+                            break;
+                        }
+                    }
+                }
                 // Add to level
                 // Draw on level.
             }
+
             _gwenInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
-            
         }
 
         void window_MouseButtonReleased(object sender, MouseButtonEventArgs e)

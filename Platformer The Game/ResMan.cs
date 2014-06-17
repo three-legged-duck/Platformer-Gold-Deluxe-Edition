@@ -7,7 +7,7 @@ using SFML.Window;
 
 namespace Platformer_The_Game
 {
-    internal class AnimationDescription
+    public class AnimationDescription
     {
         public int Top { set; get; }
         public int Width { set; get; }
@@ -16,7 +16,7 @@ namespace Platformer_The_Game
         public int Frames { set; get; }
     }
 
-    internal class SpriteDescription
+    public class SpriteDescription
     {
         public Dictionary<string, AnimationDescription> Animations = new Dictionary<string, AnimationDescription>();
 
@@ -24,6 +24,7 @@ namespace Platformer_The_Game
         public string File { set; get; }
 
         public Color? AlphaColor { get; set; }
+        public bool TexturePerAnim { get; set; }
 
         public AnimationDescription this[string index]
         {
@@ -38,10 +39,10 @@ namespace Platformer_The_Game
         private readonly Dictionary<string, Texture> textures = new Dictionary<string, Texture>();
 
         // ResMan-accessible constructor
-
         static ResMan()
         {
-            AnimatedSprite.SetupAnimatedSprite();
+        //    AnimatedSprite.SetupAnimatedSprite();
+            newAnimatedSprite = (desc, tex, str) => new AnimatedSprite(desc, tex, str);
         }
 
         public ResMan()
@@ -54,18 +55,27 @@ namespace Platformer_The_Game
             }
         }
 
-        public void LoadLevel()
+        public void LoadLevel(string[] texs)
         {
-            // TODO : Load textures in textures dict
+            foreach (var id in texs)
+            {
+                GetTexture(id);
+            }
         }
 
         public void UnloadLevel()
         {
-            // TODO : Free memory
+            textures.Clear();
         }
 
-        public AnimatedSprite NewSprite(string id, string animation)
+        public Texture GetTexture(string id)
         {
+            string animId = null;
+            if (id.Contains("."))
+            {
+                animId = id.Split('.')[1];
+                id = id.Split('.')[0];
+            }
             SpriteDescription desc = spriteDesc[id];
             Texture tex;
             if (!textures.TryGetValue(id, out tex))
@@ -75,9 +85,29 @@ namespace Platformer_The_Game
                 {
                     img.CreateMaskFromColor(desc.AlphaColor.Value);
                 }
-                tex = new Texture(img);
+                if (desc.TexturePerAnim)
+                {
+                    foreach (var anim in desc.Animations)
+                    {
+                        textures[id + "." + anim.Key] = new Texture(img, new IntRect(0, anim.Value.Top, anim.Value.Width * anim.Value.Frames, anim.Value.Height));
+                        if (anim.Key == animId)
+                        {
+                            tex = textures[id + "." + anim.Key];
+                        }
+                    }
+                }
+                else
+                {
+                    tex = textures[id] = new Texture(img);
+                }
             }
+            return tex;
+        }
 
+        public AnimatedSprite NewSprite(string id, string animation)
+        {
+            SpriteDescription desc = spriteDesc[id];
+            Texture tex = GetTexture(id);
             AnimatedSprite sprite = newAnimatedSprite(desc, tex, animation);
             return sprite;
         }
@@ -97,7 +127,7 @@ namespace Platformer_The_Game
                 this.desc = desc;
                 currentAnimation = animation;
                 sprite = new Sprite(tex);
-                TextureRect = new IntRect(anim.Width*Frame, anim.Top, anim.Width, anim.Height);
+                TextureRect = new IntRect(anim.Width * Frame, anim.Top, anim.Width, anim.Height);
             }
 
             public static implicit operator Sprite(AnimatedSprite s)
@@ -113,7 +143,7 @@ namespace Platformer_The_Game
             private int Frame
             {
                 get { return currentFrame; }
-                set { currentFrame = value%desc[currentAnimation].Frames; }
+                set { currentFrame = value % desc[currentAnimation].Frames; }
             }
 
             public string Animation
@@ -149,11 +179,11 @@ namespace Platformer_The_Game
                     nextUpdate = anim.Interval;
                     if (reversed)
                     {
-                        TextureRect = new IntRect(anim.Width*(Frame + 1), anim.Top, -anim.Width, anim.Height);
+                        TextureRect = new IntRect(anim.Width * (Frame + 1), anim.Top, -anim.Width, anim.Height);
                     }
                     else
                     {
-                        TextureRect = new IntRect(anim.Width*Frame, anim.Top, anim.Width, anim.Height);
+                        TextureRect = new IntRect(anim.Width * Frame, anim.Top, anim.Width, anim.Height);
                     }
                     Frame += 1;
                 }

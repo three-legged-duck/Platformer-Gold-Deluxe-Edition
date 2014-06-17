@@ -40,6 +40,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -100,7 +101,7 @@
     <Compile Include="ScrollingTextState.cs" />
     <Compile Include="SplashState.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Plateform.cs" />
+    <Compile Include="Platform.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="IEntity.cs" />
@@ -145,6 +146,7 @@
     <None Include="res\music\gameLoop.ogg" />
     <None Include="res\music\eddsworldCreditsTheme.ogg" />
     <None Include="res\sprites\character.json" />
+    <None Include="res\sprites\plateformes.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\images\backgroundStars.bmp" />
@@ -156,6 +158,7 @@
     <Content Include="res\images\menuBg.bmp" />
     <Content Include="res\images\plateformes.png" />
     <Content Include="res\images\splash.bmp" />
+    <Content Include="res\sprites\plateformes.png" />
     <Content Include="res\strings\FrenchIntro.txt" />
     <Content Include="res\strings\FrenchMenu.txt" />
     <Content Include="res\strings\English.xml">

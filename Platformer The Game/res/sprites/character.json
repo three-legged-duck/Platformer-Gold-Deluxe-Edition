@@ -1,24 +1,25 @@
 ﻿{
-	"animations": {
-		"movement": {
+  "animations": {
+    "movement": {
       "top": 0,
-	    "width": 90, 
-  	  "height": 94,
-  		"interval": 10,
-	    "frames": 6
+      "width": 90, 
+      "height": 94,
+      "interval": 10,
+      "frames": 6
     },
     "idle": {
       "top": 94,
-		  "width": 90,
-	  	"height": 94,
-  		"interval": 60,
-		  "frames": 1
+      "width": 90,
+      "height": 94,
+      "interval": 60,
+      "frames": 1
     }
   },
   "alphaColor": {
-      "a": 255,
-      "r": 0,
-      "g": 255,
-      "b": 0
-  }
+    "a": 255,
+    "r": 0,
+    "g": 255,
+    "b": 0
+  },
+  "texturePerAnim": false
 }

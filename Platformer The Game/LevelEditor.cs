@@ -138,8 +138,8 @@ namespace Platformer_The_Game
                 reloadBackground();
             };
 
-            Button btn = new Button(_gwenCanvas);
-            btn.Text = Utils.GetString("quit", _game);
+            Button exitbtn = new Button(_gwenCanvas);
+            exitbtn.Text = Utils.GetString("quit", _game);
             exitbtn.Released += (sender, arguments) => {
                 level.Save("customLevel");
                 _game.State = Utils.CreateMainMenu(_game);

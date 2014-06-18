@@ -12,10 +12,13 @@ namespace Platformer_The_Game
         private Game _game;
 
         public string BgMusicName { get { return null; } }
-        
+
+        private View _view;
+
         // Gwen
         private readonly Canvas _gwenCanvas;
         private Gwen.Input.SFML _gwenInput;
+        private ScrollControl entitySettingsPage;
 
         // Item management
         private bool _itemSelected;
@@ -26,7 +29,8 @@ namespace Platformer_The_Game
 
 
         // Level management
-        private Level level = Level.CreateLevel(new Vector2f(1200, 800));
+        private Level level = Level.CreateLevel();
+        private Sprite backgroundSprite = new Sprite();
 
         // Entity Management
         int _currentArg;
@@ -34,6 +38,7 @@ namespace Platformer_The_Game
         public LevelEditor(Game g)
         {
             _game = g;
+            _view = new View(new Vector2f(0, 0), new Vector2f(_game.W.Size.X, _game.W.Size.Y));
             var gwen = new Gwen.Renderer.SFML(_game.W);
             var skin = new Gwen.Skin.TexturedBase(gwen, @"res\images\DefaultSkin.png");
 
@@ -100,10 +105,10 @@ namespace Platformer_The_Game
             page = new ScrollControl(ents.Page);
             page.Dock = Gwen.Pos.Fill;
 
-            var argsPage = entities.AddPage(Utils.GetString("entitySettings", _game));
-            page = new ScrollControl(argsPage.Page);
+            ents = entities.AddPage(Utils.GetString("entitySettings", _game));
+            page = entitySettingsPage = new ScrollControl(ents.Page);
             page.Dock = Gwen.Pos.Fill;
-            NumericUpDown updown = new NumericUpDown(page);
+            NumericUpDown updown = new NumericUpDown(entitySettingsPage);
             updown.SetPosition(0, 0);
             updown.Value = updown.Min = 0;
             updown.ValueChanged += delegate(Base sender, EventArgs eventargs)
@@ -114,14 +119,63 @@ namespace Platformer_The_Game
             argBox.SetPosition(200, 0);
             argBox.SubmitPressed += delegate(Base sender, EventArgs eventargs)
             {
+                if (_placedSelected != null)
+                {
+                    var args = _placedSelected.Args;
+                    args[_currentArg] = (sender as TextBox).Text;
+                    _placedSelected.Initialize(args);
+                }
+            };
 
+            var settingsPage = entities.AddPage(Utils.GetString("levelSettings", _game));
+            page = new ScrollControl(settingsPage.Page);
+            page.Dock = Gwen.Pos.Fill;
+            TextBox background = new TextBox(page);
+            background.SetPosition(0, 0);
+            background.SubmitPressed += delegate(Base sender, EventArgs eventargs)
+            {
+                level.background = (sender as TextBox).Text;
+                reloadBackground();
             };
 
             Button btn = new Button(_gwenCanvas);
             btn.Text = "Exit";
             btn.Released += (sender, arguments) => {
+                level.Save("customLevel");
                 _game.State = Utils.CreateMainMenu(_game);
             };
+        }
+
+        private void reloadBackground()
+        {
+            backgroundSprite.Texture = _game.ResMan.GetTexture(level.background);
+            backgroundSprite.Scale = new Vector2f(_game.W.DefaultView.Size.X / backgroundSprite.GetGlobalBounds().Width,
+                _game.W.DefaultView.Size.Y / backgroundSprite.GetGlobalBounds().Height);
+        }
+
+        private void reloadEntitySettingsPage()
+        {
+            entitySettingsPage.Children.Clear();
+            if (_placedSelected != null)
+            {
+                var argstype = _placedSelected.ArgsType;
+                for (var i = 0; i < argstype.Length; i++)
+                {
+                    var _i = i;
+                    var lbl = new Label(entitySettingsPage);
+                    lbl.Text = argstype[i];
+                    lbl.SetPosition(0, 50 * i);
+                    var txtBox = new TextBox(entitySettingsPage);
+                    txtBox.SetPosition(200, 50 * i);
+                    txtBox.Text = _placedSelected.Args[i];
+                    txtBox.SubmitPressed += delegate(Base sender, EventArgs args)
+                    {
+                        var arg = _placedSelected.Args;
+                        arg[_i] = (sender as TextBox).Text;
+                        _placedSelected.Initialize(arg);
+                    };
+                }
+            }
         }
 
         public void Initialize(Game game)
@@ -143,11 +197,14 @@ namespace Platformer_The_Game
 
         public void Draw()
         {
+            _game.W.SetView(_game.W.DefaultView);
+            _game.W.Draw(backgroundSprite);
             _gwenCanvas.RenderCanvas();
             if (_itemSelected)
             {
                 _game.W.Draw(_currentItem);
             }
+            _game.W.SetView(_view);
             foreach (var ent in level.entities)
             {
                 ent.Draw();
@@ -157,15 +214,31 @@ namespace Platformer_The_Game
                 var shape = new RectangleShape();
                 shape.OutlineColor = Color.Red;
                 shape.OutlineThickness = 3;
-                shape.Size = new Vector2f(30, 30);
+                shape.Size = _placedSelected.Size;
                 shape.Position = _placedSelected.Pos;
                 shape.FillColor = Color.Transparent;
                 _game.W.Draw(shape);
             }
+            _game.W.SetView(_game.W.DefaultView);
         }
         // Useless... kinda.
         public void OnEvent(Settings.Action ev)
         {
+            switch (ev)
+            {
+                case Settings.Action.Left:
+                    _view.Move(new Vector2f(-1, 0));
+                    break;
+                case Settings.Action.Right:
+                    _view.Move(new Vector2f(1, 0));
+                    break;
+                case Settings.Action.Up:
+                    _view.Move(new Vector2f(0, -1));
+                    break;
+                case Settings.Action.Down:
+                    _view.Move(new Vector2f(0, 1));
+                    break;
+            }
 
         }
 
@@ -195,17 +268,20 @@ namespace Platformer_The_Game
             {
                 if (_itemSelected != false)
                 {
-                    _placedSelected = new Platform(_game, new Vector2f(e.X - 15, e.Y - 15));
+                    _placedSelected = new Platform(_game, _game.W.MapPixelToCoords(new Vector2i(e.X - 15, e.Y - 15), _view));
+                    reloadEntitySettingsPage();
                     level.entities.Add(_placedSelected);
                 }
                 else
                 {
+                    var mouseCoords = _game.W.MapPixelToCoords(new Vector2i(e.X, e.Y), _view);
                     foreach (IEntity ent in level.entities)
                     {
-                        if (ent.Pos.X - 15 < e.X && e.X < ent.Pos.X + 15
-                         && ent.Pos.Y - 15 < e.Y && e.Y < ent.Pos.Y + 15)
+                        if (ent.Pos.X - 15 < mouseCoords.X && mouseCoords.X < ent.Pos.X + 15
+                         && ent.Pos.Y - 15 < mouseCoords.Y && mouseCoords.Y < ent.Pos.Y + 15)
                         {
                             _placedSelected = ent;
+                            reloadEntitySettingsPage();
                             break;
                         }
                     }

@@ -68,17 +68,26 @@ namespace Platformer_The_Game
             textures.Clear();
         }
 
-        public Texture GetTexture(string id)
+        public Texture GetTexture(string fullid)
         {
-            string animId = null;
-            if (id.Contains("."))
+            string id = fullid, animId = "";
+            if (fullid.Contains("."))
             {
-                animId = id.Split('.')[1];
-                id = id.Split('.')[0];
+                animId = fullid.Split('.')[1];
+                id = fullid.Split('.')[0];
+            }
+            if (!spriteDesc.ContainsKey(id))
+            {
+                // GO look in images
+                if (File.Exists(@"res\images\" + fullid + ".png")) {
+                    return new Texture(@"res\images\" + fullid + ".png");
+                } else {
+                    return new Texture(0,0);
+                }
             }
             SpriteDescription desc = spriteDesc[id];
             Texture tex;
-            if (!textures.TryGetValue(id, out tex))
+            if (!textures.TryGetValue(fullid, out tex))
             {
                 var img = new Image(@"res\sprites\" + desc.File);
                 if (desc.AlphaColor.HasValue)

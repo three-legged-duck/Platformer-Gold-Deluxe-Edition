@@ -18,17 +18,15 @@ namespace Platformer_The_Game
         {
         }
 
-        Vector2f size;
-        string background;
-        int parTime;
+        public string background;
+        public int parTime;
         public ISet<IEntity> entities = new HashSet<IEntity>();
 
         public event LoadProgressHandler LoadProgress;
 
-        public static Level CreateLevel(Vector2f size)
+        public static Level CreateLevel()
         {
             Level lvl = new Level();
-            lvl.size = size;
             return lvl;
         }
 
@@ -38,7 +36,6 @@ namespace Platformer_The_Game
             FileStream f = File.Open(levelName, FileMode.Open);
 
             #region header
-            level.size = new Vector2f(f.ReadVarInt(), f.ReadVarInt());
             level.background = f.ReadString();
             level.parTime = (int)f.ReadVarInt();
             #endregion header
@@ -65,6 +62,25 @@ namespace Platformer_The_Game
             }
             #endregion entities
             return level;
+        }
+
+        public void Save(string levelName)
+        {
+            var f = File.Open(levelName, FileMode.Create);
+            f.WriteString(this.background);
+            f.WriteVarInt(this.parTime);
+            f.WriteVarInt(this.entities.Count);
+            foreach (var ent in entities)
+            {
+                f.WriteString(ent.GetType().FullName);
+                f.WriteVarInt((long)ent.Pos.X);
+                f.WriteVarInt((long)ent.Pos.Y);
+                f.WriteVarInt(ent.Args.Length);
+                foreach (var arg in ent.Args)
+                {
+                    f.WriteString(arg);
+                }
+            }
         }
 
         public class LoadProgressArgs : EventArgs

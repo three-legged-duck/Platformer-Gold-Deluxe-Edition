@@ -33,7 +33,7 @@ namespace Platformer_The_Game
         public void Initialize(Game game)
         {
             _game = game;
-            _view = new View();
+            _view = new View(new Vector2f(0, 0), new Vector2f(game.W.Size.X, game.W.Size.Y));
             _backgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.png"));
             _backgroundSprite.Scale = new Vector2f(game.W.DefaultView.Size.X/_backgroundSprite.GetGlobalBounds().Width,
                 game.W.DefaultView.Size.Y/_backgroundSprite.GetGlobalBounds().Height);

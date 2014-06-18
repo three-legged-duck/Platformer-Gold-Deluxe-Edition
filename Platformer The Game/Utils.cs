@@ -35,34 +35,30 @@ namespace Platformer_The_Game
 
         public static long ReadVarInt(this Stream stream)
         {
-            long result = 0;
             int shift = 0;
-            int b;
-            while ((b = stream.ReadByte()) != -1)
+            long result = 0;
+            while (shift < 64)
             {
-                result |= (b & 0x7F) << shift++*7;
-
-                if (shift > 5) throw new Exception("VarInt too big");
-
-                if ((b & 0x80) != 128) break;
+                int b = stream.ReadByte();
+                if (b == -1) throw new Exception("EOF");
+                result |= (long)(b & 0x7F) << shift;
+                if ((b & 0x80) == 0)
+                {
+                    return result;
+                }
+                shift += 7;
             }
-
-            return result;
+            throw new Exception("MalformedVarint");
         }
 
         public static void WriteVarInt(this Stream stream, long value)
         {
-            while (true)
+            while (value > 127)
             {
-                if ((value & 0xFFFFFF80) == 0)
-                {
-                    stream.WriteByte((byte) value);
-                    return;
-                }
-
-                stream.WriteByte((byte) (value & 0x7F | 0x80));
+                stream.WriteByte((byte)((value & 0x7F) | 0x80));
                 value >>= 7;
             }
+            stream.WriteByte((byte)value);
         }
 
         public static string ReadString(this Stream stream)
@@ -80,6 +76,11 @@ namespace Platformer_The_Game
 
         public static void WriteString(this Stream stream, string text)
         {
+            if (text == null)
+            {
+                stream.WriteVarInt(0);
+                return;
+            }
             stream.WriteVarInt(text.Length);
             byte[] strBytes = Encoding.UTF8.GetBytes(text);
             stream.Write(strBytes, 0, strBytes.Length);

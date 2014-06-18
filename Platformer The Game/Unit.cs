@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
-    class Unit : IEntity
+    abstract class Unit : IEntity
     {
         protected enum Facing { Left, Right };
 
@@ -34,6 +34,21 @@ namespace Platformer_The_Game
         {
             get { return Sprite.Position; }
             set { Sprite.Position = value; }
+        }
+
+        public Vector2f Size
+        {
+            get { return new Vector2f(Sprite.GetGlobalBounds().Width, Sprite.GetGlobalBounds().Height); }
+        }
+
+        public string[] Args
+        {
+            get { return new string[0]; }
+        }
+
+        public string[] ArgsType
+        {
+            get { return new string[0]; }
         }
 
         public Unit(Game game, GameState gameState, Vector2f pos, string spriteSheet, string animation)

@@ -91,17 +91,19 @@ namespace Platformer_The_Game
             Pos = new Vector2f(Pos.X + Speed.X, Pos.Y + Speed.Y);
             OnGround = false;
             var colliding = false;
-            foreach (Platform entity in GameState.Platforms) // TODO: IEntity instead of Platform
+            foreach (IEntity entity in GameState.Level.entities) // TODO: IEntity instead of Platform
             {
-                if (GameState.Collision.PixelPerfectTest(this.Sprite, entity.sprite))
+                if (entity.GetType() != typeof(Platform)) continue;
+                if (GameState.Collision.PixelPerfectTest(this.Sprite, (entity as Platform).sprite))
                 {
                     colliding = true;
                 }
             }
-            foreach (Platform entity in GameState.Platforms)
+            foreach (IEntity entity in GameState.Level.entities) // TODO: IEntity instead of Platform
             {
+                if (entity.GetType() != typeof(Platform)) continue;
                 // Btw, is it colliding with bottom ?
-                if (UnderUnit.Intersects(entity.sprite.GetGlobalBounds()))
+                if (UnderUnit.Intersects((entity as Platform).sprite.GetGlobalBounds()))
                 {
                     OnGround = true;
                     break;

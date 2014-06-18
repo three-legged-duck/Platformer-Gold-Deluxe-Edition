@@ -33,32 +33,37 @@ namespace Platformer_The_Game
             }
         }
 
-        public static long ReadVarInt(this Stream stream)
+        public static int ReadVarInt(this Stream stream)
         {
-            int shift = 0;
-            long result = 0;
-            while (shift < 64)
+            uint result = 0;
+            int length = 0;
+            while (true)
             {
-                int b = stream.ReadByte();
-                if (b == -1) throw new Exception("EOF");
-                result |= (long)(b & 0x7F) << shift;
-                if ((b & 0x80) == 0)
-                {
-                    return result;
-                }
-                shift += 7;
+                int currentMAYBEFAIL = stream.ReadByte();
+                if (currentMAYBEFAIL == -1) throw new InvalidDataException("EOF");
+                byte current = (byte)currentMAYBEFAIL;
+                result |= (current & 0x7Fu) << length++ * 7;
+                if (length > 5)
+                    throw new InvalidDataException("VarInt may not be longer than 28 bits.");
+                if ((current & 0x80) != 128)
+                    break;
             }
-            throw new Exception("MalformedVarint");
+            return (int)result;
         }
 
-        public static void WriteVarInt(this Stream stream, long value)
+        public static void WriteVarInt(this Stream stream, int _value)
         {
-            while (value > 127)
+            uint value = (uint)_value;
+            while (true)
             {
-                stream.WriteByte((byte)((value & 0x7F) | 0x80));
+                if ((value & 0xFFFFFF80u) == 0)
+                {
+                    stream.WriteByte((byte)value);
+                    break;
+                }
+                stream.WriteByte((byte)(value & 0x7F | 0x80));
                 value >>= 7;
             }
-            stream.WriteByte((byte)value);
         }
 
         public static string ReadString(this Stream stream)
@@ -126,36 +131,50 @@ namespace Platformer_The_Game
 
         public static MenuState CreateSelectionMenu(Game game)
         {
-            int selectedWorld = 1;
-            int selectedLevel = 1;
-            var menu = new MenuState(game.MenuFont, "menuBg.png", true, GetString("level", game) + " : " + selectedLevel,
-                GetString("play", game), GetString("back", game));
-            menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+            var selectedLevel = 0;
+            string[] levels = null;
+            if (Directory.Exists(@"levels"))
             {
-                switch (args.SelectedPos)
+                levels = Directory.GetFiles(@"levels");
+                for (int i = 0; i < levels.Length; i++)
                 {
-                    case 0:
-                        if (selectedLevel == 3)
-                        {
-                            selectedLevel = 1;
-                        }
-                        else
-                        {
-                            selectedLevel++;
-                        }
-                        menu.ModifyElement(0,GetString("level", game) + " : " + selectedLevel);
-                        break;
-                    case 1:
-                        game.State = new GameState(selectedWorld,selectedLevel);
-                        break;
-                    case 2:
-                        game.State = CreateMainMenu(game);
-                        break;
-                    case 3:
-                        game.Close();
-                        break;
+                    levels[i] = Path.GetFileName(levels[i]);
                 }
-            };
+            }
+            MenuState menu;
+            if (levels == null || levels.Length == 0)
+            {
+                menu = new MenuState(game.MenuFont, "menuBg.png", true, GetString("noLevelsFound", game),
+                    GetString("back", game));
+                menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+                {
+                    game.State = CreateMainMenu(game);
+                };
+            }
+            else
+            {
+                menu = new MenuState(game.MenuFont, "menuBg.png", true, GetString("level", game) + " : " + levels[0],
+                GetString("play", game), GetString("back", game));
+                menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
+                {
+                    switch (args.SelectedPos)
+                    {
+                        case 0:
+                            selectedLevel = (selectedLevel + 1) % levels.Length;
+                            menu.ModifyElement(0, GetString("level", game) + " : " + levels[selectedLevel]);
+                            break;
+                        case 1:
+                            game.State = new GameState(levels[selectedLevel]);
+                            break;
+                        case 2:
+                            game.State = CreateMainMenu(game);
+                            break;
+                        case 3:
+                            game.Close();
+                            break;
+                    }
+                };
+            }
             return menu;
         }
 

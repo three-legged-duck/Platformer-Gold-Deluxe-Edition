@@ -140,9 +140,16 @@ namespace Platformer_The_Game
 
             Button btn = new Button(_gwenCanvas);
             btn.Text = Utils.GetString("quit", _game);
-            btn.Released += (sender, arguments) => {
+            exitbtn.Released += (sender, arguments) => {
                 level.Save("customLevel");
                 _game.State = Utils.CreateMainMenu(_game);
+            };
+            var btn = new Button(_gwenCanvas);
+            btn.Text = "Test";
+            btn.SetPosition(exitbtn.Bounds.Width + 1, 0);
+            btn.Released += (sender, arguments) =>
+            {
+                _game.State = new GameState("customlevel", level);
             };
         }
 

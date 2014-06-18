@@ -19,7 +19,7 @@ namespace Platformer_The_Game
         }
 
         public string background;
-        public int parTime;
+        public int startScore;
         public ISet<IEntity> entities = new HashSet<IEntity>();
 
         public event LoadProgressHandler LoadProgress;
@@ -33,11 +33,11 @@ namespace Platformer_The_Game
         public static Level LoadLevel(Game game, string levelName)
         {
             Level level = new Level();
-            FileStream f = File.Open(levelName, FileMode.Open);
+            FileStream f = File.Open(@"levels\" + levelName, FileMode.Open);
 
             #region header
             level.background = f.ReadString();
-            level.parTime = (int)f.ReadVarInt();
+            level.startScore = (int)f.ReadVarInt();
             #endregion header
             #region entities
             var entCount = f.ReadVarInt();
@@ -61,26 +61,30 @@ namespace Platformer_The_Game
               level.entities.Add((IEntity)info.Invoke(new object[] { game, new Vector2f(x, y), args }));
             }
             #endregion entities
+            f.Close();
             return level;
         }
 
         public void Save(string levelName)
         {
-            var f = File.Open(levelName, FileMode.Create);
+            if (!Directory.Exists(@"levels")) Directory.CreateDirectory(@"levels");
+            var f = File.Open(@"levels\" + levelName, FileMode.Create);
             f.WriteString(this.background);
-            f.WriteVarInt(this.parTime);
+            f.WriteVarInt(this.startScore);
             f.WriteVarInt(this.entities.Count);
             foreach (var ent in entities)
             {
                 f.WriteString(ent.GetType().FullName);
-                f.WriteVarInt((long)ent.Pos.X);
-                f.WriteVarInt((long)ent.Pos.Y);
+                f.WriteVarInt((int)ent.Pos.X);
+                f.WriteVarInt((int)ent.Pos.Y);
                 f.WriteVarInt(ent.Args.Length);
                 foreach (var arg in ent.Args)
                 {
                     f.WriteString(arg);
                 }
             }
+            f.Flush();
+            f.Close();
         }
 
         public class LoadProgressArgs : EventArgs

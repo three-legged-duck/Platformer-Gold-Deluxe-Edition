@@ -9,20 +9,28 @@ namespace Platformer_The_Game
     {
         private Sprite _backgroundSprite;
         private Game _game;
-        public List<Platform> Platforms;
+        private Level level;
         private Player _player;
-        private Image _spriteSheet;
         public Collision Collision;
 
-        private int levelNumber;
-        private int worldNumber;
+        public Level Level
+        {
+            get { return level; }
+        }
+
+        private string levelname;
 
         private View _view;
 
-        public GameState(int selectedWorld, int selectedLevel)
+        public GameState(string levelname)
         {
-            levelNumber = selectedLevel;
-            worldNumber = selectedWorld;
+            this.levelname = levelname;
+        }
+
+        public GameState(string levelname, Level level)
+        {
+            this.levelname = levelname;
+            this.level = level;
         }
 
         public string BgMusicName
@@ -34,35 +42,19 @@ namespace Platformer_The_Game
         {
             _game = game;
             _view = new View(new Vector2f(0, 0), new Vector2f(game.W.Size.X, game.W.Size.Y));
-            _backgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.png"));
-            _backgroundSprite.Scale = new Vector2f(game.W.DefaultView.Size.X/_backgroundSprite.GetGlobalBounds().Width,
+            if (level == null) level = Level.LoadLevel(_game, levelname);
+            if (level.background != null)
+            {
+                _backgroundSprite = new Sprite(_game.ResMan.GetTexture(level.background));
+            } else {
+                _backgroundSprite = new Sprite();
+            }
+            _backgroundSprite.Scale = new Vector2f(game.W.DefaultView.Size.X / _backgroundSprite.GetGlobalBounds().Width,
                 game.W.DefaultView.Size.Y/_backgroundSprite.GetGlobalBounds().Height);
-            Platforms = new List<Platform>();
 
             Collision = new Collision();
 
             _player = new Player(game, this, new Vector2f(50, 180));
-
-            _spriteSheet = new Image(@"res\images\plateformes.png");
-            _spriteSheet.CreateMaskFromColor(new Color(0, 255, 0));
-            var blockTexture = new Texture(_spriteSheet, new IntRect(12*32, 0, 32, 32));
-
-            //TODO : true level loading
-            switch (levelNumber)
-            {
-                case 1:
-                    Platforms.Add(new Platform(game, new Vector2f(180, 256), "752", "32", "space_3"));
-                    Platforms.Add(new Platform(game, new Vector2f(0, 570), "752", "32", "space_3"));
-                    break;
-                case 2:
-                    Platforms.Add(new Platform(game, new Vector2f(0, 180), "752", "32", "space_3"));
-                    Platforms.Add(new Platform(game, new Vector2f(0, 570), "800", "32", "space_3"));
-                    break;
-                default:
-                    Platforms.Add(new Platform(game, new Vector2f(250, 256), "752", "32", "space_3"));
-                    Platforms.Add(new Platform(game, new Vector2f(0, 570), "800", "32", "space_3"));
-                    break;
-            }
 
             _view.Center = _player.Pos;
         }
@@ -72,9 +64,9 @@ namespace Platformer_The_Game
             _game.W.SetView(_game.W.DefaultView);
             _game.W.Draw(_backgroundSprite);
             _game.W.SetView(_view);
-            foreach (Platform plateform in Platforms)
+            foreach (IEntity ent in level.entities)
             {
-                plateform.Draw();
+                ent.Draw();
             }
             _player.Draw();
             _game.W.SetView(_game.W.DefaultView);
@@ -85,8 +77,8 @@ namespace Platformer_The_Game
 
         public void Update()
         {
-            foreach (Platform plateform in Platforms)
-                plateform.Update();
+            foreach (var ent in level.entities)
+                ent.Update();
             //Vector2f oldPos = _player.Pos;
             _player.Update();
             _view.Center = _player.Pos;

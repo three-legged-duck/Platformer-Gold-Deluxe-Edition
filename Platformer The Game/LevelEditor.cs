@@ -157,6 +157,13 @@ namespace Platformer_The_Game
             {
                 _game.State = new GameState("customlevel", level);
             };
+            var openCustomLvl = new Button(_gwenCanvas);
+            openCustomLvl.Text = "Open CustomLevel";
+            openCustomLvl.SetPosition(btn.Bounds.Width + 1, 0);
+            openCustomLvl.Released += (sender, arguments) =>
+            {
+                level = Level.LoadLevel(_game, "customLevel");
+            };
         }
 
         private void reloadBackground()

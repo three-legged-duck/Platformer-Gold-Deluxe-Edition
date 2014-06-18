@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -10,10 +11,19 @@ namespace Platformer_The_Game
 
         public bool GetPixel(bool[,] mask, Texture tex, uint x, uint y)
         {
-            if (x > tex.Size.X || y > tex.Size.Y)
-                return false;
+            try
+            {
+                if (x > tex.Size.X || y > tex.Size.Y)
+                    return false;
 
-            return mask[x,y];
+                return mask[x, y];
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
         }
 
         public bool[,] GetMask(Texture tex)

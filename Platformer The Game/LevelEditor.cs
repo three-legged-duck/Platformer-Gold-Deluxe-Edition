@@ -276,16 +276,16 @@ namespace Platformer_The_Game
             switch (ev)
             {
                 case Settings.Action.Left:
-                    _view.Move(new Vector2f(-1, 0));
+                    _view.Move(new Vector2f(-10, 0));
                     break;
                 case Settings.Action.Right:
-                    _view.Move(new Vector2f(1, 0));
+                    _view.Move(new Vector2f(10, 0));
                     break;
                 case Settings.Action.Up:
-                    _view.Move(new Vector2f(0, -1));
+                    _view.Move(new Vector2f(0, -10));
                     break;
                 case Settings.Action.Down:
-                    _view.Move(new Vector2f(0, 1));
+                    _view.Move(new Vector2f(0, 10));
                     break;
             }
 

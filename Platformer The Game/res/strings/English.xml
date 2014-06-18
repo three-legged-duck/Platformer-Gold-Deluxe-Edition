@@ -24,7 +24,10 @@
   <string name="scoresError">Cannot be send to the server :</string> 
   
   <!-- Level editor -->
-  <string name="platforms">Plateforms</string>
+  <string name="platforms">Platforms</string>
+  <string name="entities">Entities</string>
+  <string name="entitySettings">Entity settings</string>
+  <string name="levelSettings">Level settings</string>
 
   <!-- Main settings menu -->
   <string name="binding">Keyboard binding</string>

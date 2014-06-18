@@ -101,7 +101,7 @@ namespace Platformer_The_Game
                 }
             }
 
-            var ents = entities.AddPage(Utils.GetString("entities", _game));
+            var ents = entities.AddPage(Utils.GetString(Utils.GetString("entities",_game),_game));
             page = new ScrollControl(ents.Page);
             page.Dock = Gwen.Pos.Fill;
 
@@ -139,7 +139,7 @@ namespace Platformer_The_Game
             };
 
             Button btn = new Button(_gwenCanvas);
-            btn.Text = "Exit";
+            btn.Text = Utils.GetString("quit", _game);
             btn.Released += (sender, arguments) => {
                 level.Save("customLevel");
                 _game.State = Utils.CreateMainMenu(_game);

@@ -25,6 +25,9 @@
   
   <!-- Level editor -->
   <string name="platforms">Plateformes</string>
+  <string name="entities">Entités</string>
+  <string name="entitySettings">Paramètres de l'entité</string>
+  <string name="levelSettings">Paramètres du niveau</string>
   
   <!-- Main settings menu -->
   <string name="binding">Configuration du clavier</string>

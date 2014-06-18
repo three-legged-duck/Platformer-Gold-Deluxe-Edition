@@ -18,7 +18,7 @@ namespace Platformer_The_Game
         public ResMan ResMan = new ResMan();
         private Music _bgMusic;
         private string _bgMusicName;
-        private int _acceptInput;
+        public int AcceptInput;
         public Font MenuFont = new Font(@"res\fonts\Square.ttf");
         public Settings Settings = Settings.Load();
         private IState _state;
@@ -96,7 +96,7 @@ namespace Platformer_The_Game
 
         private void CleanInput()
         {
-            breakOutOfInputStateLoopHack = true;
+            _breakOutOfInputStateLoopHack = true;
             _inputState.Clear();
         }
 
@@ -131,7 +131,8 @@ namespace Platformer_The_Game
             _state = state;
             _state.Initialize(this);
         }
-        bool breakOutOfInputStateLoopHack;
+
+        bool _breakOutOfInputStateLoopHack;
         private void Update()
         {
             if (_nextState != null)
@@ -139,14 +140,14 @@ namespace Platformer_The_Game
                 SwitchState(_nextState);
                 _nextState = null;
             }
-            if (_acceptInput < Environment.TickCount)
+            if (AcceptInput < Environment.TickCount)
             {
-                breakOutOfInputStateLoopHack = false;
+                _breakOutOfInputStateLoopHack = false;
                 foreach (var action in _inputState)
                 {
                     if (action.Value == 0) continue;
                     _state.OnEvent(action.Key);
-                    if (breakOutOfInputStateLoopHack) break;
+                    if (_breakOutOfInputStateLoopHack) break;
                 }
             }
             _state.Update();
@@ -274,7 +275,7 @@ namespace Platformer_The_Game
 
         public void StopInput(int ms)
         {
-            _acceptInput = Environment.TickCount + ms;
+            AcceptInput = Environment.TickCount + ms;
         }
 
         public void ReloadMusicVolume()

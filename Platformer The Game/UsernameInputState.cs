@@ -70,7 +70,7 @@ namespace Platformer_The_Game
 
         public void OnKeyReleased(object sender, KeyEventArgs e)
         {
-            if (e.Code == Keyboard.Key.Return && !String.IsNullOrWhiteSpace(username))
+            if (_game.AcceptInput < Environment.TickCount && e.Code == Keyboard.Key.Return && !String.IsNullOrWhiteSpace(username))
             {
                 _game.Settings.Username = username.ToUpper();
                 _game.State = OptionsMenu.CreateOptionsMenu(_game, Utils.CreateMainMenu(_game));

@@ -115,31 +115,33 @@ namespace Platformer_The_Game
 
         void OnKeyReleased(object sender, KeyEventArgs e)
         {
-            try
+            if (_game.AcceptInput < Environment.TickCount)
             {
-                _game.Settings.SetButton(settingsArray[_currentModifiedState].State, e.Code,
-                    settingsArray[_currentModifiedState].Actions[_currentModifiedAction]);
-                if (_currentModifiedAction < settingsArray[_currentModifiedState].Actions.Length -1)
+                try
                 {
-                    _currentModifiedAction++;
+                    _game.Settings.SetButton(settingsArray[_currentModifiedState].State, e.Code,
+                        settingsArray[_currentModifiedState].Actions[_currentModifiedAction]);
+                    if (_currentModifiedAction < settingsArray[_currentModifiedState].Actions.Length - 1)
+                    {
+                        _currentModifiedAction++;
+                    }
+                    else if (_currentModifiedState < settingsArray.Length - 1)
+                    {
+                        //Go to the next set of modifications
+                        _currentModifiedState++;
+                        _currentModifiedAction = 0;
+                    }
+                    else
+                    {
+                        _game.State = nextState;
+                        _game.Settings.IsCorrupted = false;
+                    }
                 }
-                else if (_currentModifiedState < settingsArray.Length -1)
+                catch
                 {
-                    //Go to the next set of modifications
-                    _currentModifiedState++;
-                    _currentModifiedAction = 0;
-                }
-                else
-                {
-                    _game.State = nextState;
-                    _game.Settings.IsCorrupted = false;
+                    Debug.WriteLine("Error while setting button in binding menu");
                 }
             }
-            catch
-            {
-                Debug.WriteLine("Error while setting button in binding menu");
-            }
-
         }
     }
 }

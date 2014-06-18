@@ -82,7 +82,7 @@ namespace Platformer_The_Game
                 if (File.Exists(@"res\images\" + fullid + ".png")) {
                     return new Texture(@"res\images\" + fullid + ".png");
                 } else {
-                    return new Texture(32,32);
+                    return new Texture(@"res\images\placeholder.png");
                 }
             }
             SpriteDescription desc = spriteDesc[id];

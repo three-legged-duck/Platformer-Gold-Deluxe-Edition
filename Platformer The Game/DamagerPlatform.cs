@@ -1,44 +1,55 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using SFML.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using SFML.Window;
-using System;
+using SFML.Graphics;
+using System.Diagnostics;
 
 namespace Platformer_The_Game
 {
-    internal class Platform : IEntity
+    class DamagerPlatform : IEntity
     {
         private readonly Game game;
         public Sprite sprite;
-        string textureName = "stone";
-
+        string textureName = "metal_vault";
+        int damageRate;
         public Sprite CollisionSprite
         {
             get { return sprite; }
         }
+        public int DamageRate
+        {
+            get { return damageRate; }
+        }
         public string[] ArgsType
         {
-            get { return new string[] { "sizeX", "sizeY", "textureName" }; }
+            get { return new string[] { "sizeX", "sizeY", "textureName", "damageRate" }; }
         }
 
         public string[] Args
         {
-            get { return new string[] { sprite.TextureRect.Width.ToString(), 
+            get
+            {
+                return new string[] { sprite.TextureRect.Width.ToString(), 
                 sprite.TextureRect.Height.ToString(),
-                textureName }; }
+                textureName,
+                damageRate.ToString() };
+            }
         }
 
-        public Platform(Game game, Vector2f pos)
+        public DamagerPlatform(Game game, Vector2f pos)
         {
             this.game = game;
-            sprite = new Sprite(game.ResMan.GetTexture("plateformes.stone"));
+            sprite = new Sprite(game.ResMan.GetTexture("plateformes.metal_vault"));
             sprite.Texture.Repeated = true;
             sprite.TextureRect = new IntRect(0, 0, (int)sprite.Texture.Size.X, (int)sprite.Texture.Size.Y);
             Pos = pos;
+            damageRate = 5;
             Debug.WriteLine(sprite.GetGlobalBounds());
         }
 
-        public Platform(Game game, Vector2f pos, params string[] args)
+        public DamagerPlatform(Game game, Vector2f pos, params string[] args)
         {
             this.game = game;
             sprite = new Sprite();
@@ -52,11 +63,13 @@ namespace Platformer_The_Game
             sprite.Texture = game.ResMan.GetTexture("plateformes." + textureName);
             sprite.Texture.Repeated = true;
             sprite.TextureRect = new IntRect(0, 0,
-                                Convert.ToInt32(args.GetOrDefault(0, sprite.Texture.Size.X.ToString())), 
+                                Convert.ToInt32(args.GetOrDefault(0, sprite.Texture.Size.X.ToString())),
                                 Convert.ToInt32(args.GetOrDefault(1, sprite.Texture.Size.Y.ToString())));
+            damageRate = Convert.ToInt32(args.GetOrDefault(3, "5"));
         }
 
-        public Vector2f Pos {
+        public Vector2f Pos
+        {
             get { return sprite.Position; }
             set { sprite.Position = value; }
         }

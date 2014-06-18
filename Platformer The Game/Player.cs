@@ -87,6 +87,17 @@ namespace Platformer_The_Game
             _lastverticalpos = Pos.Y;
         }
 
+        protected override void UpdatePostCollision(System.Collections.Generic.ISet<IEntity> collidedWith)
+        {
+            foreach (IEntity ent in collidedWith)
+            {
+                if (ent.GetType() == typeof(DamagerPlatform))
+                {
+                    GetDamage((ent as DamagerPlatform).DamageRate);
+                }
+            }
+        }
+
         public void Uninitialize()
         {
         }

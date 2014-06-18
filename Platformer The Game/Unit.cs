@@ -36,6 +36,11 @@ namespace Platformer_The_Game
             set { Sprite.Position = value; }
         }
 
+        public Sprite CollisionSprite
+        {
+            get { return Sprite; }
+        }
+
         public Vector2f Size
         {
             get { return new Vector2f(Sprite.GetGlobalBounds().Width, Sprite.GetGlobalBounds().Height); }
@@ -75,7 +80,7 @@ namespace Platformer_The_Game
 
         }
 
-        protected virtual void UpdatePostCollision()
+        protected virtual void UpdatePostCollision(ISet<IEntity> collidedWith)
         {
 
         }
@@ -83,7 +88,7 @@ namespace Platformer_The_Game
         public virtual void Update()
         {
             FloatRect under = UnderUnit;
-
+            ISet<IEntity> collidedWith = new HashSet<IEntity>();
             Vector2f oldPos = Sprite.Position;
             UpdatePreCollision();
             Debug.WriteLine("===");
@@ -94,9 +99,10 @@ namespace Platformer_The_Game
             var colliding = false;
             foreach (IEntity entity in GameState.Level.entities) // TODO: IEntity instead of Platform
             {
-                if (entity.GetType() != typeof(Platform)) continue;
-                if (GameState.Collision.PixelPerfectTest(this.Sprite, (entity as Platform).sprite))
+                //if (GameState.Collision.PixelPerfectTest(this.Sprite, entity.CollisionSprite))
+                if (this.CollisionSprite.GetGlobalBounds().Intersects(entity.CollisionSprite.GetGlobalBounds()))
                 {
+                    collidedWith.Add(entity);
                     colliding = true;
                 }
             }
@@ -115,7 +121,7 @@ namespace Platformer_The_Game
                 Speed = new Vector2f(0, 0);
                 Pos = oldPos;
             }
-            UpdatePostCollision();
+            UpdatePostCollision(collidedWith);
         }
 
         public void Draw()

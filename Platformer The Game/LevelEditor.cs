@@ -4,6 +4,7 @@ using SFML.Window;
 using Platformer_The_Game.GwenExtensions;
 using System.Diagnostics;
 using System;
+using System.Linq;
 
 namespace Platformer_The_Game
 {
@@ -23,13 +24,29 @@ namespace Platformer_The_Game
         // Gwen
         private readonly Canvas _gwenCanvas;
         private Gwen.Input.SFML _gwenInput;
-        private ScrollControl entitySettingsPage;
+        private ScrollControl _entitySettingsPage;
+        private Button[] _typeButtons;
 
-        SelectMode mode = SelectMode.Normal;
+        SelectMode _mode = SelectMode.Normal;
+        SelectMode mode
+        {
+            get { return _mode; }
+            set
+            {
+                if (value == SelectMode.Normal)
+                {
+                    foreach (var btn in _typeButtons)
+                    {
+                        btn.ToggleState = false;
+                    }
+                }
+                _mode = value;
+            }
+        }
         Vector2i AbsoluteMousePos;
 
         // Item management
-        private Sprite _currentItem;
+        private string _currentItem;
         
         // Placed item management
         private IEntity _placedSelected;
@@ -84,13 +101,13 @@ namespace Platformer_The_Game
             _gwenInput = new Gwen.Input.SFML();
             _gwenInput.Initialize(_gwenCanvas, _game.W);
             
-            TabControl entities = new TabControl(_gwenCanvas);
-            entities.SetSize(_gwenCanvas.Width, 200);
-            entities.SetPosition(0, _gwenCanvas.Height - 200);
+            TabControl tabs = new TabControl(_gwenCanvas);
+            tabs.SetSize(_gwenCanvas.Width, 200);
+            tabs.SetPosition(0, _gwenCanvas.Height - 200);
             Gwen.Texture tex = new Gwen.Texture(skin.Renderer);
             tex.Load(@"res\images\plateformes.png");
 
-            var platforms = entities.AddPage(Utils.GetString("platforms",_game));
+            /*var platforms = tabs.AddPage(Utils.GetString("platforms",_game));
             var page = new ScrollControl(platforms.Page);
             page.Dock = Gwen.Pos.Fill;
             for (int y = 0; y < tex.Height; y += 32)
@@ -109,16 +126,45 @@ namespace Platformer_The_Game
                         _currentItem.Color = new Color(255, 255, 255, 127);
                     };
                 }
+            }*/
+
+            var ents = tabs.AddPage(Utils.GetString(Utils.GetString("entities",_game),_game));
+            var page = new ScrollControl(ents.Page);
+            page.Dock = Gwen.Pos.Fill;
+            var type = typeof(IEntity);
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => !p.IsAbstract && !p.IsInterface && type.IsAssignableFrom(p));
+            _typeButtons = new Button[types.Count()];
+            var i = 0;
+            foreach (Type t in types)
+            {
+                Type _t = t;
+                var btn = _typeButtons[i] = new Button(page);
+                btn.Text = t.Name;
+                btn.SetToolTipText(t.FullName);
+                btn.SetPosition((i % 3) * btn.Bounds.Right, (i / 3) * btn.Bounds.Height);
+                btn.IsToggle = true;
+                btn.ToggledOn += (sender, args) =>
+                {
+                    foreach (var bleigh in _typeButtons)
+                    {
+                        if (bleigh != btn) bleigh.ToggleState = false;
+                    }
+                    _currentItem = _t.FullName;
+                    mode = SelectMode.Item;
+                };
+                btn.ToggledOff += (sender, args) =>
+                {
+                    mode = SelectMode.Normal;
+                };
+                i++;
             }
 
-            var ents = entities.AddPage(Utils.GetString(Utils.GetString("entities",_game),_game));
-            page = new ScrollControl(ents.Page);
+            ents = tabs.AddPage(Utils.GetString("entitySettings", _game));
+            page = _entitySettingsPage = new ScrollControl(ents.Page);
             page.Dock = Gwen.Pos.Fill;
-
-            ents = entities.AddPage(Utils.GetString("entitySettings", _game));
-            page = entitySettingsPage = new ScrollControl(ents.Page);
-            page.Dock = Gwen.Pos.Fill;
-            NumericUpDown updown = new NumericUpDown(entitySettingsPage);
+            NumericUpDown updown = new NumericUpDown(_entitySettingsPage);
             updown.SetPosition(0, 0);
             updown.Value = updown.Min = 0;
             updown.ValueChanged += delegate(Base sender, EventArgs eventargs)
@@ -137,7 +183,7 @@ namespace Platformer_The_Game
                 }
             };
 
-            var settingsPage = entities.AddPage(Utils.GetString("levelSettings", _game));
+            var settingsPage = tabs.AddPage(Utils.GetString("levelSettings", _game));
             page = new ScrollControl(settingsPage.Page);
             page.Dock = Gwen.Pos.Fill;
             Label lbl = new Label(page);
@@ -172,17 +218,17 @@ namespace Platformer_The_Game
                 level.Save("customLevel");
                 _game.State = Utils.CreateMainMenu(_game);
             };
-            var btn = new Button(_gwenCanvas);
-            btn.Text = "Test";
-            btn.SetPosition(exitbtn.Bounds.Width + 1, 0);
-            btn.Released += (sender, arguments) =>
+            var testBtn = new Button(_gwenCanvas);
+            testBtn.Text = "Test";
+            testBtn.SetPosition(exitbtn.Bounds.Width + 1, 0);
+            testBtn.Released += (sender, arguments) =>
             {
                 level.Save("customLevel");
                 _game.State = new GameState("customlevel", level);
             };
             var openCustomLvl = new Button(_gwenCanvas);
             openCustomLvl.Text = "Open CustomLevel";
-            openCustomLvl.SetPosition(btn.Bounds.Right + 1, 0);
+            openCustomLvl.SetPosition(testBtn.Bounds.Right + 1, 0);
             openCustomLvl.Released += (sender, arguments) =>
             {
                 level = Level.LoadLevel(_game, "customLevel");
@@ -198,17 +244,17 @@ namespace Platformer_The_Game
 
         private void reloadEntitySettingsPage()
         {
-            entitySettingsPage.Children.Clear();
+            _entitySettingsPage.Children.Clear();
             if (_placedSelected != null)
             {
                 var argstype = _placedSelected.ArgsType;
                 for (var i = 0; i < argstype.Length; i++)
                 {
                     var _i = i;
-                    var lbl = new Label(entitySettingsPage);
+                    var lbl = new Label(_entitySettingsPage);
                     lbl.Text = argstype[i];
                     lbl.SetPosition(0, 50 * i);
-                    var txtBox = new TextBox(entitySettingsPage);
+                    var txtBox = new TextBox(_entitySettingsPage);
                     txtBox.SetPosition(200, 50 * i);
                     txtBox.Text = _placedSelected.Args[i];
                     txtBox.SubmitPressed += delegate(Base sender, EventArgs args)
@@ -224,7 +270,7 @@ namespace Platformer_The_Game
         public void Initialize(Game game)
         {
             RenderWindow mWindow = game.W;
-            _currentItem = new Sprite(new Texture(@"res\images\plateformes.png"));
+            //_currentItem = new Sprite(new Texture(@"res\images\plateformes.png"));
             mWindow.KeyPressed += window_KeyPressed;
             mWindow.KeyReleased += window_KeyReleased;
             mWindow.MouseButtonPressed += window_MouseButtonPressed;
@@ -245,7 +291,7 @@ namespace Platformer_The_Game
             _gwenCanvas.RenderCanvas();
             if (mode == SelectMode.Item)
             {
-                _game.W.Draw(_currentItem);
+               // _game.W.Draw(_currentItem);
             }
             _game.W.SetView(_view);
             foreach (var ent in level.entities)
@@ -299,7 +345,7 @@ namespace Platformer_The_Game
         void window_MouseMoved(object sender, MouseMoveEventArgs e)
         {
             AbsoluteMousePos = new Vector2i(e.X, e.Y);
-            _currentItem.Position = new Vector2f(e.X - 15, e.Y - 15);
+            //_currentItem.Position = new Vector2f(e.X - 15, e.Y - 15);
             _gwenInput.ProcessMessage(e);
         }
 
@@ -310,34 +356,47 @@ namespace Platformer_The_Game
 
         void window_MouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
-            if (e.Button == Mouse.Button.Right)
+            var mouseCoords = _game.W.MapPixelToCoords(new Vector2i(e.X, e.Y), _view);
+            if (e.Button == Mouse.Button.Right && mode == SelectMode.Item)
             {
                 mode = SelectMode.Normal;
             }
-            else if (e.Y < _game.W.Size.Y - 200)
+            else if (e.Button == Mouse.Button.Right)
             {
-                if (mode == SelectMode.Item)
+                foreach (IEntity ent in level.entities)
                 {
-                    _placedSelected = new Platform(_game, _game.W.MapPixelToCoords(new Vector2i(e.X - 15, e.Y - 15), _view));
+                    if (ent.CollisionSprite.GetGlobalBounds().Intersects(
+                        new FloatRect(mouseCoords.X - 10, mouseCoords.Y - 10, 20, 20))) {
+                        if (_placedSelected == ent) _placedSelected = null;
+                        level.entities.Remove(ent);
+                        break;
+                    }
+                }
+            }
+            else if (mode == SelectMode.Item)
+            {
+                if (e.Y < _gwenCanvas.Height - 200)
+                {
+                    Type t = Type.GetType(_currentItem, false);
+                    var info = t.GetConstructor(new Type[] { typeof(Game), typeof(Vector2f) });
+                    var coords = _game.W.MapPixelToCoords(new Vector2i(e.X - 15, e.Y - 15), _view);
+                    _placedSelected = (IEntity)info.Invoke(new object[] { _game, coords });
                     reloadEntitySettingsPage();
                     level.entities.Add(_placedSelected);
                 }
-                else
+            }
+            else
+            {
+                foreach (IEntity ent in level.entities)
                 {
-                    var mouseCoords = _game.W.MapPixelToCoords(new Vector2i(e.X, e.Y), _view);
-                    foreach (IEntity ent in level.entities)
+                    if (ent.CollisionSprite.GetGlobalBounds().Intersects(
+                        new FloatRect(mouseCoords.X - 10, mouseCoords.Y - 10, 20, 20)))
                     {
-                        if (ent.Pos.X - 15 < mouseCoords.X && mouseCoords.X < ent.Pos.X + 15
-                         && ent.Pos.Y - 15 < mouseCoords.Y && mouseCoords.Y < ent.Pos.Y + 15)
-                        {
-                            _placedSelected = ent;
-                            reloadEntitySettingsPage();
-                            break;
-                        }
+                        _placedSelected = ent;
+                        break;
                     }
                 }
-                // Add to level
-                // Draw on level.
+                reloadEntitySettingsPage();
             }
 
             _gwenInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));

@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collision.cs" />
+    <Compile Include="DamagerPlatform.cs" />
     <Compile Include="EndOfLevelState.cs" />
     <Compile Include="GwenExtensions\ClippedImage.cs" />
     <Compile Include="KeyBindingState.cs" />
@@ -153,6 +154,7 @@
     <Content Include="res\images\gameoverBg.png" />
     <Content Include="res\images\lab.png" />
     <Content Include="res\images\menuBg.png" />
+    <Content Include="res\images\placeholder.png" />
     <Content Include="res\images\splash.png" />
     <Content Include="res\sprites\character.png" />
     <Content Include="icon.ico" />

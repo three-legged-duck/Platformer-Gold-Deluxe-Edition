@@ -155,6 +155,7 @@ namespace Platformer_The_Game
             btn.SetPosition(exitbtn.Bounds.Width + 1, 0);
             btn.Released += (sender, arguments) =>
             {
+                level.Save("customLevel");
                 _game.State = new GameState("customlevel", level);
             };
             var openCustomLvl = new Button(_gwenCanvas);

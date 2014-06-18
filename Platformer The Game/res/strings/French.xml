@@ -13,6 +13,10 @@
   <string name="yes">oui</string>
   <string name="no">non</string>
 
+  <!-- Level selection menu -->
+  <string name="world">Monde</string>
+  <string name="level">Niveau</string>
+
   <!-- End of a level strings -->
   <string name="yourScore">Votre score : {0}</string>
   <string name="scoreTooLow">Non ajouté au classement.</string>

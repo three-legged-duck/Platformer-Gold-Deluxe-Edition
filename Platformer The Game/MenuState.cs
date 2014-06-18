@@ -130,6 +130,7 @@ namespace Platformer_The_Game
         {
             _game.W.MouseButtonPressed -= MouseClickHandler;
             _game.W.MouseMoved -= MouseMoveHandler;
+            _game.StopInput(100);
         }
 
         public void OnEvent(Settings.Action action)

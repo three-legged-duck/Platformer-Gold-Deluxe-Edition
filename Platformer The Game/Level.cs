@@ -29,12 +29,22 @@ namespace Platformer_The_Game
             Level lvl = new Level();
             return lvl;
         }
-
+        const int VERSION = 1;
         public static Level LoadLevel(Game game, string levelName)
         {
             Level level = new Level();
             FileStream f = File.Open(@"levels\" + levelName, FileMode.Open);
+            var version = f.ReadVarInt();
+            if (version == 1)
+            {
+                LoadVersion1(game, level, f);
+            }
+            f.Close();
+            return level;
+        }
 
+        private static void LoadVersion1(Game game, Level level, FileStream f)
+        {
             #region header
             level.background = f.ReadString();
             level.startScore = (int)f.ReadVarInt();
@@ -46,8 +56,7 @@ namespace Platformer_The_Game
               Type t = Type.GetType(f.ReadString(), false);
               if (t == null || t.GetInterface("IEntity") == null)
               {
-                // Throw an exception
-                return null;
+                  throw new Exception("Entity is not an entity");
               }
               var info = t.GetConstructor(new Type[] { typeof(Game), typeof(Vector2f), typeof(string[]) });
               long x = f.ReadVarInt();
@@ -61,14 +70,13 @@ namespace Platformer_The_Game
               level.entities.Add((IEntity)info.Invoke(new object[] { game, new Vector2f(x, y), args }));
             }
             #endregion entities
-            f.Close();
-            return level;
         }
 
         public void Save(string levelName)
         {
             if (!Directory.Exists(@"levels")) Directory.CreateDirectory(@"levels");
             var f = File.Open(@"levels\" + levelName, FileMode.Create);
+            f.WriteVarInt(VERSION);
             f.WriteString(this.background);
             f.WriteVarInt(this.startScore);
             f.WriteVarInt(this.entities.Count);

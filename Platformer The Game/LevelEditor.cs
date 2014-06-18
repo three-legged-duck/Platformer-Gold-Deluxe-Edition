@@ -9,6 +9,11 @@ namespace Platformer_The_Game
 {
     internal class LevelEditor : IState
     {
+        enum SelectMode
+        {
+            Normal,
+            Item
+        }
         private Game _game;
 
         public string BgMusicName { get { return null; } }
@@ -20,8 +25,9 @@ namespace Platformer_The_Game
         private Gwen.Input.SFML _gwenInput;
         private ScrollControl entitySettingsPage;
 
+        SelectMode mode = SelectMode.Normal;
+
         // Item management
-        private bool _itemSelected;
         private Sprite _currentItem;
         
         // Placed item management
@@ -94,7 +100,7 @@ namespace Platformer_The_Game
                     img.Clicked += delegate(Base sender, ClickedEventArgs args)
                     {
                         Debug.WriteLine("{0},{1}", sender.Width, sender.Height);
-                        _itemSelected = true;
+                        mode = SelectMode.Item;
                         _currentItem.TextureRect = new IntRect(sender.X, sender.Y, 31, 31);
                         _currentItem.Color = new Color(255, 255, 255, 127);
                     };
@@ -207,7 +213,7 @@ namespace Platformer_The_Game
             _game.W.SetView(_game.W.DefaultView);
             _game.W.Draw(backgroundSprite);
             _gwenCanvas.RenderCanvas();
-            if (_itemSelected)
+            if (mode == SelectMode.Item)
             {
                 _game.W.Draw(_currentItem);
             }
@@ -269,11 +275,11 @@ namespace Platformer_The_Game
         {
             if (e.Button == Mouse.Button.Right)
             {
-                _itemSelected = false;
+                mode = SelectMode.Normal;
             }
             else if (e.Y < _game.W.Size.Y - 200)
             {
-                if (_itemSelected != false)
+                if (mode == SelectMode.Item)
                 {
                     _placedSelected = new Platform(_game, _game.W.MapPixelToCoords(new Vector2i(e.X - 15, e.Y - 15), _view));
                     reloadEntitySettingsPage();

@@ -113,9 +113,6 @@ namespace Platformer_The_Game
                     };
                     _game.State = pause;
                     break;
-                case Settings.Action.DebugDamage:
-                    _player.GetDamage(10);
-                    break;
                 default:
                     _player.Event(action);
                     break;

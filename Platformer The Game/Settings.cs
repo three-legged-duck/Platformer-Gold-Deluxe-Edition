@@ -18,9 +18,7 @@ namespace Platformer_The_Game
             Left,
             Right,
             Jump,
-            Run,
             Pause,
-            DebugDamage,
             None
         };
 
@@ -54,15 +52,10 @@ namespace Platformer_The_Game
             SetButton(typeof (Default), Keyboard.Key.A, Action.Left);
             SetButton(typeof (Default), Keyboard.Key.D, Action.Right);
 
-            SetButton(typeof (GameState), Keyboard.Key.E, Action.Use);
             SetButton(typeof (GameState), Keyboard.Key.Space, Action.Jump);
-            SetButton(typeof (GameState), Keyboard.Key.LShift, Action.Run);
             SetButton(typeof (GameState), Keyboard.Key.Escape, Action.Pause);
 
             SetButton(typeof (MenuState), Keyboard.Key.Return, Action.Use);
-
-            SetButton(typeof(GameState), Keyboard.Key.F5, Action.DebugDamage);
-
             // Axis
             SetButton(typeof (Default), Joystick.Axis.X, Action.Left, Action.Right);
             SetButton(typeof (Default), Joystick.Axis.Y, Action.Up, Action.Down);

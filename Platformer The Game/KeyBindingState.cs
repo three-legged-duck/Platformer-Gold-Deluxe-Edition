@@ -49,9 +49,7 @@ namespace Platformer_The_Game
             SettingsToModify gameModify = new SettingsToModify(
                 new[]
                 {
-                    Settings.Action.Use,
                     Settings.Action.Jump,
-                    Settings.Action.Run,
                     Settings.Action.Pause
                 },typeof(GameState));
             SettingsToModify defaultModify = new SettingsToModify(

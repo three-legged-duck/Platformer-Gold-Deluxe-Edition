@@ -63,9 +63,9 @@ namespace Platformer_The_Game
               long y = f.ReadVarInt();
               long argCount = f.ReadVarInt();
               var args = new string[argCount];
-              for (i = 0; i < argCount; i++)
+              for (int j = 0; j < argCount; j++)
               {
-                 args[i] = f.ReadString();
+                 args[j] = f.ReadString();
               }
               level.entities.Add((IEntity)info.Invoke(new object[] { game, new Vector2f(x, y), args }));
             }

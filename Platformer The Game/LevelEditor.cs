@@ -26,6 +26,7 @@ namespace Platformer_The_Game
         private ScrollControl entitySettingsPage;
 
         SelectMode mode = SelectMode.Normal;
+        Vector2i AbsoluteMousePos;
 
         // Item management
         private Sprite _currentItem;
@@ -37,13 +38,16 @@ namespace Platformer_The_Game
         // Level management
         private Level level = Level.CreateLevel();
         private Sprite backgroundSprite = new Sprite();
+        private Player player;
 
         // Entity Management
         int _currentArg;
 
         public LevelEditor(Game g)
         {
+            player = new Player(g, null, level.startPos);
             _game = g;
+            AbsoluteMousePos = new Vector2i();
             _view = new View(new Vector2f(0, 0), new Vector2f(_game.W.Size.X, _game.W.Size.Y));
             var gwen = new Gwen.Renderer.SFML(_game.W);
             var skin = new Gwen.Skin.TexturedBase(gwen, @"res\images\DefaultSkin.png");
@@ -136,12 +140,30 @@ namespace Platformer_The_Game
             var settingsPage = entities.AddPage(Utils.GetString("levelSettings", _game));
             page = new ScrollControl(settingsPage.Page);
             page.Dock = Gwen.Pos.Fill;
+            Label lbl = new Label(page);
+            lbl.Text = "Background Image : ";
+            lbl.SetPosition(0, 0);
             TextBox background = new TextBox(page);
-            background.SetPosition(0, 0);
+            background.SetPosition(lbl.Width, 0);
             background.SubmitPressed += delegate(Base sender, EventArgs eventargs)
             {
                 level.background = (sender as TextBox).Text;
                 reloadBackground();
+            };
+            lbl = new Label(page);
+            lbl.Text = "Start Position : ";
+            lbl.SetPosition(0, background.Bounds.Height + 5);
+            TextBoxNumeric startPosX = new TextBoxNumeric(page);
+            startPosX.SetPosition(lbl.Width, background.Bounds.Height + 5);
+            startPosX.SubmitPressed += (sender, arguments) =>
+            {
+                level.startPos = new Vector2f(Convert.ToInt32(startPosX.Text), level.startPos.Y);
+            };
+            TextBoxNumeric startPosY = new TextBoxNumeric(page);
+            startPosY.SetPosition(lbl.Width + startPosX.Width, background.Bounds.Height + 5);
+            startPosY.SubmitPressed += (sender, arguments) =>
+            {
+                level.startPos = new Vector2f(level.startPos.X, Convert.ToInt32(startPosY.Text));
             };
 
             Button exitbtn = new Button(_gwenCanvas);
@@ -160,7 +182,7 @@ namespace Platformer_The_Game
             };
             var openCustomLvl = new Button(_gwenCanvas);
             openCustomLvl.Text = "Open CustomLevel";
-            openCustomLvl.SetPosition(btn.Bounds.Width + 1, 0);
+            openCustomLvl.SetPosition(btn.Bounds.Right + 1, 0);
             openCustomLvl.Released += (sender, arguments) =>
             {
                 level = Level.LoadLevel(_game, "customLevel");
@@ -230,6 +252,8 @@ namespace Platformer_The_Game
             {
                 ent.Draw();
             }
+            player.Pos = level.startPos;
+            player.Draw();
             if (_placedSelected != null)
             {
                 var shape = new RectangleShape();
@@ -241,6 +265,10 @@ namespace Platformer_The_Game
                 _game.W.Draw(shape);
             }
             _game.W.SetView(_game.W.DefaultView);
+            var mousePos = _game.W.MapPixelToCoords(AbsoluteMousePos, _view);
+            Text posText = new Text("X : " +  mousePos.X + ", Y : " + mousePos.Y, 
+                _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(_game.W.Size.X - 200, 0) };
+            _game.W.Draw(posText);
         }
         // Useless... kinda.
         public void OnEvent(Settings.Action ev)
@@ -270,6 +298,7 @@ namespace Platformer_The_Game
 
         void window_MouseMoved(object sender, MouseMoveEventArgs e)
         {
+            AbsoluteMousePos = new Vector2i(e.X, e.Y);
             _currentItem.Position = new Vector2f(e.X - 15, e.Y - 15);
             _gwenInput.ProcessMessage(e);
         }

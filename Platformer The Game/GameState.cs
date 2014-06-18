@@ -54,7 +54,7 @@ namespace Platformer_The_Game
 
             Collision = new Collision();
 
-            _player = new Player(game, this, new Vector2f(50, 180));
+            _player = new Player(game, this, level.startPos);
 
             _view.Center = _player.Pos;
         }

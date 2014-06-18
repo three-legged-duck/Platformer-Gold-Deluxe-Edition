@@ -61,6 +61,7 @@ namespace Platformer_The_Game
 
             // Visual appearance
             Sprite = game.ResMan.NewSprite(spriteSheet, animation);
+            Pos = pos;
         }
 
         // WILL NEED TO FILL IT UP

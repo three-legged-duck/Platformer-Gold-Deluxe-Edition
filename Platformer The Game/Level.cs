@@ -21,6 +21,7 @@ namespace Platformer_The_Game
         public string background;
         public int startScore;
         public ISet<IEntity> entities = new HashSet<IEntity>();
+        public Vector2f startPos;
 
         public event LoadProgressHandler LoadProgress;
 
@@ -29,7 +30,7 @@ namespace Platformer_The_Game
             Level lvl = new Level();
             return lvl;
         }
-        const int VERSION = 1;
+        const int VERSION = 2;
         public static Level LoadLevel(Game game, string levelName)
         {
             Level level = new Level();
@@ -38,6 +39,10 @@ namespace Platformer_The_Game
             if (version == 1)
             {
                 LoadVersion1(game, level, f);
+            }
+            else if (version == 2)
+            {
+                LoadVersion2(game, level, f);
             }
             f.Close();
             return level;
@@ -72,11 +77,19 @@ namespace Platformer_The_Game
             #endregion entities
         }
 
+        private static void LoadVersion2(Game game, Level level, FileStream f)
+        {
+            level.startPos = new Vector2f((float)f.ReadVarInt(), (float)f.ReadVarInt());
+            LoadVersion1(game, level, f);
+        }
+
         public void Save(string levelName)
         {
             if (!Directory.Exists(@"levels")) Directory.CreateDirectory(@"levels");
             var f = File.Open(@"levels\" + levelName, FileMode.Create);
             f.WriteVarInt(VERSION);
+            f.WriteVarInt((int)this.startPos.X);
+            f.WriteVarInt((int)this.startPos.Y);
             f.WriteString(this.background);
             f.WriteVarInt(this.startScore);
             f.WriteVarInt(this.entities.Count);

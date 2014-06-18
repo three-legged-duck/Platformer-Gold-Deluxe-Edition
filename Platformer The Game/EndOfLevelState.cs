@@ -58,8 +58,6 @@ namespace Platformer_The_Game
             _font = font;
             MouseClickHandler = OnMousePressed;
             MouseMoveHandler = OnMouseMoved;
-            _menuBtns.Add(new Text("Next level", font));
-            _menuBtns.Add(new Text("Main menu", font));
             Image backgroundImage = new Image(@"res\images\menuBg.png");
             Texture backgroundTexture = new Texture(backgroundImage);
             _backgroundSprite = new Sprite(backgroundTexture);
@@ -74,6 +72,8 @@ namespace Platformer_The_Game
             _nextmillis = Environment.TickCount + 150;
             _scoreCharacterSize = _game.MenuTextSize/2;
             if (_initialized) return;
+            _menuBtns.Add(new Text(Utils.GetString("nextLevel", _game), _font));
+            _menuBtns.Add(new Text(Utils.GetString("backMain", _game), _font));
             foreach (Text btn in _menuBtns)
             {
                 btn.CharacterSize = game.MenuTextSize;

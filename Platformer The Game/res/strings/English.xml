@@ -21,7 +21,8 @@
   <string name="yourScore">Your score : {0}</string>
   <string name="scoreTooLow">Not added to the leaderboard.</string>
   <string name="scoreAdded">Added to the leaderboard !</string>  
-  <string name="scoresError">Cannot be send to the server :</string> 
+  <string name="scoresError">Cannot be send to the server :</string>
+  <string name="nextLevel">Next level</string>
   
   <!-- Level editor -->
   <string name="platforms">Platforms</string>

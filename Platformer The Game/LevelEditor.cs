@@ -211,6 +211,33 @@ namespace Platformer_The_Game
             {
                 level.startPos = new Vector2f(level.startPos.X, Convert.ToInt32(startPosY.Text));
             };
+            
+            lbl = new Label(page);
+            lbl.Text = "End Position : ";
+            lbl.SetPosition(0, startPosX.Bounds.Bottom + 5);
+            TextBoxNumeric endPosX = new TextBoxNumeric(page);
+            endPosX.SetPosition(lbl.Width, startPosX.Bounds.Bottom + 5);
+            endPosX.SubmitPressed += (sender, arguments) =>
+            {
+                level.endPos = new Vector2f(Convert.ToInt32(endPosX.Text), level.endPos.Y);
+            };
+            TextBoxNumeric endPosY = new TextBoxNumeric(page);
+            endPosY.SetPosition(lbl.Width + endPosX.Width, startPosX.Bounds.Bottom + 5);
+            endPosY.SubmitPressed += (sender, arguments) =>
+            {
+                level.endPos = new Vector2f(level.endPos.X, Convert.ToInt32(endPosY.Text));
+            };
+            
+            lbl = new Label(page);
+            lbl.Text = "Starting Score : ";
+            lbl.SetPosition(0, endPosX.Bounds.Bottom + 5);
+            TextBoxNumeric startingScore = new TextBoxNumeric(page);
+            startingScore.SetPosition(lbl.Bounds.Right, endPosX.Bounds.Bottom);
+            startingScore.SubmitPressed += (sender, arguments) =>
+            {
+                level.startScore = Convert.ToInt32(startingScore.Text);
+            };
+
 
             Button exitbtn = new Button(_gwenCanvas);
             exitbtn.Text = Utils.GetString("quit", _game);
@@ -288,7 +315,6 @@ namespace Platformer_The_Game
         {
             _game.W.SetView(_game.W.DefaultView);
             _game.W.Draw(backgroundSprite);
-            _gwenCanvas.RenderCanvas();
             if (mode == SelectMode.Item)
             {
                // _game.W.Draw(_currentItem);
@@ -315,6 +341,7 @@ namespace Platformer_The_Game
             Text posText = new Text("X : " +  mousePos.X + ", Y : " + mousePos.Y, 
                 _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(_game.W.Size.X - 200, 0) };
             _game.W.Draw(posText);
+            _gwenCanvas.RenderCanvas();
         }
         // Useless... kinda.
         public void OnEvent(Settings.Action ev)

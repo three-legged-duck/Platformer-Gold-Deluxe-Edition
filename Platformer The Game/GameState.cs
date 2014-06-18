@@ -71,7 +71,8 @@ namespace Platformer_The_Game
             _player.Draw();
             _game.W.SetView(_game.W.DefaultView);
             Text lifeText = new Text(Utils.GetString("life", _game) + " : " + _player.Life.ToString("D3") + "  " +
-                Utils.GetString("speed", _game) + " : " + Math.Abs(Convert.ToInt32(_player.Speed.X)).ToString("D3"), _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(0, 0) };
+                Utils.GetString("speed", _game) + " : " + Math.Abs(Convert.ToInt32(_player.Speed.X)).ToString("D3") + " " +
+                "score : " + level.startScore.ToString(), _game.MenuFont, _game.W.Size.Y / 40) { Position = new Vector2f(0, 0) };
             _game.W.Draw(lifeText);
         }
 
@@ -82,6 +83,11 @@ namespace Platformer_The_Game
             //Vector2f oldPos = _player.Pos;
             _player.Update();
             _view.Center = _player.Pos;
+            if (_player.CollisionSprite.GetGlobalBounds().Intersects(new FloatRect(level.endPos.X, level.endPos.Y, 1, 1)))
+            {
+                _game.State = new EndOfLevelState(_game.MenuFont, Utils.CreateMainMenu(_game), levelname, level.startScore);
+            }
+            level.startScore--;
         }
 
         public void Uninitialize()

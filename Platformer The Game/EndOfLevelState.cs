@@ -24,9 +24,9 @@ namespace Platformer_The_Game
         private Text _scoreText;
         private View _view;
         private IState _nextState;
-        private int _nextmillis, _selectedPos, _currentWorld, _currentLevel, _playerScore;
+        private int _nextmillis, _selectedPos, _playerScore;
         private uint _scoreCharacterSize;
-        private string _apiUrl;
+        private string _apiUrl, _currentLevel;
         private HighscoresList _leaderboard;
 
         public string BgMusicName
@@ -49,11 +49,10 @@ namespace Platformer_The_Game
         // ReSharper restore InconsistentNaming
 
         // ReSharper disable PossibleLossOfFraction
-        public EndOfLevelState(Font font, IState nextState, int currentWorld, int currentLevel, int playerScore)
+        public EndOfLevelState(Font font, IState nextState, string currentLevel, int playerScore)
         {
             _playerScore = playerScore;
             _currentLevel = currentLevel;
-            _currentWorld = currentWorld;
             _nextState = nextState;
             _font = font;
             MouseClickHandler = OnMousePressed;
@@ -255,7 +254,7 @@ namespace Platformer_The_Game
                 WebClient client = new WebClient();
 
                 string sendResult =
-                    client.DownloadString(_apiUrl + "insert/" + _currentWorld + "/" + _currentLevel + "/" +
+                    client.DownloadString(_apiUrl + "insert/" + _currentLevel + "/" +
                                           _game.Settings.Username + "/" + _playerScore);
                 if (sendResult.Contains("-1"))
                 {
@@ -269,7 +268,7 @@ namespace Platformer_The_Game
                 }
 
                 string jsonResult =
-                    client.DownloadString(_apiUrl + "leaderboard/" + _currentWorld + "/" + _currentLevel);
+                    client.DownloadString(_apiUrl + "leaderboard/" + _currentLevel);
                 _leaderboard = JsonConvert.DeserializeObject<HighscoresList>(jsonResult);
                 _leaderboard.highscores = _leaderboard.highscores.OrderByDescending(o => o.score).ToList();
                 for (int i = 0; i < _leaderboard.highscores.Count; i++)

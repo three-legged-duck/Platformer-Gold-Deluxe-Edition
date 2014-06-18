@@ -2,6 +2,7 @@
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.Window;
+using System.Collections.Generic;
 
 namespace Platformer_The_Game
 {
@@ -45,7 +46,7 @@ namespace Platformer_The_Game
                     }
                     break;
                 case Settings.Action.Jump:
-                    if (!_isjumping)
+                    if (!_isjumping && OnGround)
                     {
                         _isjumping = true;
                         Speed.Y = -15;
@@ -77,9 +78,8 @@ namespace Platformer_The_Game
             {
                 Speed.Y++;
             }
-            else if (OnGround && Speed.Y > 0)
+            else if (OnGround/* && Speed.Y > 0*/)
             {
-                Speed.Y = 0;
                 _isjumping = false;
             }
 
@@ -87,11 +87,12 @@ namespace Platformer_The_Game
             _lastverticalpos = Pos.Y;
         }
 
-        protected override void UpdatePostCollision(System.Collections.Generic.ISet<IEntity> collidedWith)
+        protected override void UpdatePostCollision(ISet<IEntity> collidedWith, Vector2f oldpos, Vector2f newpos)
         {
-            foreach (IEntity ent in collidedWith)
+            base.UpdatePostCollision(collidedWith, oldpos, newpos);
+            foreach (var ent in collidedWith)
             {
-                if (ent.GetType() == typeof(DamagerPlatform))
+                if (typeof(DamagerPlatform).IsAssignableFrom(ent.GetType()))
                 {
                     GetDamage((ent as DamagerPlatform).DamageRate);
                 }

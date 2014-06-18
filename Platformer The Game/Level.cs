@@ -34,7 +34,7 @@ namespace Platformer_The_Game
         public static Level LoadLevel(Game game, string levelName)
         {
             Level level = new Level();
-            FileStream f = File.Open(@"levels\" + levelName, FileMode.Open);
+            FileStream f = File.Open(@"res\levels\" + levelName, FileMode.Open);
             var version = f.ReadVarInt();
             if (version == 1)
             {
@@ -85,8 +85,8 @@ namespace Platformer_The_Game
 
         public void Save(string levelName)
         {
-            if (!Directory.Exists(@"levels")) Directory.CreateDirectory(@"levels");
-            var f = File.Open(@"levels\" + levelName, FileMode.Create);
+            if (!Directory.Exists(@"res\levels")) Directory.CreateDirectory(@"res\levels");
+            var f = File.Open(@"res\levels\" + levelName, FileMode.Create);
             f.WriteVarInt(VERSION);
             f.WriteVarInt((int)this.startPos.X);
             f.WriteVarInt((int)this.startPos.Y);

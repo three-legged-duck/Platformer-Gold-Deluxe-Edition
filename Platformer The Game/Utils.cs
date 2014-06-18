@@ -133,9 +133,9 @@ namespace Platformer_The_Game
         {
             var selectedLevel = 0;
             string[] levels = null;
-            if (Directory.Exists(@"levels"))
+            if (Directory.Exists(@"res\levels"))
             {
-                levels = Directory.GetFiles(@"levels");
+                levels = Directory.GetFiles(@"res\levels");
                 for (int i = 0; i < levels.Length; i++)
                 {
                     levels[i] = Path.GetFileName(levels[i]);

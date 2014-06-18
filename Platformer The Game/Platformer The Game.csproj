@@ -143,6 +143,8 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="res\fonts\arial.ttf" />
+    <None Include="res\levels\Cosmos" />
+    <None Include="res\levels\Lab" />
     <None Include="res\music\gameLoop.ogg" />
     <None Include="res\music\eddsworldCreditsTheme.ogg" />
     <None Include="res\sprites\character.json" />
@@ -172,9 +174,7 @@
     <Content Include="res\strings\EnglishMenu.txt" />
     <Content Include="res\strings\EnglishIntro.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="res\levels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets" Condition="Exists('..\packages\SFML.Net.2.1.0\build\net\SFML.Net.targets')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

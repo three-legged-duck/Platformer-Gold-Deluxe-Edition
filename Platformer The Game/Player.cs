@@ -99,7 +99,7 @@ namespace Platformer_The_Game
             Life -= dmg;
             if (Life <= 0)
             {
-                MenuState gameoverMenuState = new MenuState(Game.MenuFont, "gameoverBg.bmp", false, Utils.GetString("backMain", Game), Utils.GetString("quit", Game));
+                MenuState gameoverMenuState = new MenuState(Game.MenuFont, "gameoverBg.png", false, Utils.GetString("backMain", Game), Utils.GetString("quit", Game));
                 gameoverMenuState.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
                 {
                     switch (args.SelectedPos)

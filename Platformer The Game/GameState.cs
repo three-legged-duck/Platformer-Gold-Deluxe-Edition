@@ -34,7 +34,7 @@ namespace Platformer_The_Game
         {
             _game = game;
             _view = new View();
-            _backgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.bmp"));
+            _backgroundSprite = new Sprite(new Texture(@"res\images\backgroundStars.png"));
             _backgroundSprite.Scale = new Vector2f(game.W.DefaultView.Size.X/_backgroundSprite.GetGlobalBounds().Width,
                 game.W.DefaultView.Size.Y/_backgroundSprite.GetGlobalBounds().Height);
             Platforms = new List<Platform>();
@@ -101,7 +101,7 @@ namespace Platformer_The_Game
             switch (action)
             {
                 case Settings.Action.Pause:
-                    var pause = new MenuState(_game.MenuFont, "menuBg.bmp", true,
+                    var pause = new MenuState(_game.MenuFont, "menuBg.png", true,
                         Utils.GetString("resume", _game), Utils.GetString("settings", _game),
                         Utils.GetString("backMain", _game));
                     pause.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)

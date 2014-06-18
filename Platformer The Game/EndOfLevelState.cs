@@ -60,7 +60,7 @@ namespace Platformer_The_Game
             MouseMoveHandler = OnMouseMoved;
             _menuBtns.Add(new Text("Next level", font));
             _menuBtns.Add(new Text("Main menu", font));
-            Image backgroundImage = new Image(@"res\images\menuBg.bmp");
+            Image backgroundImage = new Image(@"res\images\menuBg.png");
             Texture backgroundTexture = new Texture(backgroundImage);
             _backgroundSprite = new Sprite(backgroundTexture);
         }

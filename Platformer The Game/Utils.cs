@@ -127,7 +127,7 @@ namespace Platformer_The_Game
         {
             int selectedWorld = 1;
             int selectedLevel = 1;
-            var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("level", game) + " : " + selectedLevel,
+            var menu = new MenuState(game.MenuFont, "menuBg.png", true, GetString("level", game) + " : " + selectedLevel,
                 GetString("play", game), GetString("back", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
@@ -160,7 +160,7 @@ namespace Platformer_The_Game
 
         public static MenuState CreateMainMenu(Game game)
         {
-            var menu = new MenuState(game.MenuFont, "menuBg.bmp", true, GetString("play", game),
+            var menu = new MenuState(game.MenuFont, "menuBg.png", true, GetString("play", game),
                 GetString("levelEditor", game),
                 GetString("settings", game), GetString("quit", game));
             menu.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)

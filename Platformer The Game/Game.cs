@@ -105,7 +105,7 @@ namespace Platformer_The_Game
             MenuState menu = Utils.CreateMainMenu(this);
             ScrollingTextState scrollingText = new ScrollingTextState("Intro", menu);
 
-            SwitchState(new SplashState("splash.bmp", true, scrollingText));
+            SwitchState(new SplashState("splash.png", true, scrollingText));
             
             while (W.IsOpen())
             {

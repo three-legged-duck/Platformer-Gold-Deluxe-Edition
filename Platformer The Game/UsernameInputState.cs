@@ -18,7 +18,7 @@ namespace Platformer_The_Game
 
         public string BgMusicName
         {
-            get { return null; }
+            get { return "eddsworldCreditsTheme.ogg"; }
         }
 
         public void Initialize(Game game)
@@ -29,7 +29,7 @@ namespace Platformer_The_Game
             username = _game.Settings.Username;
             textlines[0] = new Text(Utils.GetString("usernameHelp",_game), _game.MenuFont, _game.MenuTextSize / 2);
             textlines[1] = new Text("", _game.MenuFont, _game.MenuTextSize / 2);
-            Image backgroundImage = new Image(@"res\images\menuBg.bmp");
+            Image backgroundImage = new Image(@"res\images\menuBg.png");
             Texture backgroundTexture = new Texture(backgroundImage);
             _backgroundSprite = new Sprite(backgroundTexture);
             _backgroundSprite.Scale = new Vector2f(_game.W.Size.X/_backgroundSprite.GetLocalBounds().Width,

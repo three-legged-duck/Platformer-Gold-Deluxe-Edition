@@ -41,7 +41,7 @@ namespace Platformer_The_Game
         public KeyBindingState(IState nextState)
         {
             this.nextState = nextState;
-            Image backgroundImage = new Image(@"res\images\menuBg.bmp");
+            Image backgroundImage = new Image(@"res\images\menuBg.png");
             Texture backgroundTexture = new Texture(backgroundImage);
             _backgroundSprite = new Sprite(backgroundTexture);
 

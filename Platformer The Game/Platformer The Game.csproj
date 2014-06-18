@@ -149,15 +149,15 @@
     <None Include="res\sprites\plateformes.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="res\images\backgroundStars.bmp" />
+    <Content Include="res\images\backgroundStars.png" />
     <Content Include="res\images\DefaultSkin.png" />
+    <Content Include="res\images\gameoverBg.png" />
+    <Content Include="res\images\menuBg.png" />
+    <Content Include="res\images\splash.png" />
     <Content Include="res\sprites\character.png" />
-    <Content Include="res\images\floor.bmp" />
     <Content Include="icon.ico" />
     <Content Include="res\images\icon.png" />
-    <Content Include="res\images\menuBg.bmp" />
     <Content Include="res\images\plateformes.png" />
-    <Content Include="res\images\splash.bmp" />
     <Content Include="res\sprites\plateformes.png" />
     <Content Include="res\strings\FrenchIntro.txt" />
     <Content Include="res\strings\FrenchMenu.txt" />

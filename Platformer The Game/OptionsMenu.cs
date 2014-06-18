@@ -15,7 +15,7 @@ namespace Platformer_The_Game
                 Utils.GetString("username", game),
                 Utils.GetString("back", game)
             };
-            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
+            var options = new MenuState(game.MenuFont, "menuBg.png", true, menuItems);
 
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
@@ -52,7 +52,7 @@ namespace Platformer_The_Game
                 GetOptionText("fxVolume", game.Settings.FxVolume, game),
                                 Utils.GetString("back", game)
             };
-            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
+            var options = new MenuState(game.MenuFont, "menuBg.png", true, menuItems);
 
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
@@ -85,7 +85,7 @@ namespace Platformer_The_Game
                 GetOptionText("drawTextures", game.Settings.DrawTextures, game),
                 Utils.GetString("back", game)
             };
-            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
+            var options = new MenuState(game.MenuFont, "menuBg.png", true, menuItems);
 
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
@@ -136,7 +136,7 @@ namespace Platformer_The_Game
                 Utils.GetString("settingsReset",game),
                 Utils.GetString("back", game)
             };
-            var options = new MenuState(game.MenuFont, "menuBg.bmp", true, menuItems);
+            var options = new MenuState(game.MenuFont, "menuBg.png", true, menuItems);
 
             options.ItemSelected += delegate(object sender, MenuState.ItemSelectedEventArgs args)
             {
